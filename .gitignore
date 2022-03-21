@@ -1,0 +1,14 @@
+*.iml
+.gradle
+/local.properties
+/.idea
+.DS_Store
+/build
+/captures
+.externalNativeBuild
+*.jks
+signing.properties
+**/fastlane/key.json
+**/fastlane/report.xml
+**/fastlane/metadata/android/screenshots.html
+/vendor
