@@ -183,18 +183,6 @@ class SettingsActivity : BaseActivity(), PreferenceFragmentCompat.OnPreferenceSt
 						}
 					}
 					"preferences_styling" -> {
-						findPreference<MultiSelectListPreference>("preference_school_background")?.apply {
-							setOnPreferenceChangeListener { _, newValue ->
-								if (newValue !is Set<*>) return@setOnPreferenceChangeListener false
-
-								refreshColorPreferences(newValue)
-
-								true
-							}
-
-							refreshColorPreferences(values)
-						}
-
 						listOf("preference_theme", "preference_dark_theme", "preference_dark_theme_oled").forEach { key ->
 							findPreference<Preference>(key)?.setOnPreferenceChangeListener { _, _ ->
 								activity?.recreate()
@@ -225,12 +213,6 @@ class SettingsActivity : BaseActivity(), PreferenceFragmentCompat.OnPreferenceSt
 							true
 						}
 					}
-					"preferences_connectivity" ->
-						findPreference<Preference>("preference_connectivity_proxy_about")?.setOnPreferenceClickListener {
-							startActivity(Intent(Intent.ACTION_VIEW, Uri.parse(WIKI_URL_PROXY)))
-							true
-						}
-
 					"preferences_notifications" -> {
 						findPreference<Preference>("preference_notifications_enable")?.setOnPreferenceChangeListener { _, newValue ->
 							if (newValue == false) clearNotifications()

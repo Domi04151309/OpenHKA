@@ -154,8 +154,9 @@ class MainActivity :
 
 		super.onCreate(savedInstanceState)
 
-		if (!loadProfile())
-			return
+		//TODO: reenable
+		/*if (!loadProfile())
+			return*/
 
 		setupNotifications()
 
@@ -168,6 +169,9 @@ class MainActivity :
 		} else {
 			setupActionBar()
 			setupNavDrawer()
+
+			//TODO: remove
+			return
 
 			setupViews()
 			setupHours()
@@ -245,7 +249,7 @@ class MainActivity :
 	}
 
 	private fun login() {
-		val loginIntent = Intent(this, LoginActivity::class.java)
+		val loginIntent = Intent(this, LinkInputActivity::class.java)
 		startActivityForResult(loginIntent, REQUEST_CODE_LOGINDATAINPUT_ADD)
 		finish()
 	}
@@ -321,8 +325,6 @@ class MainActivity :
 		navigationview_main.setNavigationItemSelectedListener(this)
 		navigationview_main.setCheckedItem(R.id.nav_show_personal)
 
-		updateNavDrawer(navigationview_main)
-
 		val header = navigationview_main.getHeaderView(0)
 		val dropdown =
 			header.findViewById<ConstraintLayout>(R.id.constraintlayout_mainactivitydrawer_dropdown)
@@ -356,19 +358,6 @@ class MainActivity :
 			closeDrawer()
 			addProfile()
 		}
-	}
-
-	private fun updateNavDrawer(navigationView: NavigationView) {
-		val line1 = profileUser.getDisplayedName(applicationContext)
-		val line2 = profileUser.userData.schoolName
-		(navigationView.getHeaderView(0)
-			.findViewById<View>(R.id.textview_mainactivtydrawer_line1) as TextView).text =
-			if (line1.isBlank()) getString(R.string.app_name) else line1
-		(navigationView.getHeaderView(0)
-			.findViewById<View>(R.id.textview_mainactivitydrawer_line2) as TextView).text =
-			if (line2.isBlank()) getString(R.string.all_contact_email) else line2
-
-		navigationView.menu.findItem(R.id.nav_messenger).isVisible = false
 	}
 
 	private fun toggleProfileDropdown(
@@ -412,8 +401,6 @@ class MainActivity :
 		preferences.saveProfileId(profileId)
 		preferences.reload(profileId)
 		if (loadProfile()) {
-			updateNavDrawer(findViewById(R.id.navigationview_main))
-
 			closeDrawer()
 			setupTimetableLoader()
 			showPersonalTimetable()
@@ -526,7 +513,8 @@ class MainActivity :
 
 	private fun loadProfile(): Boolean {
 		if (userDatabase.getUsersCount() < 1) {
-			login()
+			//TODO: reenable
+			//login()
 			return false
 		}
 
@@ -921,15 +909,6 @@ class MainActivity :
 				showPersonalTimetable()
 				refreshNavigationViewSelection()
 			}
-			R.id.nav_show_classes -> {
-				showItemList(TimetableDatabaseInterface.Type.CLASS)
-			}
-			R.id.nav_show_teachers -> {
-				showItemList(TimetableDatabaseInterface.Type.TEACHER)
-			}
-			R.id.nav_show_rooms -> {
-				showItemList(TimetableDatabaseInterface.Type.ROOM)
-			}
 			R.id.nav_settings -> {
 				val i = Intent(this@MainActivity, SettingsActivity::class.java)
 				i.putExtra(SettingsActivity.EXTRA_LONG_PROFILE_ID, profileId)
@@ -938,32 +917,6 @@ class MainActivity :
 			R.id.nav_infocenter -> {
 				val i = Intent(this@MainActivity, InfoCenterActivity::class.java)
 				i.putExtra(InfoCenterActivity.EXTRA_LONG_PROFILE_ID, profileId)
-				startActivityForResult(i, REQUEST_CODE_ROOM_FINDER)
-			}
-			R.id.nav_messenger -> {
-				try {
-					startActivity(packageManager.getLaunchIntentForPackage(MESSENGER_PACKAGE_NAME))
-				} catch (e: Exception) {
-					try {
-						startActivity(
-							Intent(
-								Intent.ACTION_VIEW,
-								Uri.parse("market://details?id=$MESSENGER_PACKAGE_NAME")
-							)
-						)
-					} catch (e: Exception) {
-						startActivity(
-							Intent(
-								Intent.ACTION_VIEW,
-								Uri.parse("https://play.google.com/store/apps/details?id=$MESSENGER_PACKAGE_NAME")
-							)
-						)
-					}
-				}
-			}
-			R.id.nav_free_rooms -> {
-				val i = Intent(this@MainActivity, RoomFinderActivity::class.java)
-				i.putExtra(RoomFinderActivity.EXTRA_LONG_PROFILE_ID, profileId)
 				startActivityForResult(i, REQUEST_CODE_ROOM_FINDER)
 			}
 		}
@@ -1157,15 +1110,6 @@ class MainActivity :
 
 	private fun refreshNavigationViewSelection() {
 		when (displayedElement?.type) {
-			TimetableDatabaseInterface.Type.CLASS.name -> (navigationview_main as NavigationView).setCheckedItem(
-				R.id.nav_show_classes
-			)
-			TimetableDatabaseInterface.Type.TEACHER.name -> (navigationview_main as NavigationView).setCheckedItem(
-				R.id.nav_show_teachers
-			)
-			TimetableDatabaseInterface.Type.ROOM.name -> (navigationview_main as NavigationView).setCheckedItem(
-				R.id.nav_show_rooms
-			)
 			else -> (navigationview_main as NavigationView).setCheckedItem(R.id.nav_show_personal)
 		}
 	}
@@ -1207,13 +1151,6 @@ class MainActivity :
 		endDate: UntisDate,
 		timestamp: Long
 	) {
-		for (item in items) {
-			if (item.periodData.element.messengerChannel != null) {
-				navigationview_main.menu.findItem(R.id.nav_messenger).isVisible = true
-				break
-			}
-		}
-
 		weeklyTimetableItems[convertDateTimeToWeekIndex(startDate.toLocalDate())]?.apply {
 			this.items = prepareItems(items).map { it.toWeekViewEvent() }
 			lastUpdated = timestamp

@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-	<string name="app_name" translatable="false">BetterUntis</string>
+	<string name="app_name" translatable="false">SimpleHKA</string>
 	<string name="app_desc">An alternative mobile client for the Untis timetable system.</string>
 
 	<string name="all_success">success</string>
@@ -75,6 +75,9 @@
 	<string name="main_drawer_image_logo">BetterUntis Logo</string>
 	<string name="main_press_back_double">Press BACK twice to exit</string>
 	<string name="main_time_diff_just_now">just now</string>
+
+	<string name="link_input_rss_link">RSS Link</string>
+	<string name="link_input_ical_link">iCal Link</string>
 
 	<string name="login_scan_code">Scan QR code</string>
 	<string name="login_welcome">Welcome to BetterUntis!</string>

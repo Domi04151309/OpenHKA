@@ -7,18 +7,6 @@
 					android:id="@+id/nav_show_personal"
 					android:icon="@drawable/all_prefs_personal"
 					android:title="@string/all_personal_timetable"/>
-				<item
-					android:id="@+id/nav_show_classes"
-					android:icon="@drawable/all_classes"
-					android:title="@string/all_classes"/>
-				<item
-					android:id="@+id/nav_show_teachers"
-					android:icon="@drawable/all_teacher"
-					android:title="@string/all_teachers"/>
-				<item
-					android:id="@+id/nav_show_rooms"
-					android:icon="@drawable/all_rooms"
-					android:title="@string/all_rooms"/>
 			</group>
 		</menu>
 	</item>
@@ -29,15 +17,7 @@
 			android:id="@+id/nav_infocenter"
 			android:icon="@drawable/all_infocenter"
 			android:title="@string/activity_title_info_center" />
-		<item
-			android:id="@+id/nav_messenger"
-			android:icon="@drawable/all_messenger"
-			android:title="@string/activity_title_messenger"
-			android:visible="false" />
-		<item
-			android:id="@+id/nav_free_rooms"
-			android:icon="@drawable/all_search_rooms"
-			android:title="@string/activity_title_free_rooms" />
+
 		<item
 			android:id="@+id/nav_settings"
 			android:icon="@drawable/all_settings"
