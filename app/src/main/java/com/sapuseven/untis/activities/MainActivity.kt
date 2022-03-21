@@ -513,8 +513,7 @@ class MainActivity :
 
 	private fun loadProfile(): Boolean {
 		if (userDatabase.getUsersCount() < 1) {
-			//TODO: reenable
-			//login()
+			login()
 			return false
 		}
 
@@ -905,10 +904,6 @@ class MainActivity :
 
 	override fun onNavigationItemSelected(item: MenuItem): Boolean {
 		when (item.itemId) {
-			R.id.nav_show_personal -> {
-				showPersonalTimetable()
-				refreshNavigationViewSelection()
-			}
 			R.id.nav_settings -> {
 				val i = Intent(this@MainActivity, SettingsActivity::class.java)
 				i.putExtra(SettingsActivity.EXTRA_LONG_PROFILE_ID, profileId)

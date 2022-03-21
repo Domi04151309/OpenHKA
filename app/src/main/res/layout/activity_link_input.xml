@@ -66,14 +66,14 @@
 				android:orientation="horizontal">
 
 				<ProgressBar
-					android:id="@+id/progressbar_logindatainput_loadingstatus"
+					android:id="@+id/progressbar_link_input_loadingstatus"
 					style="?android:attr/progressBarStyleSmall"
 					android:layout_width="24dp"
 					android:layout_height="24dp"
 					android:visibility="gone" />
 
 				<ImageView
-					android:id="@+id/imageview_logindatainput_loadingstatussuccess"
+					android:id="@+id/imageview_link_input_loadingstatussuccess"
 					android:layout_width="24dp"
 					android:layout_height="24dp"
 					android:contentDescription="@string/all_success"
@@ -81,7 +81,7 @@
 					app:srcCompat="@drawable/all_check" />
 
 				<ImageView
-					android:id="@+id/imageview_logindatainput_loadingstatusfailed"
+					android:id="@+id/imageview_link_input_loadingstatusfailed"
 					android:layout_width="24dp"
 					android:layout_height="24dp"
 					android:contentDescription="@string/all_failed"
@@ -89,7 +89,7 @@
 					app:srcCompat="@drawable/all_cross" />
 
 				<TextView
-					android:id="@+id/textview_logindatainput_loadingstatus"
+					android:id="@+id/textview_link_input_loadingstatus"
 					android:layout_width="0dp"
 					android:layout_height="wrap_content"
 					android:layout_marginStart="16dp"

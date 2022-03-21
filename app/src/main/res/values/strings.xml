@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 	<string name="app_name" translatable="false">SimpleHKA</string>
-	<string name="app_desc">An alternative mobile client for the Untis timetable system.</string>
+	<string name="app_desc">A mobile client for the IWI HKA system</string>
 
 	<string name="all_success">success</string>
 	<string name="all_failed">failed</string>

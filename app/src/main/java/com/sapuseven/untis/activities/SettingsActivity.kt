@@ -13,7 +13,6 @@ import android.os.Build
 import android.os.Bundle
 import android.provider.Settings
 import android.view.MenuItem
-import android.view.View
 import androidx.core.content.pm.PackageInfoCompat
 import androidx.fragment.app.DialogFragment
 import androidx.fragment.app.Fragment
@@ -29,14 +28,12 @@ import com.sapuseven.untis.dialogs.AlertPreferenceDialog
 import com.sapuseven.untis.dialogs.ElementPickerDialog
 import com.sapuseven.untis.dialogs.WeekRangePickerPreferenceDialog
 import com.sapuseven.untis.helpers.SerializationUtils.getJSON
-import com.sapuseven.untis.helpers.config.PreferenceManager
 import com.sapuseven.untis.helpers.timetable.TimetableDatabaseInterface
 import com.sapuseven.untis.models.github.GithubUser
 import com.sapuseven.untis.models.untis.timetable.PeriodElement
 import com.sapuseven.untis.preferences.AlertPreference
 import com.sapuseven.untis.preferences.ElementPickerPreference
 import com.sapuseven.untis.preferences.WeekRangePickerPreference
-import kotlinx.android.synthetic.main.activity_settings.*
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
@@ -48,12 +45,7 @@ class SettingsActivity : BaseActivity(), PreferenceFragmentCompat.OnPreferenceSt
 
 	companion object {
 		const val EXTRA_LONG_PROFILE_ID = "com.sapuseven.untis.activities.profileId"
-
-		private const val DIALOG_DESIGNING_HIDE = "preference_dialog_designing_hide"
-
 		private const val REPOSITORY_URL_GITHUB = "https://github.com/SapuSeven/BetterUntis"
-		private const val WIKI_URL_DESIGNING = "$REPOSITORY_URL_GITHUB/wiki/Designing"
-		private const val WIKI_URL_PROXY = "$REPOSITORY_URL_GITHUB/wiki/Proxy"
 	}
 
 	override fun onCreate(savedInstanceState: Bundle?) {
@@ -63,7 +55,6 @@ class SettingsActivity : BaseActivity(), PreferenceFragmentCompat.OnPreferenceSt
 
 		setupActionBar()
 		setContentView(R.layout.activity_settings)
-		setupDesigningDialog()
 
 		if (savedInstanceState == null) {
 			// Create the fragment only when the activity is created for the first time.
@@ -86,23 +77,6 @@ class SettingsActivity : BaseActivity(), PreferenceFragmentCompat.OnPreferenceSt
 		if (item.itemId == android.R.id.home)
 			onBackPressed()
 		return true
-	}
-
-	private fun setupDesigningDialog() {
-		val prefs = PreferenceManager(this)
-		if (!prefs.defaultPrefs.getBoolean(DIALOG_DESIGNING_HIDE, false))
-			banner_settings_designing.visibility = View.VISIBLE
-
-		banner_settings_designing.setLeftButtonAction {
-			banner_settings_designing.dismiss()
-
-			val editor = prefs.defaultPrefs.edit()
-			editor.putBoolean(DIALOG_DESIGNING_HIDE, true)
-			editor.apply()
-		}
-		banner_settings_designing.setRightButtonAction {
-			startActivity(Intent(Intent.ACTION_VIEW, Uri.parse(WIKI_URL_DESIGNING)))
-		}
 	}
 
 	private fun setupActionBar() {
