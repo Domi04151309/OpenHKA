@@ -22,7 +22,7 @@
 	<bool name="preference_automute_mute_priority_default">true</bool>
 	<bool name="preference_additional_error_messages_default">false</bool>
 
-	<integer name="preference_background_regular_default">0xFFF44336</integer>
+	<integer name="preference_background_regular_default">0xFFD72305</integer>
 	<integer name="preference_background_regular_past_default">0xFFD32F2F</integer>
 	<integer name="preference_background_exam_default">0xFF03A9F4</integer>
 	<integer name="preference_background_exam_past_default">0xFF0288D1</integer>
