@@ -1,8 +1,10 @@
 package com.sapuseven.untis.activities
 
 import android.os.Bundle
+import android.util.Log
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.prof.rssparser.Parser
 import com.sapuseven.untis.R
 import com.sapuseven.untis.adapters.infocenter.*
 import com.sapuseven.untis.data.connectivity.UntisApiConstants
@@ -20,6 +22,7 @@ import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
 import kotlinx.serialization.decodeFromString
 import org.joda.time.LocalDate
+import java.nio.charset.Charset
 import java.text.SimpleDateFormat
 import java.util.*
 
@@ -37,13 +40,35 @@ class InfoCenterActivity : BaseActivity() {
 
 	companion object {
 		const val EXTRA_LONG_PROFILE_ID = "com.sapuseven.untis.activities.profileid"
+
+		const val RSS_URL_CHANGE_LATER = "https://www.iwi.hs-karlsruhe.de/intranet/feed/rss/news.xml"
 	}
 
 	override fun onCreate(savedInstanceState: Bundle?) {
 		super.onCreate(savedInstanceState)
 		setContentView(R.layout.activity_infocenter)
 
-		userDatabase = UserDatabase.createInstance(this)
+		val parser = Parser.Builder()
+			.context(this)
+			.charset(Charset.forName("ISO-8859-7"))
+			.cacheExpirationMillis(24L * 60L * 60L * 100L) // one day
+			.build()
+
+		GlobalScope.launch {
+			try {
+				val channel = parser.getChannel(RSS_URL_CHANGE_LATER)
+				channel.articles.forEach {
+					Log.wtf("AAA", it.title)
+					Log.wtf("AAA", it.description)
+				}
+				// Do something with your data
+			} catch (e: Exception) {
+				e.printStackTrace()
+				// Handle the exception
+			}
+		}
+
+		/*userDatabase = UserDatabase.createInstance(this)
 		user = userDatabase.getUser(intent.getLongExtra(EXTRA_LONG_PROFILE_ID, -1))
 		user?.let {
 			refreshMessages(it)
@@ -57,7 +82,7 @@ class InfoCenterActivity : BaseActivity() {
 			if (messageList.isEmpty()) getString(R.string.infocenter_messages_empty) else ""
 		) { user ->
 			refreshMessages(user)
-		}
+		}*/
 	}
 
 	private fun showList(
