@@ -165,7 +165,7 @@ class LinkInputActivity : BaseActivity() {
 			.setMessage(
 				getString(
 					R.string.main_dialog_delete_profile_message,
-					link.getDisplayedName(applicationContext),
+					"HKA",
 					"HKA"
 				)
 			)
