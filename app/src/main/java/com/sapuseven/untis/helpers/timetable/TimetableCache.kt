@@ -2,11 +2,10 @@ package com.sapuseven.untis.helpers.timetable
 
 import android.content.Context
 import com.sapuseven.untis.models.untis.UntisDate
-import com.sapuseven.untis.models.untis.timetable.Period
-import kotlinx.serialization.Serializable
 import kotlinx.serialization.cbor.Cbor
 import kotlinx.serialization.decodeFromByteArray
 import kotlinx.serialization.encodeToByteArray
+import net.fortuna.ical4j.model.ComponentList
 import java.io.File
 import java.lang.ref.WeakReference
 
@@ -14,8 +13,8 @@ import java.lang.ref.WeakReference
 class TimetableCache(val context: WeakReference<Context>) {
 	private var target: CacheTarget? = null
 
-	fun setTarget(startDate: UntisDate, endDate: UntisDate, id: Int, type: String) {
-		target = CacheTarget(startDate, endDate, id, type)
+	fun setTarget(startDate: UntisDate, endDate: UntisDate, id: Int) {
+		target = CacheTarget(startDate, endDate, id)
 	}
 
 	fun exists(): Boolean {
@@ -24,14 +23,18 @@ class TimetableCache(val context: WeakReference<Context>) {
 
 	fun load(): CacheObject? {
 		return try {
-			Cbor.decodeFromByteArray<CacheObject>(targetCacheFile(target)?.readBytes() ?: ByteArray(0))
+			Cbor.decodeFromByteArray<CacheObject>(
+				targetCacheFile(target)?.readBytes() ?: ByteArray(
+					0
+				)
+			)
 		} catch (e: Exception) {
 			null
 		}
 	}
 
 	fun save(items: CacheObject) {
-		targetCacheFile(target)?.writeBytes(Cbor.encodeToByteArray<CacheObject>(items))
+		targetCacheFile(target)?.writeBytes(Cbor.encodeToByteArray(items))
 	}
 
 	private fun targetCacheFile(target: CacheTarget?): File? {
@@ -46,20 +49,18 @@ class TimetableCache(val context: WeakReference<Context>) {
 		targetCacheFile(target)?.delete()
 	}
 
-	@Serializable
 	data class CacheObject(
-			val timestamp: Long,
-			val items: List<Period>
+		val timestamp: Long,
+		val items: ComponentList
 	)
 
 	private inner class CacheTarget(
-			val startDate: UntisDate,
-			val endDate: UntisDate,
-			val id: Int,
-			val type: String
+		val startDate: UntisDate,
+		val endDate: UntisDate,
+		val id: Int
 	) {
 		fun getName(): String {
-			return String.format("%s-%d-%s-%s", type, id, startDate, endDate)
+			return String.format("%s-%s-%s", id, startDate, endDate)
 		}
 	}
 }

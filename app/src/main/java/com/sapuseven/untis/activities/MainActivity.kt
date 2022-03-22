@@ -56,6 +56,7 @@ import com.sapuseven.untis.models.UntisMessage
 import com.sapuseven.untis.models.untis.UntisDate
 import com.sapuseven.untis.models.untis.params.MessageParams
 import com.sapuseven.untis.models.untis.response.MessageResponse
+import com.sapuseven.untis.models.untis.timetable.Period
 import com.sapuseven.untis.models.untis.timetable.PeriodElement
 import com.sapuseven.untis.preferences.ElementPickerPreference
 import com.sapuseven.untis.preferences.RangePreference
@@ -182,7 +183,7 @@ class MainActivity :
 			setupHours()
 
 			//TODO: remove
-			return
+			//return
 
 			setupTimetableLoader()
 			showPersonalTimetable()
@@ -199,17 +200,18 @@ class MainActivity :
 		super.onPause()
 	}
 
+	//TODO: reenable
 	override fun onResume() {
 		super.onResume()
 		if (timetableLoader == null) return
 
-		refreshMessages(profileUser, navigationview_main)
+		//refreshMessages(profileUser, navigationview_main)
 
-		if (::weekView.isInitialized) {
+		/*if (::weekView.isInitialized) {
 			setupWeekViewConfig()
 
 			weekViewRefreshHandler.post(weekViewUpdate)
-		}
+		}*/
 	}
 
 	override fun onErrorLogFound() {
@@ -239,36 +241,9 @@ class MainActivity :
 		finish()
 	}
 
+	//TODO: show actual timetable
 	private fun showPersonalTimetable(): Boolean {
-		val customType = TimetableDatabaseInterface.Type.valueOf(
-			PreferenceUtils.getPrefString(
-				preferences,
-				"preference_timetable_personal_timetable${ElementPickerPreference.KEY_SUFFIX_TYPE}",
-				TimetableDatabaseInterface.Type.SUBJECT.toString()
-			) ?: TimetableDatabaseInterface.Type.SUBJECT.toString()
-		)
-
-		if (customType === TimetableDatabaseInterface.Type.SUBJECT) {
-			profileUser.userData.elemType?.let { type ->
-				return setTarget(
-					profileUser.userData.elemId,
-					type,
-					profileUser.getDisplayedName(applicationContext)
-				)
-			} ?: run {
-				return setTarget(true, profileUser.getDisplayedName(applicationContext))
-			}
-		} else {
-			val customId = preferences.defaultPrefs.getInt(
-				"preference_timetable_personal_timetable${ElementPickerPreference.KEY_SUFFIX_ID}",
-				-1
-			)
-			return setTarget(
-				customId,
-				customType.toString(),
-				timetableDatabaseInterface.getLongName(customId, customType)
-			)
-		}
+		return setTarget()
 	}
 
 	private fun setupNotifications() {
@@ -279,7 +254,7 @@ class MainActivity :
 
 	private fun setupTimetableLoader() {
 		timetableLoader =
-			TimetableLoader(WeakReference(this), this, profileUser, timetableDatabaseInterface)
+			TimetableLoader(WeakReference(this), this, profileLink)
 	}
 
 	private fun setupNavDrawer() {
@@ -444,8 +419,7 @@ class MainActivity :
 						TimetableLoader.TimetableLoaderTarget(
 							dateRange.first,
 							dateRange.second,
-							element.id,
-							element.type
+							element.id
 						), true
 					)
 				}
@@ -622,8 +596,7 @@ class MainActivity :
 								TimetableLoader.TimetableLoaderTarget(
 									dateRange.first,
 									dateRange.second,
-									displayedElement.id,
-									displayedElement.type
+									displayedElement.id
 								)
 							)
 						}
@@ -718,81 +691,15 @@ class MainActivity :
 	}
 
 	private fun prepareItems(items: List<TimegridItem>): List<TimegridItem> {
-		val newItems = mergeItems(items.mapNotNull { item ->
+		val newItems = items.mapNotNull { item ->
 			if (PreferenceUtils.getPrefBool(
 					preferences,
 					"preference_timetable_hide_cancelled"
-				) && item.periodData.isCancelled()
+				) && item.period.type == Period.Type.CANCELLED
 			) return@mapNotNull null
-
-			if (PreferenceUtils.getPrefBool(
-					preferences,
-					"preference_timetable_substitutions_irregular"
-				)
-			) {
-				item.periodData.apply {
-					forceIrregular =
-						classes.find { it.id != it.orgId } != null
-								|| teachers.find { it.id != it.orgId } != null
-								|| subjects.find { it.id != it.orgId } != null
-								|| rooms.find { it.id != it.orgId } != null
-								|| (PreferenceUtils.getPrefBool(
-							preferences,
-							"preference_timetable_background_irregular"
-						) && item.periodData.element.backColor != UNTIS_DEFAULT_COLOR)
-				}
-			}
 			item
-		})
+		}
 		colorItems(newItems)
-		return newItems
-	}
-
-	private fun mergeItems(items: List<TimegridItem>): List<TimegridItem> {
-		val days = profileUser.timeGrid.days
-		val itemGrid: Array<Array<MutableList<TimegridItem>>> =
-			Array(days.size) { Array(days.maxByOrNull { it.units.size }!!.units.size) { mutableListOf() } }
-		val leftover: MutableList<TimegridItem> = mutableListOf()
-
-		// TODO: Check if the day from the Untis API is always an english string
-		val firstDayOfWeek =
-			DateTimeConstants.MONDAY //DateTimeFormat.forPattern("EEE").withLocale(Locale.ENGLISH).parseDateTime(days.first().day).dayOfWeek
-
-		// Put all items into a two dimensional array depending on day and hour
-		items.forEach { item ->
-			val startDateTime = item.periodData.element.startDateTime.toLocalDateTime()
-			val endDateTime = item.periodData.element.endDateTime.toLocalDateTime()
-
-			val day = endDateTime.dayOfWeek - firstDayOfWeek
-
-			if (day < 0 || day >= days.size) return@forEach
-
-			val thisUnitStartIndex = days[day].units.indexOfFirst {
-				it.startTime.time == startDateTime.toString(DateTimeUtils.tTimeNoSeconds())
-			}
-
-			val thisUnitEndIndex = days[day].units.indexOfFirst {
-				it.endTime.time == endDateTime.toString(DateTimeUtils.tTimeNoSeconds())
-			}
-
-			if (thisUnitStartIndex != -1 && thisUnitEndIndex != -1)
-				itemGrid[day][thisUnitStartIndex].add(item)
-			else
-				leftover.add(item)
-		}
-
-		val newItems = mutableListOf<TimegridItem>()
-		newItems.addAll(leftover) // Add items that didn't fit inside the timegrid. These will always be single lessons.
-		itemGrid.forEach { unitsOfDay ->
-			unitsOfDay.forEachIndexed { unitIndex, items ->
-				items.forEach {
-					var i = 1
-					while (unitIndex + i < unitsOfDay.size && it.mergeWith(unitsOfDay[unitIndex + i])) i++
-				}
-
-				newItems.addAll(items)
-			}
-		}
 		return newItems
 	}
 
@@ -822,30 +729,20 @@ class MainActivity :
 		) else false
 
 		items.forEach { item ->
-			val defaultColor = Color.parseColor(item.periodData.element.backColor)
-
 			item.color = when {
-				item.periodData.isExam() -> if (useDefault.contains("exam")) defaultColor else examColor
-				item.periodData.isCancelled() -> if (useDefault.contains("cancelled")) defaultColor else cancelledColor
-				item.periodData.isIrregular() -> if (useDefault.contains("irregular")) defaultColor else irregularColor
+				item.period.type == Period.Type.CANCELLED -> cancelledColor
+				item.period.type == Period.Type.IRREGULAR -> irregularColor
 				useTheme -> getAttr(R.attr.colorPrimary)
-				else -> if (useDefault.contains("regular")) defaultColor else regularColor
+				else -> regularColor
 			}
 
 			item.pastColor = when {
-				item.periodData.isExam() -> if (useDefault.contains("exam")) defaultColor.darken(
-					0.25f
-				) else examPastColor
-				item.periodData.isCancelled() -> if (useDefault.contains("cancelled")) defaultColor.darken(
-					0.25f
-				) else cancelledPastColor
-				item.periodData.isIrregular() -> if (useDefault.contains("irregular")) defaultColor.darken(
-					0.25f
-				) else irregularPastColor
+				item.period.type == Period.Type.CANCELLED -> cancelledPastColor
+				item.period.type == Period.Type.IRREGULAR -> irregularPastColor
 				useTheme -> if (currentTheme == "pixel") getAttr(R.attr.colorPrimary).darken(0.25f) else getAttr(
 					R.attr.colorPrimaryDark
 				)
-				else -> if (useDefault.contains("regular")) defaultColor.darken(0.25f) else regularPastColor
+				else -> regularPastColor
 			}
 		}
 	}
@@ -877,9 +774,8 @@ class MainActivity :
 				if (resultCode == Activity.RESULT_OK)
 					recreate()
 			REQUEST_CODE_LOGINDATAINPUT_EDIT ->
-				if (resultCode == Activity.RESULT_OK) {
+				if (resultCode == Activity.RESULT_OK)
 					recreate()
-				}
 			REQUEST_CODE_ERRORS -> recreate()
 		}
 	}
@@ -923,6 +819,19 @@ class MainActivity :
 		} else {
 			constraintlayout_main_anonymouslogininfo.visibility = View.GONE
 		}
+		return true
+	}
+
+	private fun setTarget(): Boolean {
+		showLoading(false)
+
+		weeklyTimetableItems.clear()
+		weekView.notifyDataSetChanged()
+
+		constraintlayout_main_anonymouslogininfo.visibility = View.VISIBLE
+
+		if (displayedElement == null) return false
+		displayedElement = null
 		return true
 	}
 

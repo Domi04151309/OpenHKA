@@ -1,48 +1,34 @@
 package com.sapuseven.untis.models.untis.timetable
 
-import com.sapuseven.untis.models.UnknownObject
-import com.sapuseven.untis.models.untis.UntisDateTime
-import kotlinx.serialization.Serializable
+import net.fortuna.ical4j.model.Component
+import net.fortuna.ical4j.model.PropertyList
+import org.joda.time.DateTime
 
-@Serializable
-data class Period(
-		val id: Int,
-		val lessonId: Int,
-		var startDateTime: UntisDateTime,
-		var endDateTime: UntisDateTime,
-		val foreColor: String,
-		val backColor: String,
-		val innerForeColor: String,
-		val innerBackColor: String,
-		val text: PeriodText,
-		val elements: List<PeriodElement>,
-		val can: List<String>,
-		val `is`: List<String>,
-		val isOnlinePeriod: Boolean? = null,
-		val onlinePeriodLink: String? = null,
-		val messengerChannel: PeriodMessengerChannel? = null,
-		val blockHash: UnknownObject? = null
-) {
-	companion object {
-		const val CODE_REGULAR = "REGULAR"
-		const val CODE_CANCELLED = "CANCELLED"
-		const val CODE_IRREGULAR = "IRREGULAR"
-		const val CODE_EXAM = "EXAM"
+
+class Period(component: Component) {
+
+	private val properties = component.properties
+
+	var startDate: DateTime = stringToDate(properties.getProperty("DTSTART").value)
+	var endDate: DateTime = stringToDate(properties.getProperty("DTEND").value)
+	var title: String = properties.getProperty("SUMMARY").value
+	var location: String = properties.getProperty("LOCATION").value
+	var type: Type =
+		if (properties.getProperty("CATEGORIES").value == "NORMAL") Type.REGULAR else Type.IRREGULAR
+
+	enum class Type {
+		REGULAR, IRREGULAR, CANCELLED
 	}
 
-	init {
-		UnknownObject.validate(mapOf("blockHash" to blockHash))
-	}
-
-	fun equalsIgnoreTime(second: Period): Boolean {
-		return `is` == second.`is`
-				&& can == second.can
-				&& elements == second.elements
-				&& text == second.text
-				&& foreColor == second.foreColor
-				&& backColor == second.backColor
-				&& innerForeColor == second.innerForeColor
-				&& innerBackColor == second.innerBackColor
-				&& lessonId == second.lessonId
+	//TODO: will break in 1000 years
+	private fun stringToDate(string: String): DateTime {
+		return DateTime(
+			string.substring(0, 4).toInt(),
+			string.substring(4, 6).toInt(),
+			string.substring(6, 8).toInt(),
+			string.substring(9, 11).toInt(),
+			string.substring(11, 13).toInt(),
+			string.substring(13, 15).toInt()
+		)
 	}
 }

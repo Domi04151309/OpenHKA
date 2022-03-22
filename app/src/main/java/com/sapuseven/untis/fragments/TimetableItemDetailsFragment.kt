@@ -27,6 +27,7 @@ import com.sapuseven.untis.data.timetable.TimegridItem
 import com.sapuseven.untis.helpers.ConversionUtils
 import com.sapuseven.untis.helpers.KotlinUtils.safeLet
 import com.sapuseven.untis.helpers.timetable.TimetableDatabaseInterface
+import com.sapuseven.untis.models.untis.timetable.Period
 import com.sapuseven.untis.models.untis.timetable.PeriodElement
 import com.sapuseven.untis.viewmodels.PeriodDataViewModel
 import org.joda.time.LocalDateTime
@@ -57,8 +58,8 @@ class TimetableItemDetailsFragment(item: TimegridItem?, timetableDatabaseInterfa
 
 	override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
 		return activity?.let { activity ->
-			safeLet(viewModel.item.periodData, viewModel.timetableDatabaseInterface) { periodData, timetableDatabaseInterface ->
-				generateView(activity, container, periodData, timetableDatabaseInterface)
+			safeLet(viewModel.item.period, viewModel.timetableDatabaseInterface) { periodData, timetableDatabaseInterface ->
+				generateView(activity, container, periodData)
 			} ?: generateErrorView(activity, container)
 		} ?: throw IllegalStateException("Activity cannot be null")
 	}
@@ -73,7 +74,7 @@ class TimetableItemDetailsFragment(item: TimegridItem?, timetableDatabaseInterfa
 		if (activity is MainActivity) (activity as MainActivity).setDefaultActionBar()
 	}
 
-	private fun generateView(activity: FragmentActivity, container: ViewGroup?, periodData: PeriodData, timetableDatabaseInterface: TimetableDatabaseInterface): View {
+	private fun generateView(activity: FragmentActivity, container: ViewGroup?, period: Period): View {
 		val root = activity.layoutInflater.inflate(R.layout.fragment_timetable_item_details_page, container, false) as ScrollView
 		val linearLayout = root.getChildAt(0) as LinearLayout
 
@@ -82,7 +83,7 @@ class TimetableItemDetailsFragment(item: TimegridItem?, timetableDatabaseInterfa
 		val color = ta?.getColor(0, 0)
 		ta?.recycle()
 
-		setOf(
+		/*setOf(
 				periodData.element.text.lesson,
 				periodData.element.text.substitution,
 				periodData.element.text.info
@@ -139,7 +140,7 @@ class TimetableItemDetailsFragment(item: TimegridItem?, timetableDatabaseInterfa
 		}
 
 		linearLayout.findViewById<TextView>(R.id.time).text = formatLessonTime(periodData.element.startDateTime.toLocalDateTime(), periodData.element.endDateTime.toLocalDateTime())
-		return root
+		*/return root
 	}
 
 	private fun generateErrorView(activity: FragmentActivity, container: ViewGroup?): View {
