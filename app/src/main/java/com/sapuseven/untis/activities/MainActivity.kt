@@ -8,6 +8,7 @@ import android.graphics.RectF
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
+import android.util.Log
 import android.view.MenuItem
 import android.view.View
 import android.view.ViewGroup
@@ -38,6 +39,7 @@ import com.sapuseven.untis.adapters.ProfileListAdapter
 import com.sapuseven.untis.data.connectivity.UntisApiConstants
 import com.sapuseven.untis.data.connectivity.UntisAuthentication
 import com.sapuseven.untis.data.connectivity.UntisRequest
+import com.sapuseven.untis.data.databases.LinkDatabase
 import com.sapuseven.untis.data.databases.UserDatabase
 import com.sapuseven.untis.data.timetable.TimegridItem
 import com.sapuseven.untis.dialogs.DatePickerDialog
@@ -120,6 +122,7 @@ class MainActivity :
 		private const val FRAGMENT_TAG_ABSENCE_CHECK = "com.sapuseven.untis.fragments.absencecheck"
 	}
 
+	private val linkDatabase = LinkDatabase.createInstance(this)
 	private val userDatabase = UserDatabase.createInstance(this)
 	private var lastBackPress: Long = 0
 	private var profileId: Long = -1
@@ -134,6 +137,7 @@ class MainActivity :
 	private var displayNameCache: CharSequence = ""
 	private var timetableLoader: TimetableLoader? = null
 	private lateinit var profileUser: UserDatabase.User
+	private lateinit var profileLink: LinkDatabase.Link
 	private lateinit var profileListAdapter: ProfileListAdapter
 	private lateinit var timetableDatabaseInterface: TimetableDatabaseInterface
 	private lateinit var weekView: WeekView<TimegridItem>
@@ -153,8 +157,8 @@ class MainActivity :
 		super.onCreate(savedInstanceState)
 
 		//TODO: reenable
-		/*if (!loadProfile())
-			return*/
+		if (!loadProfile())
+			return
 
 		setupNotifications()
 
@@ -182,7 +186,7 @@ class MainActivity :
 	}
 
 	private fun checkForProfileUpdateRequired(): Boolean {
-		return profileUser.schoolId.isBlank() || profileUser.apiUrl.isBlank()
+		return profileLink.rssUrl.isBlank() || profileLink.iCalUrl.isBlank()
 	}
 
 	private fun checkForNewSchoolYear(): Boolean {
@@ -377,18 +381,18 @@ class MainActivity :
 	}
 
 	private fun addProfile() {
-		val loginIntent = Intent(this, LoginActivity::class.java)
+		val loginIntent = Intent(this, LinkInputActivity::class.java)
 		startActivityForResult(loginIntent, REQUEST_CODE_LOGINDATAINPUT_ADD)
 	}
 
 	private fun editProfile(user: UserDatabase.User) {
-		val loginIntent = Intent(this, LoginDataInputActivity::class.java)
+		val loginIntent = Intent(this, LinkInputActivity::class.java)
 			.putExtra(LoginDataInputActivity.EXTRA_LONG_PROFILE_ID, user.id)
 		startActivityForResult(loginIntent, REQUEST_CODE_LOGINDATAINPUT_EDIT)
 	}
 
 	private fun updateProfile(user: UserDatabase.User) {
-		val loginIntent = Intent(this, LoginDataInputActivity::class.java)
+		val loginIntent = Intent(this, LinkInputActivity::class.java)
 			.putExtra(LoginDataInputActivity.EXTRA_LONG_PROFILE_ID, user.id)
 			.putExtra(EXTRA_BOOLEAN_PROFILE_UPDATE, true)
 		startActivityForResult(loginIntent, REQUEST_CODE_LOGINDATAINPUT_EDIT)
@@ -509,7 +513,7 @@ class MainActivity :
 		timetableLoader!!.load(target, flags, proxyHost)
 	}
 
-	private fun loadProfile(): Boolean {
+	/*private fun loadProfile(): Boolean {
 		if (userDatabase.getUsersCount() < 1) {
 			login()
 			return false
@@ -532,6 +536,32 @@ class MainActivity :
 
 		if (checkForNewSchoolYear()) {
 			updateProfile(profileUser)
+			return false
+		}
+
+		return true
+	}*/
+
+	private fun loadProfile(): Boolean {
+		if (linkDatabase.getLinkCount() < 1) {
+			Log.wtf("aaa", "count is 0")
+			login()
+			return false
+		}
+
+		profileId = preferences.currentProfileId()
+		if (profileId == 0L || linkDatabase.getLink(profileId) == null)
+			profileId = linkDatabase.getAllLinks()[0].id
+				?: 0 // Fall back to the first user if an invalid user id is saved
+		profileLink = linkDatabase.getLink(profileId) ?: return false
+
+		preferences.saveProfileId(profileId)
+		preferences.reload(profileId)
+		//TODO: rewrite
+		//timetableDatabaseInterface = TimetableDatabaseInterface(userDatabase, profileUser.id ?: 0)
+
+		if (checkForProfileUpdateRequired()) {
+			showProfileUpdateRequired()
 			return false
 		}
 

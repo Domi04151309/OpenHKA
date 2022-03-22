@@ -28,8 +28,6 @@ class InfoCenterActivity : BaseActivity() {
 
 	companion object {
 		const val EXTRA_LONG_PROFILE_ID = "com.sapuseven.untis.activities.profileid"
-
-		const val RSS_URL_CHANGE_LATER = "https://www.iwi.hs-karlsruhe.de/intranet/feed/rss/news.xml"
 	}
 
 	override fun onCreate(savedInstanceState: Bundle?) {
@@ -38,10 +36,6 @@ class InfoCenterActivity : BaseActivity() {
 
 		linkDatabase = LinkDatabase.createInstance(this)
 		link = linkDatabase.getLink(intent.getLongExtra(EXTRA_LONG_PROFILE_ID, -1))
-
-		//TODO: remove dummy link
-		link = LinkDatabase.Link(0, RSS_URL_CHANGE_LATER, "")
-
 		link?.let {
 			refreshMessages(it)
 		}

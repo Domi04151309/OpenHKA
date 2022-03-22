@@ -9,7 +9,10 @@ import android.widget.EditText
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.sapuseven.untis.R
 import com.sapuseven.untis.data.databases.LinkDatabase
+import com.sapuseven.untis.data.databases.UserDatabase
 import com.sapuseven.untis.dialogs.ProfileUpdateDialog
+import com.sapuseven.untis.helpers.api.LoginErrorInfo
+import com.sapuseven.untis.models.untis.masterdata.TimeGrid
 import kotlinx.android.synthetic.main.activity_link_input.*
 import kotlinx.android.synthetic.main.activity_logindatainput.*
 import kotlinx.coroutines.Dispatchers
@@ -141,9 +144,29 @@ class LinkInputActivity : BaseActivity() {
 	}
 
 	private suspend fun sendRequest() {
-		//TODO: do something here
-		setResult(Activity.RESULT_OK)
-		finish()
+		val link = LinkDatabase.Link(
+			existingLinkId,
+			edittext_link_input_rss?.text.toString(),
+			edittext_link_input_ical?.text.toString()
+		)
+
+		val linkId =
+			if (existingLinkId == null) linkDatabase.addLink(link) else linkDatabase.editLink(
+				link
+			)
+
+		linkId?.let {
+			progressbar_logindatainput_loadingstatus?.visibility = View.GONE
+			imageview_logindatainput_loadingstatussuccess?.visibility = View.VISIBLE
+			textview_logindatainput_loadingstatus?.text =
+				getString(R.string.logindatainput_data_loaded)
+
+			preferences.saveProfileId(linkId.toLong())
+
+			setResult(Activity.RESULT_OK)
+			finish()
+		}
+
 		setElementsEnabled(true)
 	}
 
