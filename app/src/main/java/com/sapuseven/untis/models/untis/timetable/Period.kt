@@ -1,7 +1,6 @@
 package com.sapuseven.untis.models.untis.timetable
 
 import com.sapuseven.untis.models.UnknownObject
-import com.sapuseven.untis.models.UntisHomework
 import com.sapuseven.untis.models.untis.UntisDateTime
 import kotlinx.serialization.Serializable
 
@@ -19,8 +18,6 @@ data class Period(
 		val elements: List<PeriodElement>,
 		val can: List<String>,
 		val `is`: List<String>,
-		val homeWorks: List<UntisHomework>?,
-		val exam: UnknownObject? = null, // This element is currently not being used by BetterUntis. More data required
 		val isOnlinePeriod: Boolean? = null,
 		val onlinePeriodLink: String? = null,
 		val messengerChannel: PeriodMessengerChannel? = null,
@@ -34,7 +31,6 @@ data class Period(
 	}
 
 	init {
-		UnknownObject.validate(mapOf("exam" to exam))
 		UnknownObject.validate(mapOf("blockHash" to blockHash))
 	}
 

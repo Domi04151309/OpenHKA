@@ -19,7 +19,7 @@ import java.util.*
 class InfoCenterActivity : BaseActivity() {
 	private val messageList = arrayListOf<Article>()
 
-	private val messageAdapter = MessageAdapter(this, messageList)
+	private val messageAdapter = MessageAdapter(messageList)
 
 	private var messagesLoading = true
 

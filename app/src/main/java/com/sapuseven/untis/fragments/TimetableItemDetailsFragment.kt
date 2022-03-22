@@ -94,29 +94,8 @@ class TimetableItemDetailsFragment(item: TimegridItem?, timetableDatabaseInterfa
 				}
 		}
 
-		periodData.element.homeWorks?.forEach {
-			val endDate = it.endDate.toLocalDate()
-
-			activity.layoutInflater.inflate(R.layout.fragment_timetable_item_details_page_homework, linearLayout, false).run {
-				(findViewById<TextView>(R.id.textview_roomfinder_name)).text = it.text
-				(findViewById<TextView>(R.id.tvDate)).text = getString(R.string.homeworks_due_time, endDate.toString(getString(R.string.homeworks_due_time_format)))
-				linearLayout.addView(this)
-			}
-		}
-
 		if (periodData.element.can.contains(CAN_READ_STUDENT_ABSENCE))
 			activity.layoutInflater.inflate(R.layout.fragment_timetable_item_details_page_absences, linearLayout, false).run {
-				viewModel.periodData().observe(viewLifecycleOwner, Observer {
-					this.findViewById<TextView>(R.id.textview_timetableitemdetails_absencestatus).text = getString(
-							if (it.absenceChecked) R.string.all_dialog_absences_checked
-							else R.string.all_dialog_absences_not_checked
-					)
-					this.findViewById<ImageView>(R.id.imageview_timetableitemdetails_absence).setImageResource(
-							if (it.absenceChecked) R.drawable.all_absences_checked
-							else R.drawable.all_absences
-					)
-				})
-
 				if (periodData.element.can.contains(CAN_WRITE_STUDENT_ABSENCE))
 					setOnClickListener {
 						listener.onPeriodAbsencesClick()
@@ -126,16 +105,6 @@ class TimetableItemDetailsFragment(item: TimegridItem?, timetableDatabaseInterfa
 
 		if (periodData.element.can.contains(CAN_READ_LESSON_TOPIC)) {
 			activity.layoutInflater.inflate(R.layout.fragment_timetable_item_details_page_lessontopic, root, false).run {
-				viewModel.periodData().observe(viewLifecycleOwner, Observer {
-					this.findViewById<TextView>(R.id.textview_timetableitemdetails_lessontopic).text =
-							if (it.topic?.text.isNullOrBlank())
-								if (periodData.element.can.contains(CAN_WRITE_LESSON_TOPIC))
-									getString(R.string.all_hint_tap_to_edit)
-								else
-									getString(R.string.all_lessontopic_none)
-							else
-								it.topic?.text
-				})
 				if (periodData.element.can.contains(CAN_WRITE_LESSON_TOPIC))
 					setOnClickListener {
 						listener.onLessonTopicClick()

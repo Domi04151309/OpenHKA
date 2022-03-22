@@ -25,7 +25,6 @@ import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.sapuseven.untis.R
 import com.sapuseven.untis.data.databases.UserDatabase
 import com.sapuseven.untis.dialogs.AlertPreferenceDialog
-import com.sapuseven.untis.dialogs.ElementPickerDialog
 import com.sapuseven.untis.dialogs.WeekRangePickerPreferenceDialog
 import com.sapuseven.untis.helpers.SerializationUtils.getJSON
 import com.sapuseven.untis.helpers.timetable.TimetableDatabaseInterface
@@ -275,38 +274,6 @@ class SettingsActivity : BaseActivity(), PreferenceFragmentCompat.OnPreferenceSt
 			irregularColors.forEach { findPreference<Preference>(it)?.isEnabled = !newValue.contains("irregular") }
 			cancelledColors.forEach { findPreference<Preference>(it)?.isEnabled = !newValue.contains("cancelled") }
 			examColors.forEach { findPreference<Preference>(it)?.isEnabled = !newValue.contains("exam") }
-		}
-
-		override fun onPreferenceTreeClick(preference: Preference): Boolean {
-			if (preference is ElementPickerPreference) {
-				val userDatabase = UserDatabase.createInstance(requireContext())
-				val timetableDatabaseInterface = TimetableDatabaseInterface(userDatabase, profileId)
-
-				ElementPickerDialog.newInstance(
-						timetableDatabaseInterface,
-						ElementPickerDialog.Companion.ElementPickerDialogConfig(TimetableDatabaseInterface.Type.valueOf(preference.getSavedType())),
-						object : ElementPickerDialog.ElementPickerDialogListener {
-							override fun onDialogDismissed(dialog: DialogInterface?) {
-								// ignore
-							}
-
-							override fun onPeriodElementClick(fragment: Fragment, element: PeriodElement?, useOrgId: Boolean) {
-								preference.setElement(
-										element,
-										element?.let {
-											timetableDatabaseInterface.getShortName(it.id, TimetableDatabaseInterface.Type.valueOf(it.type))
-										} ?: "")
-								(fragment as DialogFragment).dismiss()
-							}
-
-							override fun onPositiveButtonClicked(dialog: ElementPickerDialog) {
-								// positive button not used
-							}
-						}
-				).show(requireFragmentManager(), "elementPicker")
-			}
-
-			return true
 		}
 
 		override fun onDisplayPreferenceDialog(preference: Preference) {

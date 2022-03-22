@@ -28,10 +28,7 @@ class TimegridItem(
 				else
 					periodData.getShortSpanned(periodData.rooms, TimetableDatabaseInterface.Type.ROOM, includeOrgIds)
 
-		hasIndicator = !periodData.element.homeWorks.isNullOrEmpty()
-				|| periodData.element.text.lesson.isNotEmpty()
-				|| periodData.element.text.substitution.isNotEmpty()
-				|| periodData.element.text.info.isNotEmpty()
+		hasIndicator = false //TODO: add if has info
 	}
 
 	override fun toWeekViewEvent(): WeekViewEvent<TimegridItem> {

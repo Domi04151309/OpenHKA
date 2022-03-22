@@ -11,7 +11,6 @@ import com.sapuseven.untis.R
 import com.sapuseven.untis.data.databases.LinkDatabase
 
 class ProfileListAdapter(
-	private val context: Context,
 	private val dataset: MutableList<LinkDatabase.Link>,
 	private val onClickListener: View.OnClickListener,
 	private val onLongClickListener: View.OnLongClickListener
@@ -38,8 +37,6 @@ class ProfileListAdapter(
 	}
 
 	override fun getItemCount() = dataset.size
-
-	fun deleteLink(link: LinkDatabase.Link) = dataset.remove(link)
 
 	fun itemAt(position: Int) = dataset[position]
 }

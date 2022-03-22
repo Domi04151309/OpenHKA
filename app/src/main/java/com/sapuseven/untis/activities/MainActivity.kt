@@ -1,7 +1,6 @@
 package com.sapuseven.untis.activities
 
 import android.app.Activity
-import android.content.DialogInterface
 import android.content.Intent
 import android.graphics.Color
 import android.graphics.RectF
@@ -15,7 +14,6 @@ import android.view.ViewGroup
 import android.view.WindowManager
 import android.widget.ImageView
 import android.widget.LinearLayout
-import androidx.activity.viewModels
 import androidx.appcompat.app.ActionBarDrawerToggle
 import androidx.appcompat.app.AlertDialog
 import androidx.constraintlayout.widget.ConstraintLayout
@@ -34,9 +32,8 @@ import com.github.kittinunf.fuel.httpGet
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.google.android.material.navigation.NavigationView
 import com.google.android.material.snackbar.Snackbar
-import com.google.android.material.textfield.TextInputEditText
 import com.sapuseven.untis.R
-import com.sapuseven.untis.activities.LoginDataInputActivity.Companion.EXTRA_BOOLEAN_PROFILE_UPDATE
+import com.sapuseven.untis.activities.LinkInputActivity.Companion.EXTRA_BOOLEAN_PROFILE_UPDATE
 import com.sapuseven.untis.adapters.ProfileListAdapter
 import com.sapuseven.untis.data.connectivity.UntisApiConstants
 import com.sapuseven.untis.data.connectivity.UntisAuthentication
@@ -45,9 +42,7 @@ import com.sapuseven.untis.data.databases.LinkDatabase
 import com.sapuseven.untis.data.databases.UserDatabase
 import com.sapuseven.untis.data.timetable.TimegridItem
 import com.sapuseven.untis.dialogs.DatePickerDialog
-import com.sapuseven.untis.dialogs.ElementPickerDialog
 import com.sapuseven.untis.dialogs.ErrorReportingDialog
-import com.sapuseven.untis.fragments.AbsenceCheckFragment
 import com.sapuseven.untis.fragments.TimetableItemDetailsFragment
 import com.sapuseven.untis.helpers.ConversionUtils
 import com.sapuseven.untis.helpers.DateTimeUtils
@@ -59,7 +54,6 @@ import com.sapuseven.untis.helpers.timetable.TimetableLoader
 import com.sapuseven.untis.interfaces.TimetableDisplay
 import com.sapuseven.untis.models.UntisMessage
 import com.sapuseven.untis.models.untis.UntisDate
-import com.sapuseven.untis.models.untis.masterdata.Holiday
 import com.sapuseven.untis.models.untis.params.MessageParams
 import com.sapuseven.untis.models.untis.response.MessageResponse
 import com.sapuseven.untis.models.untis.timetable.PeriodElement
@@ -67,8 +61,6 @@ import com.sapuseven.untis.preferences.ElementPickerPreference
 import com.sapuseven.untis.preferences.RangePreference
 import com.sapuseven.untis.receivers.NotificationSetup.Companion.EXTRA_BOOLEAN_MANUAL
 import com.sapuseven.untis.receivers.StartupReceiver
-import com.sapuseven.untis.viewmodels.PeriodDataViewModel
-import com.sapuseven.untis.views.weekview.HolidayChip
 import com.sapuseven.untis.views.weekview.WeekView
 import com.sapuseven.untis.views.weekview.WeekViewDisplayable
 import com.sapuseven.untis.views.weekview.WeekViewEvent
@@ -103,8 +95,7 @@ class MainActivity :
 	EventClickListener<TimegridItem>,
 	TopLeftCornerClickListener,
 	TimetableDisplay,
-	TimetableItemDetailsFragment.TimetableItemDetailsDialogListener,
-	ElementPickerDialog.ElementPickerDialogListener {
+	TimetableItemDetailsFragment.TimetableItemDetailsDialogListener {
 
 	companion object {
 		private const val MINUTE_MILLIS: Int = 60 * 1000
@@ -121,14 +112,10 @@ class MainActivity :
 
 		private const val PERSISTENT_INT_ZOOM_LEVEL = "persistent_zoom_level"
 
-		private const val MESSENGER_PACKAGE_NAME = "com.untis.chat"
-
 		private const val FRAGMENT_TAG_LESSON_INFO = "com.sapuseven.untis.fragments.lessoninfo"
-		private const val FRAGMENT_TAG_ABSENCE_CHECK = "com.sapuseven.untis.fragments.absencecheck"
 	}
 
 	private val linkDatabase = LinkDatabase.createInstance(this)
-	private val userDatabase = UserDatabase.createInstance(this)
 	private var lastBackPress: Long = 0
 	private var profileId: Long = -1
 	private val weeklyTimetableItems: MutableMap<Int, WeeklyTimetableItems?> = mutableMapOf()
@@ -144,8 +131,6 @@ class MainActivity :
 	private lateinit var profileListAdapter: ProfileListAdapter
 	private lateinit var timetableDatabaseInterface: TimetableDatabaseInterface
 	private lateinit var weekView: WeekView<TimegridItem>
-
-	private val timetableItemDetailsViewModel: PeriodDataViewModel by viewModels()
 
 	private val weekViewUpdate = object : Runnable {
 		override fun run() {
@@ -183,7 +168,7 @@ class MainActivity :
 							CalendarBuilder().build(StringReader(data))
 						calendar?.components?.forEach {
 							val properties = (it as Component).properties
-							Log.wtf("aaa", properties.getProperty("SUMMARY").value)
+							//Log.wtf("aaa", properties.getProperty("SUMMARY").value)
 							//Log.wtf("aaa", properties.getProperty("LOCATION").value)
 							//Log.wtf("aaa", (properties.getProperty("CATEGORIES").value != "NORMAL").toString())
 							//Log.wtf("aaa", it.toString())
@@ -193,12 +178,11 @@ class MainActivity :
 					})
 			}
 
-			//TODO: remove
-			return
-
 			setupViews()
 			setupHours()
-			setupHolidays()
+
+			//TODO: remove
+			return
 
 			setupTimetableLoader()
 			showPersonalTimetable()
@@ -313,17 +297,16 @@ class MainActivity :
 			header.findViewById<RecyclerView>(R.id.recyclerview_mainactivitydrawer_profile_list)
 
 		profileListAdapter = ProfileListAdapter(
-			this,
 			linkDatabase.getAllLinks().toMutableList(),
 			{ view ->
 				toggleProfileDropdown(dropdownView, dropdownImage, dropdownList)
 				switchToProfile(profileListAdapter.itemAt(dropdownList.getChildLayoutPosition(view)))
-			},
-			{ view ->
-				closeDrawer()
-				editProfile(profileListAdapter.itemAt(dropdownList.getChildLayoutPosition(view)))
-				true
-			})
+			}
+		) { view ->
+			closeDrawer()
+			editProfile(profileListAdapter.itemAt(dropdownList.getChildLayoutPosition(view)))
+			true
+		}
 		dropdownList.adapter = profileListAdapter
 		dropdown.setOnClickListener {
 			toggleProfileDropdown(dropdownView, dropdownImage, dropdownList)
@@ -362,13 +345,13 @@ class MainActivity :
 
 	private fun editProfile(link: LinkDatabase.Link) {
 		val loginIntent = Intent(this, LinkInputActivity::class.java)
-			.putExtra(LoginDataInputActivity.EXTRA_LONG_PROFILE_ID, link.id)
+			.putExtra(LinkInputActivity.EXTRA_LONG_PROFILE_ID, link.id)
 		startActivityForResult(loginIntent, REQUEST_CODE_LOGINDATAINPUT_EDIT)
 	}
 
 	private fun updateProfile(user: UserDatabase.User) {
 		val loginIntent = Intent(this, LinkInputActivity::class.java)
-			.putExtra(LoginDataInputActivity.EXTRA_LONG_PROFILE_ID, user.id)
+			.putExtra(LinkInputActivity.EXTRA_LONG_PROFILE_ID, user.id)
 			.putExtra(EXTRA_BOOLEAN_PROFILE_UPDATE, true)
 		startActivityForResult(loginIntent, REQUEST_CODE_LOGINDATAINPUT_EDIT)
 	}
@@ -536,7 +519,8 @@ class MainActivity :
 				saveZoomLevel()
 			}
 		}
-		setupWeekViewConfig()
+		//TODO: reenable
+		//setupWeekViewConfig()
 	}
 
 	private fun saveZoomLevel() {
@@ -651,6 +635,7 @@ class MainActivity :
 
 	private fun convertDateTimeToWeekIndex(date: LocalDate) = date.year * 100 + date.dayOfYear / 7
 
+	//TODO: redo this with normal time grid
 	private fun setupHours() {
 		val lines = MutableList(0) { return@MutableList 0 }
 		val labels = MutableList(0) { return@MutableList "" }
@@ -662,7 +647,8 @@ class MainActivity :
 			)
 		)
 
-		profileUser.timeGrid.days.maxByOrNull { it.units.size }?.units?.forEachIndexed { index, hour ->
+		//TODO: reenable
+		/*profileUser.timeGrid.days.maxByOrNull { it.units.size }?.units?.forEachIndexed { index, hour ->
 			if (range?.let { index < it.first - 1 || index >= it.second } == true) return@forEachIndexed
 
 			val startTime =
@@ -678,7 +664,7 @@ class MainActivity :
 			lines.add(startTimeInt)
 			lines.add(endTimeInt)
 			labels.add(hour.label)
-		}
+		}*/
 
 		if (!PreferenceUtils.getPrefBool(preferences, "preference_timetable_range_index_reset"))
 			weekView.hourIndexOffset = (range?.first ?: 1) - 1
@@ -689,20 +675,8 @@ class MainActivity :
 				fun(idx: Int): Int { return idx + 1 }).map { it.toString() }.toTypedArray()
 			else hourLabelArray
 		}
-		weekView.startTime = lines.first()
-		weekView.endTime = lines.last() + 30 // TODO: Don't hard-code this offset
-	}
-
-	private fun setupHolidays() {
-		userDatabase.getAdditionalUserData<Holiday>(profileUser.id!!, Holiday())?.let { item ->
-			weekView.addHolidays(item.map {
-				HolidayChip(
-					text = it.value.longName,
-					startDate = it.value.startDate,
-					endDate = it.value.endDate
-				)
-			})
-		}
+		/*weekView.startTime = lines.first()
+		weekView.endTime = lines.last() + 30 // TODO: Don't hard-code this offset*/
 	}
 
 	private fun setupActionBar() {
@@ -1012,38 +986,9 @@ class MainActivity :
 	}
 
 	override fun onPeriodAbsencesClick() {
-		val absenceEditFragment = AbsenceCheckFragment()
-
-		supportFragmentManager.beginTransaction().run {
-			setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN)
-			add(R.id.content_main, absenceEditFragment, FRAGMENT_TAG_ABSENCE_CHECK)
-			addToBackStack(absenceEditFragment.tag)
-			commit()
-		}
 	}
 
 	override fun onLessonTopicClick() {
-		val dialogView = layoutInflater.inflate(R.layout.dialog_edit_lessontopic, null)
-		val etLessonTopic = dialogView.findViewById<TextInputEditText>(R.id.edittext_dialog)
-
-		etLessonTopic.setText(timetableItemDetailsViewModel.periodData().value?.topic?.text ?: "")
-
-		MaterialAlertDialogBuilder(this)
-			.setView(dialogView)
-			.setPositiveButton(R.string.all_ok) { dialog, _ ->
-				val lessonTopic = etLessonTopic.text.toString()
-				timetableItemDetailsViewModel.submitLessonTopic(lessonTopic)
-				dialog.dismiss()
-			}
-			.show()
-	}
-
-	override fun onDialogDismissed(dialog: DialogInterface?) {
-		refreshNavigationViewSelection()
-	}
-
-	override fun onPositiveButtonClicked(dialog: ElementPickerDialog) {
-		dialog.dismiss() // unused, but just in case
 	}
 
 	private fun removeFragment(fragment: Fragment) {

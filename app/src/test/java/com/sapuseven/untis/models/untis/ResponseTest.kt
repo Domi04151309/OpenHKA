@@ -1,7 +1,6 @@
 package com.sapuseven.untis.models.untis
 
 import com.sapuseven.untis.helpers.SerializationUtils.getJSON
-import com.sapuseven.untis.models.UntisSchoolInfo
 import com.sapuseven.untis.models.untis.response.*
 import kotlinx.serialization.decodeFromString
 import kotlinx.serialization.encodeToString

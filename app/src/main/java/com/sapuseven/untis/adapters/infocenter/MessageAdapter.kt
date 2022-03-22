@@ -12,7 +12,6 @@ import com.prof.rssparser.Article
 import com.sapuseven.untis.R
 
 class MessageAdapter(
-	private val context: Context,
 	private val messageList: List<Article> = ArrayList()
 ) : RecyclerView.Adapter<MessageAdapter.ViewHolder>() {
 	override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
