@@ -122,19 +122,6 @@ class TimetableLoader(
 		})
 	}
 
-	/*private fun formatJsonParsingException(e: JsonDecodingException, jsonData: String): String {
-		val errorMargin = 20
-		val errorIndex: Int? = e.message?.let {
-			it.split(" ")[3].let { i ->
-				i.substring(0, i.length - 1)
-			}.toIntOrNull()
-		}
-
-		return e.toString() + if (errorIndex != null)
-			"\n(near " + jsonData.substring((errorIndex - errorMargin).coerceAtLeast(0), (errorIndex + errorMargin).coerceAtMost(jsonData.length)) + ")"
-		else ""
-	}*/
-
 	private fun periodToTimegridItem(period: Period, type: String): TimegridItem {
 		return TimegridItem(
 				period.id.toLong(),

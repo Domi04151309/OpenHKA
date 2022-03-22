@@ -4,6 +4,11 @@ apply plugin: 'kotlin-android'
 apply plugin: 'kotlin-android-extensions'
 apply plugin: 'kotlinx-serialization'
 
+configurations {
+	// referenced in some portable lib. use android internal instead
+	compile.exclude group: 'commons-logging'
+}
+
 android {
 	compileSdkVersion 31
 	buildToolsVersion '31.0.0'
@@ -80,6 +85,11 @@ android {
 	lintOptions {
 		disable "MissingTranslation"
 	}
+
+	packagingOptions {
+		//!!! andoird buildToolsVersion 19.0.3 does not support exclude with wildcards yet :-(
+		exclude('org/apache/commons/codec/language/bm/*.txt')       //  124 files (uncompressed 215kb) with unused language specific rules
+	}
 }
 
 dependencies {
@@ -114,6 +124,11 @@ dependencies {
 	androidTestImplementation 'androidx.test.espresso:espresso-contrib:3.3.0'
 	androidTestImplementation 'androidx.test.uiautomator:uiautomator:2.2.0'
 	androidTestImplementation 'tools.fastlane:screengrab:2.0.0'
+
+	implementation 'org.mnode.ical4j:ical4j:1.0.5'
+	implementation 'backport-util-concurrent:backport-util-concurrent:3.1'
+	implementation 'commons-codec:commons-codec:1.8'
+	implementation 'commons-lang:commons-lang:2.6'
 
 	implementation project(':weekview')
 }

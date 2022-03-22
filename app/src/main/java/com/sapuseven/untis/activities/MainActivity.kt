@@ -29,6 +29,8 @@ import androidx.fragment.app.FragmentTransaction
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import ca.antonious.materialdaypicker.MaterialDayPicker
+import com.github.kittinunf.fuel.coroutines.awaitStringResult
+import com.github.kittinunf.fuel.httpGet
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.google.android.material.navigation.NavigationView
 import com.google.android.material.snackbar.Snackbar
@@ -58,7 +60,6 @@ import com.sapuseven.untis.interfaces.TimetableDisplay
 import com.sapuseven.untis.models.UntisMessage
 import com.sapuseven.untis.models.untis.UntisDate
 import com.sapuseven.untis.models.untis.masterdata.Holiday
-import com.sapuseven.untis.models.untis.masterdata.SchoolYear
 import com.sapuseven.untis.models.untis.params.MessageParams
 import com.sapuseven.untis.models.untis.response.MessageResponse
 import com.sapuseven.untis.models.untis.timetable.PeriodElement
@@ -82,14 +83,18 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
 import kotlinx.serialization.decodeFromString
+import net.fortuna.ical4j.data.CalendarBuilder
+import net.fortuna.ical4j.model.Component
 import org.joda.time.DateTime
 import org.joda.time.DateTimeConstants
 import org.joda.time.Instant
 import org.joda.time.LocalDate
 import org.joda.time.format.DateTimeFormat
+import java.io.StringReader
 import java.lang.ref.WeakReference
 import java.text.SimpleDateFormat
 import java.util.*
+
 
 class MainActivity :
 	BaseActivity(),
@@ -129,10 +134,8 @@ class MainActivity :
 	private val weeklyTimetableItems: MutableMap<Int, WeeklyTimetableItems?> = mutableMapOf()
 	private var displayedElement: PeriodElement? = null
 	private var lastPickedDate: DateTime? = null
-	private var proxyHost: String? = null
 	private var profileUpdateDialog: AlertDialog? = null
 	private var currentWeekIndex = 0
-	private var currentSchoolYearId = -1
 	private val weekViewRefreshHandler = Handler(Looper.getMainLooper())
 	private var displayNameCache: CharSequence = ""
 	private var timetableLoader: TimetableLoader? = null
@@ -171,6 +174,25 @@ class MainActivity :
 			setupActionBar()
 			setupNavDrawer()
 
+			GlobalScope.launch {
+				profileLink.iCalUrl
+					.httpGet()
+					.awaitStringResult()
+					.fold({ data ->
+						val calendar: net.fortuna.ical4j.model.Calendar? =
+							CalendarBuilder().build(StringReader(data))
+						calendar?.components?.forEach {
+							val properties = (it as Component).properties
+							Log.wtf("aaa", properties.getProperty("SUMMARY").value)
+							//Log.wtf("aaa", properties.getProperty("LOCATION").value)
+							//Log.wtf("aaa", (properties.getProperty("CATEGORIES").value != "NORMAL").toString())
+							//Log.wtf("aaa", it.toString())
+						}
+					}, {
+						//TODO: handle error
+					})
+			}
+
 			//TODO: remove
 			return
 
@@ -200,8 +222,6 @@ class MainActivity :
 		refreshMessages(profileUser, navigationview_main)
 
 		if (::weekView.isInitialized) {
-			proxyHost =
-				preferences.defaultPrefs.getString("preference_connectivity_proxy_host", null)
 			setupWeekViewConfig()
 
 			weekViewRefreshHandler.post(weekViewUpdate)
@@ -465,7 +485,7 @@ class MainActivity :
 		)
 		val flags =
 			(if (!forceRefresh) TimetableLoader.FLAG_LOAD_CACHE else 0) or (if (alwaysLoad || forceRefresh) TimetableLoader.FLAG_LOAD_SERVER else 0)
-		timetableLoader!!.load(target, flags, proxyHost)
+		timetableLoader!!.load(target, flags)
 	}
 
 	private fun loadProfile(): Boolean {
@@ -1089,8 +1109,7 @@ class MainActivity :
 		when (code) {
 			TimetableLoader.CODE_CACHE_MISSING -> timetableLoader!!.repeat(
 				requestId,
-				TimetableLoader.FLAG_LOAD_SERVER,
-				proxyHost
+				TimetableLoader.FLAG_LOAD_SERVER
 			)
 			else -> {
 				showLoading(false)
