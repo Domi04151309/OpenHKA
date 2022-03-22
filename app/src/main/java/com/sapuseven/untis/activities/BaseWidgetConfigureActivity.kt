@@ -8,6 +8,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.sapuseven.untis.R
 import com.sapuseven.untis.adapters.ProfileListAdapter
+import com.sapuseven.untis.data.databases.LinkDatabase
 import com.sapuseven.untis.data.databases.UserDatabase
 import com.sapuseven.untis.widgets.saveIdPref
 
@@ -37,7 +38,7 @@ class BaseWidgetConfigureActivity : BaseActivity() {
 		setContentView(R.layout.widget_base_configuration)
 
 		userList = findViewById(R.id.recyclerview_daily_messages_widget_configure_profile_list)
-		profileListAdapter = ProfileListAdapter(this, UserDatabase.createInstance(this).getAllUsers().toMutableList(), onClickListener, onLongClickListener)
+		profileListAdapter = ProfileListAdapter(this, LinkDatabase.createInstance(this).getAllLinks().toMutableList(), onClickListener, onLongClickListener)
 		userList.layoutManager = LinearLayoutManager(this)
 		userList.adapter = profileListAdapter
 

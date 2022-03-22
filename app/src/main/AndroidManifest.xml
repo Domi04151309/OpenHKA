@@ -18,18 +18,6 @@
 		android:theme="@style/AppTheme">
 
 		<activity
-			android:name=".activities.ShortcutConfigureActivity"
-			android:icon="@mipmap/ic_shortcut"
-			android:label="@string/widget_timetable_link"
-			android:exported="false">
-
-			<intent-filter>
-				<category android:name="android.intent.category.DEFAULT" />
-				<action android:name="android.intent.action.CREATE_SHORTCUT" />
-			</intent-filter>
-		</activity>
-
-		<activity
 			android:name=".activities.BaseWidgetConfigureActivity"
 			android:label="@string/widget_configuration"
 			android:exported="true">

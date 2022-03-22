@@ -156,7 +156,6 @@ class MainActivity :
 
 		super.onCreate(savedInstanceState)
 
-		//TODO: reenable
 		if (!loadProfile())
 			return
 
@@ -180,33 +179,13 @@ class MainActivity :
 			setupHolidays()
 
 			setupTimetableLoader()
-			if (!checkShortcut()) showPersonalTimetable()
+			showPersonalTimetable()
 			refreshNavigationViewSelection()
 		}
 	}
 
 	private fun checkForProfileUpdateRequired(): Boolean {
 		return profileLink.rssUrl.isBlank() || profileLink.iCalUrl.isBlank()
-	}
-
-	private fun checkForNewSchoolYear(): Boolean {
-		currentSchoolYearId = getCurrentSchoolYear()?.id ?: -1
-
-		return if (preferences.defaultPrefs.getInt("school_year", -1) != currentSchoolYearId) {
-			preferences.defaultPrefs.contains("school_year")
-		} else false
-	}
-
-	private fun getCurrentSchoolYear(): SchoolYear? {
-		val schoolYears = userDatabase.getAdditionalUserData<SchoolYear>(
-			profileUser.id
-				?: -1, SchoolYear()
-		)?.values?.toList() ?: emptyList()
-
-		return schoolYears.find {
-			val now = LocalDate.now()
-			now.isAfter(LocalDate(it.startDate)) && now.isBefore(LocalDate(it.endDate))
-		}
 	}
 
 	override fun onPause() {
@@ -288,30 +267,6 @@ class MainActivity :
 		}
 	}
 
-	private fun checkShortcut(): Boolean {
-		return intent.extras?.let { extras ->
-			val userId = extras.getLong("user")
-			if (preferences.currentProfileId() != userId)
-				switchToProfile(userDatabase.getUser(userId) ?: return false)
-
-			val element = PeriodElement(
-				type = extras.getString("type") ?: return false,
-				id = extras.getInt("id"),
-				orgId = extras.getInt("orgId")
-			)
-			val useOrgId = extras.getBoolean("useOrgId")
-			setTarget(
-				if (useOrgId) element.orgId else element.id,
-				element.type,
-				timetableDatabaseInterface.getLongName(
-					if (useOrgId) element.orgId else element.id,
-					TimetableDatabaseInterface.Type.valueOf(element.type)
-				)
-			)
-			true
-		} ?: false
-	}
-
 	private fun setupNotifications() {
 		val intent = Intent(this, StartupReceiver::class.java)
 		intent.putExtra(EXTRA_BOOLEAN_MANUAL, true)
@@ -339,7 +294,7 @@ class MainActivity :
 
 		profileListAdapter = ProfileListAdapter(
 			this,
-			userDatabase.getAllUsers().toMutableList(),
+			linkDatabase.getAllLinks().toMutableList(),
 			{ view ->
 				toggleProfileDropdown(dropdownView, dropdownImage, dropdownList)
 				switchToProfile(profileListAdapter.itemAt(dropdownList.getChildLayoutPosition(view)))
@@ -385,9 +340,9 @@ class MainActivity :
 		startActivityForResult(loginIntent, REQUEST_CODE_LOGINDATAINPUT_ADD)
 	}
 
-	private fun editProfile(user: UserDatabase.User) {
+	private fun editProfile(link: LinkDatabase.Link) {
 		val loginIntent = Intent(this, LinkInputActivity::class.java)
-			.putExtra(LoginDataInputActivity.EXTRA_LONG_PROFILE_ID, user.id)
+			.putExtra(LoginDataInputActivity.EXTRA_LONG_PROFILE_ID, link.id)
 		startActivityForResult(loginIntent, REQUEST_CODE_LOGINDATAINPUT_EDIT)
 	}
 
@@ -398,8 +353,8 @@ class MainActivity :
 		startActivityForResult(loginIntent, REQUEST_CODE_LOGINDATAINPUT_EDIT)
 	}
 
-	private fun switchToProfile(user: UserDatabase.User) {
-		profileId = user.id!!
+	private fun switchToProfile(link: LinkDatabase.Link) {
+		profileId = link.id!!
 		preferences.saveProfileId(profileId)
 		preferences.reload(profileId)
 		if (loadProfile()) {
@@ -512,35 +467,6 @@ class MainActivity :
 			(if (!forceRefresh) TimetableLoader.FLAG_LOAD_CACHE else 0) or (if (alwaysLoad || forceRefresh) TimetableLoader.FLAG_LOAD_SERVER else 0)
 		timetableLoader!!.load(target, flags, proxyHost)
 	}
-
-	/*private fun loadProfile(): Boolean {
-		if (userDatabase.getUsersCount() < 1) {
-			login()
-			return false
-		}
-
-		profileId = preferences.currentProfileId()
-		if (profileId == 0L || userDatabase.getUser(profileId) == null)
-			profileId = userDatabase.getAllUsers()[0].id
-				?: 0 // Fall back to the first user if an invalid user id is saved
-		profileUser = userDatabase.getUser(profileId) ?: return false
-
-		preferences.saveProfileId(profileId)
-		preferences.reload(profileId)
-		timetableDatabaseInterface = TimetableDatabaseInterface(userDatabase, profileUser.id ?: 0)
-
-		if (checkForProfileUpdateRequired()) {
-			showProfileUpdateRequired()
-			return false
-		}
-
-		if (checkForNewSchoolYear()) {
-			updateProfile(profileUser)
-			return false
-		}
-
-		return true
-	}*/
 
 	private fun loadProfile(): Boolean {
 		if (linkDatabase.getLinkCount() < 1) {
@@ -948,44 +874,17 @@ class MainActivity :
 		return true
 	}
 
-	private fun showItemList(type: TimetableDatabaseInterface.Type) {
-		ElementPickerDialog.newInstance(
-			timetableDatabaseInterface,
-			ElementPickerDialog.Companion.ElementPickerDialogConfig(type)
-		).show(supportFragmentManager, "elementPicker") // TODO: Do not hard-code the tag
-	}
-
 	override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
 		super.onActivityResult(requestCode, resultCode, intent)
 
 		when (requestCode) {
-			REQUEST_CODE_ROOM_FINDER ->
-				if (resultCode == Activity.RESULT_OK)
-					(data?.getIntExtra(RoomFinderActivity.EXTRA_INT_ROOM_ID, -1)
-						?: -1).let { roomId ->
-						if (roomId != -1)
-							@Suppress("RemoveRedundantQualifierName")
-							setTarget(
-								roomId,
-								TimetableDatabaseInterface.Type.ROOM.toString(),
-								timetableDatabaseInterface.getLongName(
-									roomId,
-									TimetableDatabaseInterface.Type.ROOM
-								)
-							)
-					}
 			REQUEST_CODE_SETTINGS -> recreate()
 			REQUEST_CODE_LOGINDATAINPUT_ADD ->
 				if (resultCode == Activity.RESULT_OK)
 					recreate()
 			REQUEST_CODE_LOGINDATAINPUT_EDIT ->
 				if (resultCode == Activity.RESULT_OK) {
-					preferences.defaultPrefs.edit()
-						.putInt("school_year", currentSchoolYearId)
-						.apply()
 					recreate()
-				} else if (checkForNewSchoolYear()) {
-					finish()
 				}
 			REQUEST_CODE_ERRORS -> recreate()
 		}

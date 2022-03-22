@@ -9,12 +9,9 @@ import android.widget.EditText
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.sapuseven.untis.R
 import com.sapuseven.untis.data.databases.LinkDatabase
-import com.sapuseven.untis.data.databases.UserDatabase
 import com.sapuseven.untis.dialogs.ProfileUpdateDialog
-import com.sapuseven.untis.helpers.api.LoginErrorInfo
-import com.sapuseven.untis.models.untis.masterdata.TimeGrid
+import com.sapuseven.untis.helpers.config.PreferenceManager
 import kotlinx.android.synthetic.main.activity_link_input.*
-import kotlinx.android.synthetic.main.activity_logindatainput.*
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
@@ -25,6 +22,9 @@ class LinkInputActivity : BaseActivity() {
 		private const val BACKUP_PREF_NAME = "linkDataInputBackup"
 
 		private const val FRAGMENT_TAG_PROFILE_UPDATE = "profileUpdate"
+
+		const val EXTRA_LONG_PROFILE_ID = "com.sapuseven.untis.activities.profileId"
+		const val EXTRA_BOOLEAN_PROFILE_UPDATE = "com.sapuseven.untis.activities.profileupdate"
 	}
 
 	private var existingLink: LinkDatabase.Link? = null
@@ -33,6 +33,11 @@ class LinkInputActivity : BaseActivity() {
 	private lateinit var linkDatabase: LinkDatabase
 
 	override fun onCreate(savedInstanceState: Bundle?) {
+		if (intent.hasExtra(EXTRA_LONG_PROFILE_ID)) {
+			existingLinkId = intent.getLongExtra(EXTRA_LONG_PROFILE_ID, 0)
+			preferences = PreferenceManager(this, existingLinkId!!)
+		}
+
 		super.onCreate(savedInstanceState)
 		setContentView(R.layout.activity_link_input)
 
@@ -56,18 +61,18 @@ class LinkInputActivity : BaseActivity() {
 		}
 
 
-		/*existingLink?.let { link ->
-			button_logindatainput_delete?.visibility = View.VISIBLE
-			button_logindatainput_delete?.setOnClickListener {
+		existingLink?.let { link ->
+			button_link_input_delete?.visibility = View.VISIBLE
+			button_link_input_delete?.setOnClickListener {
 				deleteProfile(link)
 			}
-		}*/
+		}
 
 		focusFirstFreeField()
 
 		setElementsEnabled(true)
 
-		if (intent.getBooleanExtra(LoginDataInputActivity.EXTRA_BOOLEAN_PROFILE_UPDATE, false)) {
+		if (intent.getBooleanExtra(EXTRA_BOOLEAN_PROFILE_UPDATE, false)) {
 			supportFragmentManager
 				.beginTransaction()
 				.replace(
@@ -81,7 +86,16 @@ class LinkInputActivity : BaseActivity() {
 	}
 
 	private fun validate(): EditText? {
-		//TODO: validate
+		if (edittext_link_input_rss?.text?.isEmpty() == true) {
+			edittext_link_input_rss.error =
+				getString(R.string.logindatainput_error_field_empty)
+			return edittext_link_input_rss
+		}
+		if (edittext_link_input_ical?.text?.isEmpty() == true) {
+			edittext_link_input_ical.error =
+				getString(R.string.logindatainput_error_field_empty)
+			return edittext_link_input_ical
+		}
 		return null
 	}
 
@@ -132,10 +146,10 @@ class LinkInputActivity : BaseActivity() {
 	}
 
 	private fun loadData() {
-		imageview_logindatainput_loadingstatusfailed?.visibility = View.GONE
-		imageview_logindatainput_loadingstatussuccess?.visibility = View.GONE
-		progressbar_logindatainput_loadingstatus?.visibility = View.VISIBLE
-		textview_logindatainput_loadingstatus?.visibility = View.VISIBLE
+		imageview_link_input_loadingstatusfailed?.visibility = View.GONE
+		imageview_link_input_loadingstatussuccess?.visibility = View.GONE
+		progressbar_link_input_loadingstatus?.visibility = View.VISIBLE
+		textview_link_input_loadingstatus?.visibility = View.VISIBLE
 
 		setElementsEnabled(false)
 		GlobalScope.launch(Dispatchers.Main) {
@@ -156,9 +170,9 @@ class LinkInputActivity : BaseActivity() {
 			)
 
 		linkId?.let {
-			progressbar_logindatainput_loadingstatus?.visibility = View.GONE
-			imageview_logindatainput_loadingstatussuccess?.visibility = View.VISIBLE
-			textview_logindatainput_loadingstatus?.text =
+			progressbar_link_input_loadingstatus?.visibility = View.GONE
+			imageview_link_input_loadingstatussuccess?.visibility = View.VISIBLE
+			textview_link_input_loadingstatus?.text =
 				getString(R.string.logindatainput_data_loaded)
 
 			preferences.saveProfileId(linkId.toLong())
@@ -192,7 +206,7 @@ class LinkInputActivity : BaseActivity() {
 	}
 
 	private fun updateLoadingStatus(msg: String) {
-		textview_logindatainput_loadingstatus?.text = msg
+		textview_link_input_loadingstatus?.text = msg
 	}
 
 	private fun stopLoadingAndShowError(msg: String) {
