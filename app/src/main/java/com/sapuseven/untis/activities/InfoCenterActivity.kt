@@ -7,7 +7,6 @@ import com.prof.rssparser.Article
 import com.prof.rssparser.Parser
 import com.sapuseven.untis.R
 import com.sapuseven.untis.adapters.infocenter.*
-import com.sapuseven.untis.data.connectivity.UntisRequest
 import com.sapuseven.untis.data.databases.LinkDatabase
 import kotlinx.android.synthetic.main.activity_infocenter.*
 import kotlinx.coroutines.Dispatchers

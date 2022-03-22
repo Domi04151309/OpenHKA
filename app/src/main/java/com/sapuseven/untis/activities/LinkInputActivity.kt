@@ -3,29 +3,18 @@ package com.sapuseven.untis.activities
 import android.app.Activity
 import android.content.Context
 import android.content.SharedPreferences
-import android.net.Uri
 import android.os.Bundle
-import android.util.Patterns
 import android.view.View
 import android.widget.EditText
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.sapuseven.untis.R
 import com.sapuseven.untis.data.databases.LinkDatabase
-import com.sapuseven.untis.data.databases.UserDatabase
 import com.sapuseven.untis.dialogs.ProfileUpdateDialog
-import com.sapuseven.untis.helpers.ErrorMessageDictionary
-import com.sapuseven.untis.helpers.SerializationUtils
-import com.sapuseven.untis.helpers.api.LoginDataInfo
-import com.sapuseven.untis.helpers.api.LoginErrorInfo
-import com.sapuseven.untis.helpers.api.LoginHelper
-import com.sapuseven.untis.models.UntisSchoolInfo
-import com.sapuseven.untis.models.untis.masterdata.TimeGrid
 import kotlinx.android.synthetic.main.activity_link_input.*
 import kotlinx.android.synthetic.main.activity_logindatainput.*
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
-import kotlinx.serialization.decodeFromString
 
 class LinkInputActivity : BaseActivity() {
 

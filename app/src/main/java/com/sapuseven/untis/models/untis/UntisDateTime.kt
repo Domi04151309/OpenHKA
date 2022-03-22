@@ -28,9 +28,6 @@ class UntisDateTime(
 			return UntisDateTime(decoder.decodeString())
 		}
 
-		fun fromLocalDate(localDate: LocalDate): UntisDateTime {
-			return UntisDateTime(localDate.toString(DateTimeUtils.isoDateTimeNoSeconds()))
-		}
 	}
 
 	override fun toString(): String {

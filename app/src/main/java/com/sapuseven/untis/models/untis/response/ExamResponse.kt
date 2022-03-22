@@ -4,11 +4,6 @@ import com.sapuseven.untis.models.UntisExam
 import kotlinx.serialization.Serializable
 
 @Serializable
-data class ExamResponse(
-		val result: ExamResult? = null
-) : BaseResponse()
-
-@Serializable
 data class ExamResult(
 		val id: Int,
 		val type: String,
