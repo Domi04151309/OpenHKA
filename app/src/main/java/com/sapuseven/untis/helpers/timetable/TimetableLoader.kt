@@ -14,11 +14,12 @@ import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
 import net.fortuna.ical4j.data.CalendarBuilder
 import net.fortuna.ical4j.model.Component
+import net.fortuna.ical4j.model.ComponentList
 import org.joda.time.Instant
 import java.io.StringReader
 import java.lang.ref.WeakReference
 
-//TODO: reeanble caching
+
 class TimetableLoader(
 	private val context: WeakReference<Context>,
 	private val timetableDisplay: TimetableDisplay,
@@ -41,12 +42,10 @@ class TimetableLoader(
 		GlobalScope.launch(Dispatchers.Main) {
 			requestList.add(target)
 
-			loadFromServer(target, requestList.size - 1)
-
-			/*if (flags and FLAG_LOAD_CACHE > 0)
+			if (flags and FLAG_LOAD_CACHE > 0)
 				loadFromCache(target, requestList.size - 1)
 			if (flags and FLAG_LOAD_SERVER > 0)
-				loadFromServer(target, requestList.size - 1)*/
+				loadFromServer(target, requestList.size - 1)
 		}
 
 	private fun loadFromCache(target: TimetableLoaderTarget, requestId: Int) {
@@ -59,7 +58,7 @@ class TimetableLoader(
 				"target $target (requestId $requestId): cached file found"
 			)
 			cache.load()?.let { cacheObject ->
-				timetableDisplay.addTimetableItems(cacheObject.items.map {
+				timetableDisplay.addTimetableItems(parseICal(cacheObject.data).map {
 					TimegridItem(
 						ids++,
 						Period(it as Component)
@@ -101,10 +100,7 @@ class TimetableLoader(
 			.httpGet()
 			.awaitStringResult()
 			.fold({ data ->
-				val calendar: net.fortuna.ical4j.model.Calendar? =
-					CalendarBuilder().build(StringReader(data))
-
-				val items = calendar?.components!!
+				val items = parseICal(data)
 				val timestamp = Instant.now().millis
 				timetableDisplay.addTimetableItems(items.map {
 					TimegridItem(
@@ -116,10 +112,14 @@ class TimetableLoader(
 					"TimetableLoaderDebug",
 					"target $target (requestId $requestId): saving to cache: $cache"
 				)
-				//cache.save(TimetableCache.CacheObject(timestamp, items))
+				cache.save(TimetableCache.CacheObject(timestamp, data))
 			}, {
 				//TODO: handle error
 			})
+	}
+
+	private fun parseICal(data: String): ComponentList {
+		return CalendarBuilder().build(StringReader(data))?.components!!
 	}
 
 	fun repeat(requestId: Int, flags: Int = 0) {

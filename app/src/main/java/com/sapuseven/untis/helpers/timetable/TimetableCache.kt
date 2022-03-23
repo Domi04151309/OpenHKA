@@ -2,10 +2,10 @@ package com.sapuseven.untis.helpers.timetable
 
 import android.content.Context
 import com.sapuseven.untis.models.untis.UntisDate
+import kotlinx.serialization.Serializable
 import kotlinx.serialization.cbor.Cbor
 import kotlinx.serialization.decodeFromByteArray
 import kotlinx.serialization.encodeToByteArray
-import net.fortuna.ical4j.model.ComponentList
 import java.io.File
 import java.lang.ref.WeakReference
 
@@ -49,9 +49,10 @@ class TimetableCache(val context: WeakReference<Context>) {
 		targetCacheFile(target)?.delete()
 	}
 
+	@Serializable
 	data class CacheObject(
 		val timestamp: Long,
-		val items: ComponentList
+		val data: String
 	)
 
 	private inner class CacheTarget(
