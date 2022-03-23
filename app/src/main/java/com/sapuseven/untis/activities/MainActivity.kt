@@ -101,8 +101,6 @@ class MainActivity :
 		private const val REQUEST_CODE_LOGINDATAINPUT_EDIT = 4
 		private const val REQUEST_CODE_ERRORS = 5
 
-		private const val UNTIS_DEFAULT_COLOR = "#f49f25"
-
 		private const val PERSISTENT_INT_ZOOM_LEVEL = "persistent_zoom_level"
 
 		private const val FRAGMENT_TAG_LESSON_INFO = "com.sapuseven.untis.fragments.lessoninfo"

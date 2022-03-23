@@ -1,7 +1,6 @@
 package com.sapuseven.untis.models.untis.timetable
 
 import net.fortuna.ical4j.model.Component
-import net.fortuna.ical4j.model.PropertyList
 import org.joda.time.DateTime
 
 

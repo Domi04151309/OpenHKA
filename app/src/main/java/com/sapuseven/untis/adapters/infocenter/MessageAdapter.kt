@@ -1,6 +1,5 @@
 package com.sapuseven.untis.adapters.infocenter
 
-import android.content.Context
 import android.text.method.LinkMovementMethod
 import android.view.LayoutInflater
 import android.view.View

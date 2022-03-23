@@ -2,12 +2,10 @@ package com.sapuseven.untis.helpers.timetable
 
 import com.sapuseven.untis.data.databases.UserDatabase
 import com.sapuseven.untis.data.timetable.PeriodData.Companion.ELEMENT_NAME_UNKNOWN
-import com.sapuseven.untis.interfaces.TableModel
 import com.sapuseven.untis.models.untis.masterdata.Klasse
 import com.sapuseven.untis.models.untis.masterdata.Room
 import com.sapuseven.untis.models.untis.masterdata.Subject
 import com.sapuseven.untis.models.untis.masterdata.Teacher
-import com.sapuseven.untis.models.untis.timetable.PeriodElement
 import java.io.Serializable
 
 class TimetableDatabaseInterface(@Transient val database: UserDatabase, id: Long) : Serializable {
@@ -47,33 +45,5 @@ class TimetableDatabaseInterface(@Transient val database: UserDatabase, id: Long
 			Type.SUBJECT -> allSubjects[id]?.longName
 			Type.ROOM -> allRooms[id]?.longName
 		} ?: ""
-	}
-
-	fun isAllowed(id: Int, type: Type?): Boolean {
-		return when (type) {
-			Type.CLASS -> allClasses[id]?.displayable
-			Type.TEACHER -> allTeachers[id]?.displayAllowed
-			Type.SUBJECT -> allSubjects[id]?.displayAllowed
-			Type.ROOM -> allRooms[id]?.displayAllowed
-			else -> null
-		} ?: false
-	}
-
-	private fun tableModelToPeriodElement(values: Collection<TableModel>): List<PeriodElement> {
-		return values.map { item: TableModel -> PeriodElement(item.elementId) }
-	}
-
-	fun elementContains(element: PeriodElement, other: String): Boolean {
-		return true
-	}
-
-	fun getElements(type: Type?): List<PeriodElement> {
-		return tableModelToPeriodElement(when (type) {
-			Type.CLASS -> allClasses.values
-			Type.TEACHER -> allTeachers.values
-			Type.SUBJECT -> allSubjects.values
-			Type.ROOM -> allRooms.values
-			else -> emptyList()
-		})
 	}
 }

@@ -14,8 +14,6 @@ import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
 import net.fortuna.ical4j.data.CalendarBuilder
 import net.fortuna.ical4j.model.Component
-import net.fortuna.ical4j.model.ComponentList
-import net.fortuna.ical4j.model.PropertyList
 import org.joda.time.Instant
 import java.io.StringReader
 import java.lang.ref.WeakReference

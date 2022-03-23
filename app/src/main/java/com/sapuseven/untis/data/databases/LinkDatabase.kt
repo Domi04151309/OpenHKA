@@ -4,13 +4,9 @@ import android.content.ContentValues
 import android.content.Context
 import android.database.Cursor
 import android.database.Cursor.FIELD_TYPE_INTEGER
-import android.database.Cursor.FIELD_TYPE_STRING
 import android.database.sqlite.SQLiteDatabase
 import android.database.sqlite.SQLiteOpenHelper
 import android.provider.BaseColumns
-import com.sapuseven.untis.helpers.LinkDatabaseQueryHelper.generateCreateTable
-import com.sapuseven.untis.helpers.LinkDatabaseQueryHelper.generateDropTable
-import com.sapuseven.untis.models.untis.masterdata.*
 
 private const val DATABASE_VERSION = 1
 private const val DATABASE_NAME = "linkdata.db"
@@ -18,8 +14,6 @@ private const val DATABASE_NAME = "linkdata.db"
 class LinkDatabase private constructor(context: Context) :
 	SQLiteOpenHelper(context, DATABASE_NAME, null, DATABASE_VERSION) {
 	companion object {
-		const val COLUMN_NAME_USER_ID = "_user_id"
-
 		private var instance: LinkDatabase? = null
 
 		fun createInstance(context: Context): LinkDatabase {
@@ -29,19 +23,6 @@ class LinkDatabase private constructor(context: Context) :
 
 	override fun onCreate(db: SQLiteDatabase) {
 		db.execSQL(LinkDatabaseContract.Links.SQL_CREATE_ENTRIES_V1)
-		db.execSQL(generateCreateTable<AbsenceReason>())
-		db.execSQL(generateCreateTable<Department>())
-		db.execSQL(generateCreateTable<Duty>())
-		db.execSQL(generateCreateTable<EventReason>())
-		db.execSQL(generateCreateTable<EventReasonGroup>())
-		db.execSQL(generateCreateTable<ExcuseStatus>())
-		db.execSQL(generateCreateTable<Holiday>())
-		db.execSQL(generateCreateTable<Klasse>())
-		db.execSQL(generateCreateTable<Room>())
-		db.execSQL(generateCreateTable<Subject>())
-		db.execSQL(generateCreateTable<Teacher>())
-		db.execSQL(generateCreateTable<TeachingMethod>())
-		db.execSQL(generateCreateTable<SchoolYear>())
 	}
 
 	override fun onUpgrade(db: SQLiteDatabase, oldVersion: Int, newVersion: Int) {
@@ -57,20 +38,6 @@ class LinkDatabase private constructor(context: Context) :
 
 	fun resetDatabase(db: SQLiteDatabase) {
 		db.execSQL(LinkDatabaseContract.Links.SQL_DELETE_ENTRIES)
-
-		db.execSQL(generateDropTable<AbsenceReason>())
-		db.execSQL(generateDropTable<Department>())
-		db.execSQL(generateDropTable<Duty>())
-		db.execSQL(generateDropTable<EventReason>())
-		db.execSQL(generateDropTable<EventReasonGroup>())
-		db.execSQL(generateDropTable<ExcuseStatus>())
-		db.execSQL(generateDropTable<Holiday>())
-		db.execSQL(generateDropTable<Klasse>())
-		db.execSQL(generateDropTable<Room>())
-		db.execSQL(generateDropTable<Subject>())
-		db.execSQL(generateDropTable<Teacher>())
-		db.execSQL(generateDropTable<TeachingMethod>())
-		db.execSQL(generateDropTable<SchoolYear>())
 	}
 
 	fun addLink(link: Link): Long? {
@@ -207,20 +174,8 @@ class LinkDatabase private constructor(context: Context) :
 	)
 }
 
-private fun Cursor.getIntOrNull(columnIndex: Int): Int? {
-	return if (getType(columnIndex) == FIELD_TYPE_INTEGER)
-		getInt(columnIndex)
-	else null
-}
-
 private fun Cursor.getLongOrNull(columnIndex: Int): Long? {
 	return if (getType(columnIndex) == FIELD_TYPE_INTEGER)
 		getLong(columnIndex)
-	else null
-}
-
-private fun Cursor.getStringOrNull(columnIndex: Int): String? {
-	return if (getType(columnIndex) == FIELD_TYPE_STRING)
-		getString(columnIndex)
 	else null
 }
