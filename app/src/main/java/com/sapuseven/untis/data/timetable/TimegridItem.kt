@@ -12,7 +12,7 @@ class TimegridItem(
 		title = period.title
 		top = ""
 		bottom = period.location
-		hasIndicator = false //TODO: add if has info
+		hasIndicator = period.hasIndicator
 	}
 
 	override fun toWeekViewEvent(): WeekViewEvent<TimegridItem> {

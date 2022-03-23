@@ -8,13 +8,18 @@ import org.joda.time.DateTimeZone
 class Period(component: Component, timeZone: DateTimeZone) {
 
 	private val properties = component.properties
+	private val unformattedTitle = properties.getProperty("SUMMARY").value.trim()
 
-	var startDate: DateTime = stringToDate(properties.getProperty("DTSTART").value, timeZone)
-	var endDate: DateTime = stringToDate(properties.getProperty("DTEND").value, timeZone)
-	var title: String = properties.getProperty("SUMMARY").value.trim()
-	var location: String = properties.getProperty("LOCATION").value
-	var type: Type =
-		if (properties.getProperty("CATEGORIES").value == "NORMAL") Type.REGULAR else Type.IRREGULAR
+	val startDate: DateTime = stringToDate(properties.getProperty("DTSTART").value, timeZone)
+	val endDate: DateTime = stringToDate(properties.getProperty("DTEND").value, timeZone)
+	val title: String = formatTitle(unformattedTitle)
+	val location: String = properties.getProperty("LOCATION").value
+	val type: Type = when (properties.getProperty("CATEGORIES").value) {
+		"AUSFALL" -> Type.CANCELLED
+		"AKTUELL" -> Type.IRREGULAR
+		else -> Type.REGULAR
+	}
+	val hasIndicator = unformattedTitle.startsWith('*')
 
 	enum class Type {
 		REGULAR, IRREGULAR, CANCELLED
@@ -32,5 +37,12 @@ class Period(component: Component, timeZone: DateTimeZone) {
 			string.substring(13, 15).toInt(),
 			timeZone
 		)
+	}
+
+	private fun formatTitle(title: String): String {
+		var returnValue = title
+		if (returnValue.startsWith('+')) returnValue = returnValue.substring(15).trim()
+		if (returnValue.startsWith('*')) returnValue = returnValue.substring(1).trim()
+		return returnValue
 	}
 }
