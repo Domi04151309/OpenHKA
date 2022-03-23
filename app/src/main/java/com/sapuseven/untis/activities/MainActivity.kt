@@ -27,8 +27,6 @@ import androidx.fragment.app.FragmentTransaction
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import ca.antonious.materialdaypicker.MaterialDayPicker
-import com.github.kittinunf.fuel.coroutines.awaitStringResult
-import com.github.kittinunf.fuel.httpGet
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.google.android.material.navigation.NavigationView
 import com.google.android.material.snackbar.Snackbar
@@ -45,7 +43,6 @@ import com.sapuseven.untis.dialogs.DatePickerDialog
 import com.sapuseven.untis.dialogs.ErrorReportingDialog
 import com.sapuseven.untis.fragments.TimetableItemDetailsFragment
 import com.sapuseven.untis.helpers.ConversionUtils
-import com.sapuseven.untis.helpers.DateTimeUtils
 import com.sapuseven.untis.helpers.ErrorMessageDictionary
 import com.sapuseven.untis.helpers.SerializationUtils
 import com.sapuseven.untis.helpers.config.PreferenceUtils
@@ -58,7 +55,6 @@ import com.sapuseven.untis.models.untis.params.MessageParams
 import com.sapuseven.untis.models.untis.response.MessageResponse
 import com.sapuseven.untis.models.untis.timetable.Period
 import com.sapuseven.untis.models.untis.timetable.PeriodElement
-import com.sapuseven.untis.preferences.ElementPickerPreference
 import com.sapuseven.untis.preferences.RangePreference
 import com.sapuseven.untis.receivers.NotificationSetup.Companion.EXTRA_BOOLEAN_MANUAL
 import com.sapuseven.untis.receivers.StartupReceiver
@@ -76,14 +72,10 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
 import kotlinx.serialization.decodeFromString
-import net.fortuna.ical4j.data.CalendarBuilder
-import net.fortuna.ical4j.model.Component
 import org.joda.time.DateTime
-import org.joda.time.DateTimeConstants
 import org.joda.time.Instant
 import org.joda.time.LocalDate
 import org.joda.time.format.DateTimeFormat
-import java.io.StringReader
 import java.lang.ref.WeakReference
 import java.text.SimpleDateFormat
 import java.util.*
@@ -160,34 +152,11 @@ class MainActivity :
 			setupActionBar()
 			setupNavDrawer()
 
-			GlobalScope.launch {
-				profileLink.iCalUrl
-					.httpGet()
-					.awaitStringResult()
-					.fold({ data ->
-						val calendar: net.fortuna.ical4j.model.Calendar? =
-							CalendarBuilder().build(StringReader(data))
-						calendar?.components?.forEach {
-							val properties = (it as Component).properties
-							//Log.wtf("aaa", properties.getProperty("SUMMARY").value)
-							//Log.wtf("aaa", properties.getProperty("LOCATION").value)
-							//Log.wtf("aaa", (properties.getProperty("CATEGORIES").value != "NORMAL").toString())
-							//Log.wtf("aaa", it.toString())
-						}
-					}, {
-						//TODO: handle error
-					})
-			}
-
 			setupViews()
 			setupHours()
 
-			//TODO: remove
-			//return
-
 			setupTimetableLoader()
 			showPersonalTimetable()
-			refreshNavigationViewSelection()
 		}
 	}
 
@@ -207,11 +176,11 @@ class MainActivity :
 
 		//refreshMessages(profileUser, navigationview_main)
 
-		/*if (::weekView.isInitialized) {
+		if (::weekView.isInitialized) {
 			setupWeekViewConfig()
 
 			weekViewRefreshHandler.post(weekViewUpdate)
-		}*/
+		}
 	}
 
 	override fun onErrorLogFound() {
@@ -339,7 +308,6 @@ class MainActivity :
 			closeDrawer()
 			setupTimetableLoader()
 			showPersonalTimetable()
-			refreshNavigationViewSelection()
 
 			recreate()
 		} else {
@@ -400,13 +368,6 @@ class MainActivity :
 
 		textview_main_lastrefresh?.text =
 			getString(R.string.main_last_refreshed, getString(R.string.main_last_refreshed_never))
-
-		button_main_settings.setOnClickListener {
-			val intent = Intent(this@MainActivity, SettingsActivity::class.java)
-			intent.putExtra(SettingsActivity.EXTRA_LONG_PROFILE_ID, profileId)
-			// TODO: Find a way to jump directly to the personal timetable setting
-			startActivityForResult(intent, REQUEST_CODE_SETTINGS)
-		}
 
 		setupSwipeRefresh()
 	}
@@ -493,8 +454,7 @@ class MainActivity :
 				saveZoomLevel()
 			}
 		}
-		//TODO: reenable
-		//setupWeekViewConfig()
+		setupWeekViewConfig()
 	}
 
 	private fun saveZoomLevel() {
@@ -509,12 +469,13 @@ class MainActivity :
 			preferences.defaultPrefs.getInt(PERSISTENT_INT_ZOOM_LEVEL, weekView.hourHeight)
 	}
 
+	//TODO: check
 	private fun setupWeekViewConfig() {
 		weekView.weekLength = preferences.defaultPrefs.getStringSet(
 			"preference_week_custom_range",
 			emptySet()
 		)?.size?.zeroToNull
-			?: profileUser.timeGrid.days.size
+			?: 0//profileUser.timeGrid.days.size
 		weekView.numberOfVisibleDays =
 			preferences.defaultPrefs.getInt("preference_week_custom_display_length", 0).zeroToNull
 				?: weekView.weekLength
@@ -522,7 +483,7 @@ class MainActivity :
 			preferences.defaultPrefs.getStringSet("preference_week_custom_range", emptySet())
 				?.map { MaterialDayPicker.Weekday.valueOf(it) }?.minOrNull()?.ordinal
 				?: DateTimeFormat.forPattern("E").withLocale(Locale.ENGLISH)
-					.parseDateTime(profileUser.timeGrid.days[0].day).dayOfWeek
+					.parseDateTime("Monday"/*profileUser.timeGrid.days[0].day*/).dayOfWeek
 
 		weekView.timeColumnVisibility =
 			!PreferenceUtils.getPrefBool(preferences, "preference_timetable_hide_time_stamps")
@@ -799,25 +760,18 @@ class MainActivity :
 			} else {
 				super.onBackPressed()
 			}
-		} else {
-			refreshNavigationViewSelection()
 		}
 	}
 
-	private fun setTarget(anonymous: Boolean, displayName: CharSequence): Boolean {
-		supportActionBar?.title = displayName
+	private fun setTarget(anonymous: Boolean): Boolean {
 		if (anonymous) {
 			showLoading(false)
 
 			weeklyTimetableItems.clear()
 			weekView.notifyDataSetChanged()
 
-			constraintlayout_main_anonymouslogininfo.visibility = View.VISIBLE
-
 			if (displayedElement == null) return false
 			displayedElement = null
-		} else {
-			constraintlayout_main_anonymouslogininfo.visibility = View.GONE
 		}
 		return true
 	}
@@ -828,21 +782,18 @@ class MainActivity :
 		weeklyTimetableItems.clear()
 		weekView.notifyDataSetChanged()
 
-		constraintlayout_main_anonymouslogininfo.visibility = View.VISIBLE
-
 		if (displayedElement == null) return false
 		displayedElement = null
 		return true
 	}
 
-	private fun setTarget(id: Int, type: String, displayName: String?): Boolean {
-		displayNameCache = displayName ?: getString(R.string.app_name)
-		PeriodElement(type, id, id).let {
+	private fun setTarget(id: Int): Boolean {
+		PeriodElement(id).let {
 			if (it == displayedElement) return false
 			displayedElement = it
 		}
 
-		setTarget(false, displayNameCache)
+		setTarget(false)
 
 		weeklyTimetableItems.clear()
 		weekView.notifyDataSetChanged()
@@ -880,18 +831,10 @@ class MainActivity :
 		else
 			removeFragment(fragment)
 		element?.let {
-			setTarget(
-				if (useOrgId) element.orgId else element.id,
-				element.type,
-				timetableDatabaseInterface.getLongName(
-					if (useOrgId) element.orgId else element.id,
-					TimetableDatabaseInterface.Type.valueOf(element.type)
-				)
-			)
+			setTarget(element.id)
 		} ?: run {
 			showPersonalTimetable()
 		}
-		refreshNavigationViewSelection()
 	}
 
 	override fun onPeriodAbsencesClick() {
@@ -902,12 +845,6 @@ class MainActivity :
 
 	private fun removeFragment(fragment: Fragment) {
 		supportFragmentManager.popBackStack(fragment.tag, FragmentManager.POP_BACK_STACK_INCLUSIVE)
-	}
-
-	private fun refreshNavigationViewSelection() {
-		when (displayedElement?.type) {
-			else -> (navigationview_main as NavigationView).setCheckedItem(R.id.nav_show_personal)
-		}
 	}
 
 	private fun setLastRefresh(timestamp: Long) {

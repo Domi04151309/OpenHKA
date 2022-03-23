@@ -5,15 +5,11 @@ import android.content.Context
 import android.content.Intent
 import android.util.Log
 import com.sapuseven.untis.data.databases.LinkDatabase
-import com.sapuseven.untis.data.databases.UserDatabase
 import com.sapuseven.untis.data.timetable.TimegridItem
 import com.sapuseven.untis.helpers.config.PreferenceManager
-import com.sapuseven.untis.helpers.config.PreferenceUtils
-import com.sapuseven.untis.helpers.timetable.TimetableDatabaseInterface
 import com.sapuseven.untis.helpers.timetable.TimetableLoader
 import com.sapuseven.untis.interfaces.TimetableDisplay
 import com.sapuseven.untis.models.untis.UntisDate
-import com.sapuseven.untis.preferences.ElementPickerPreference
 import org.joda.time.LocalDate
 import java.lang.ref.WeakReference
 

@@ -4,7 +4,5 @@ import kotlinx.serialization.Serializable
 
 @Serializable
 data class PeriodElement(
-		val type: String,
-		val id: Int,
-		val orgId: Int
+		val id: Int
 ) : java.io.Serializable

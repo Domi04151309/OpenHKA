@@ -154,9 +154,7 @@ class TimetableItemDetailsFragment(item: TimegridItem?, timetableDatabaseInterfa
 	                         textColor: Int?): Boolean {
 		if (data.isEmpty()) return true
 		data.forEach { element ->
-			generateTextViewForElement(element, type, timetableDatabaseInterface, textColor, false)?.let { list.addView(it) }
-			if (element.id != element.orgId)
-				generateTextViewForElement(element, type, timetableDatabaseInterface, textColor, true)?.let { list.addView(it) }
+			generateTextViewForElement(element, type, timetableDatabaseInterface, textColor)?.let { list.addView(it) }
 		}
 		return false
 	}
@@ -164,25 +162,21 @@ class TimetableItemDetailsFragment(item: TimegridItem?, timetableDatabaseInterfa
 	private fun generateTextViewForElement(element: PeriodElement,
 	                                       type: TimetableDatabaseInterface.Type,
 	                                       timetableDatabaseInterface: TimetableDatabaseInterface,
-	                                       textColor: Int?,
-	                                       useOrgId: Boolean = false): TextView? {
+	                                       textColor: Int?): TextView? {
 		val tv = TextView(requireContext())
 		val params = LinearLayout.LayoutParams(
 				ViewGroup.LayoutParams.WRAP_CONTENT,
 				ViewGroup.LayoutParams.MATCH_PARENT)
 		params.setMargins(0, 0, ConversionUtils.dpToPx(12.0f, requireContext()).toInt(), 0)
 		tv.text =
-				if (type == TimetableDatabaseInterface.Type.TEACHER) timetableDatabaseInterface.getLongName(if (useOrgId) element.orgId else element.id, type)
-				else timetableDatabaseInterface.getShortName(if (useOrgId) element.orgId else element.id, type)
+				if (type == TimetableDatabaseInterface.Type.TEACHER) timetableDatabaseInterface.getLongName(element.id, type)
+				else timetableDatabaseInterface.getShortName(element.id, type)
 		if (tv.text.isBlank()) return null
 		tv.layoutParams = params
 		textColor?.let { tv.setTextColor(it) }
 		tv.gravity = Gravity.CENTER_VERTICAL
-		if (useOrgId) {
-			tv.paintFlags = tv.paintFlags or Paint.STRIKE_THRU_TEXT_FLAG
-		}
 		tv.setOnClickListener {
-			listener.onPeriodElementClick(this, element, useOrgId)
+			listener.onPeriodElementClick(this, element, false)
 		}
 		return tv
 	}

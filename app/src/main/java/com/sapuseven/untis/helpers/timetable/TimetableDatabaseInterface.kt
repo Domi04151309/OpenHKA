@@ -60,24 +60,11 @@ class TimetableDatabaseInterface(@Transient val database: UserDatabase, id: Long
 	}
 
 	private fun tableModelToPeriodElement(values: Collection<TableModel>): List<PeriodElement> {
-		return values.map { item: TableModel ->
-			when (item) {
-				is Klasse -> PeriodElement(Type.CLASS.name, item.id, item.id)
-				is Teacher -> PeriodElement(Type.TEACHER.name, item.id, item.id)
-				is Subject -> PeriodElement(Type.SUBJECT.name, item.id, item.id)
-				is Room -> PeriodElement(Type.ROOM.name, item.id, item.id)
-				else -> PeriodElement("", -1, -1)
-			}
-		}
+		return values.map { item: TableModel -> PeriodElement(item.elementId) }
 	}
 
 	fun elementContains(element: PeriodElement, other: String): Boolean {
-		return when (Type.valueOf(element.type)) {
-			Type.CLASS -> allClasses[element.id]?.compareTo(other)
-			Type.TEACHER -> allTeachers[element.id]?.compareTo(other)
-			Type.SUBJECT -> allSubjects[element.id]?.compareTo(other)
-			Type.ROOM -> allRooms[element.id]?.compareTo(other)
-		} == 0
+		return true
 	}
 
 	fun getElements(type: Type?): List<PeriodElement> {
