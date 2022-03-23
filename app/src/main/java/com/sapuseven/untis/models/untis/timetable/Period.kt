@@ -11,7 +11,7 @@ class Period(component: Component) {
 
 	var startDate: DateTime = stringToDate(properties.getProperty("DTSTART").value)
 	var endDate: DateTime = stringToDate(properties.getProperty("DTEND").value)
-	var title: String = properties.getProperty("SUMMARY").value
+	var title: String = properties.getProperty("SUMMARY").value.trim()
 	var location: String = properties.getProperty("LOCATION").value
 	var type: Type =
 		if (properties.getProperty("CATEGORIES").value == "NORMAL") Type.REGULAR else Type.IRREGULAR
