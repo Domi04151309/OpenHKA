@@ -106,12 +106,9 @@ class MainActivity :
 	private var profileUpdateDialog: AlertDialog? = null
 	private var currentWeekIndex = 0
 	private val weekViewRefreshHandler = Handler(Looper.getMainLooper())
-	private var displayNameCache: CharSequence = ""
 	private var timetableLoader: TimetableLoader? = null
-	private lateinit var profileUser: UserDatabase.User
 	private lateinit var profileLink: LinkDatabase.Link
 	private lateinit var profileListAdapter: ProfileListAdapter
-	private lateinit var timetableDatabaseInterface: TimetableDatabaseInterface
 	private lateinit var weekView: WeekView<TimegridItem>
 
 	private val weekViewUpdate = object : Runnable {
@@ -353,10 +350,12 @@ class MainActivity :
 		}
 	}
 
+	//TODO: fix items shown three times
 	private fun loadTimetable(
 		target: TimetableLoader.TimetableLoaderTarget,
 		forceRefresh: Boolean = false
 	) {
+		Log.wtf("aaa", "load timetable")
 		if (timetableLoader == null) return
 
 		weekView.notifyDataSetChanged()
@@ -373,7 +372,6 @@ class MainActivity :
 
 	private fun loadProfile(): Boolean {
 		if (linkDatabase.getLinkCount() < 1) {
-			Log.wtf("aaa", "count is 0")
 			login()
 			return false
 		}
@@ -386,8 +384,6 @@ class MainActivity :
 
 		preferences.saveProfileId(profileId)
 		preferences.reload(profileId)
-		//TODO: rewrite
-		//timetableDatabaseInterface = TimetableDatabaseInterface(userDatabase, profileUser.id ?: 0)
 
 		if (checkForProfileUpdateRequired()) {
 			showProfileUpdateRequired()
@@ -717,13 +713,13 @@ class MainActivity :
 	}
 
 	private fun setTarget(): Boolean {
-		showLoading(false)
+		PeriodElement(0).let {
+			if (it == displayedElement) return false
+			displayedElement = it
+		}
 
 		weeklyTimetableItems.clear()
 		weekView.notifyDataSetChanged()
-
-		if (displayedElement == null) return false
-		displayedElement = null
 		return true
 	}
 
@@ -746,12 +742,12 @@ class MainActivity :
 	}
 
 	internal fun setDefaultActionBar() {
-		supportActionBar?.title = displayNameCache
+		supportActionBar?.title = resources.getString(R.string.app_name)
 	}
 
 	override fun onEventClick(data: TimegridItem, eventRect: RectF) {
 		viewModelStore.clear() // TODO: Doesn't seem like the best solution. This could potentially interfere with other ViewModels scoped to this activity.
-		val fragment = TimetableItemDetailsFragment(data, timetableDatabaseInterface, profileUser)
+		val fragment = TimetableItemDetailsFragment(data)
 
 		supportFragmentManager.beginTransaction().run {
 			setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN)

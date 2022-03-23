@@ -9,9 +9,9 @@ class TimegridItem(
 ) : WeekViewEvent<TimegridItem>(id, startTime = period.startDate, endTime = period.endDate) {
 
 	init {
-		title = "Title"
-		top = "Top"
-		bottom = "Bottom"
+		title = period.title
+		top = ""
+		bottom = period.location
 		hasIndicator = false //TODO: add if has info
 	}
 

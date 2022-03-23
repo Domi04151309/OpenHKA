@@ -13,11 +13,15 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
 import net.fortuna.ical4j.data.CalendarBuilder
+import net.fortuna.ical4j.model.Calendar
 import net.fortuna.ical4j.model.Component
 import net.fortuna.ical4j.model.ComponentList
+import org.joda.time.DateTimeZone
 import org.joda.time.Instant
 import java.io.StringReader
 import java.lang.ref.WeakReference
+import java.util.*
+import kotlin.collections.ArrayList
 
 
 class TimetableLoader(
@@ -58,10 +62,13 @@ class TimetableLoader(
 				"target $target (requestId $requestId): cached file found"
 			)
 			cache.load()?.let { cacheObject ->
-				timetableDisplay.addTimetableItems(parseICal(cacheObject.data).map {
+				val calendar = parseICal(cacheObject.data)
+				val timeZone: DateTimeZone =
+					DateTimeZone.forID(calendar.getProperty("X-WR-TIMEZONE").value)
+				timetableDisplay.addTimetableItems(calendar.components.map {
 					TimegridItem(
-						ids++,
-						Period(it as Component)
+						ids,
+						Period(it as Component, timeZone)
 					)
 				}, target.startDate, target.endDate, cacheObject.timestamp)
 			} ?: run {
@@ -100,12 +107,14 @@ class TimetableLoader(
 			.httpGet()
 			.awaitStringResult()
 			.fold({ data ->
-				val items = parseICal(data)
+				val calendar = parseICal(data)
+				val timeZone: DateTimeZone =
+					DateTimeZone.forID(calendar.getProperty("X-WR-TIMEZONE").value)
 				val timestamp = Instant.now().millis
-				timetableDisplay.addTimetableItems(items.map {
+				timetableDisplay.addTimetableItems(calendar.components.map {
 					TimegridItem(
-						ids++,
-						Period(it as Component)
+						ids,
+						Period(it as Component, timeZone)
 					)
 				}, target.startDate, target.endDate, timestamp)
 				Log.d(
@@ -118,8 +127,8 @@ class TimetableLoader(
 			})
 	}
 
-	private fun parseICal(data: String): ComponentList {
-		return CalendarBuilder().build(StringReader(data))?.components!!
+	private fun parseICal(data: String): Calendar {
+		return CalendarBuilder().build(StringReader(data))!!
 	}
 
 	fun repeat(requestId: Int, flags: Int = 0) {
