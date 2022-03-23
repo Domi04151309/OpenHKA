@@ -20,9 +20,7 @@ import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.graphics.ColorUtils
 import androidx.core.view.GravityCompat
 import androidx.drawerlayout.widget.DrawerLayout
-import androidx.fragment.app.DialogFragment
 import androidx.fragment.app.Fragment
-import androidx.fragment.app.FragmentManager
 import androidx.fragment.app.FragmentTransaction
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -34,7 +32,6 @@ import com.sapuseven.untis.R
 import com.sapuseven.untis.activities.LinkInputActivity.Companion.EXTRA_BOOLEAN_PROFILE_UPDATE
 import com.sapuseven.untis.adapters.ProfileListAdapter
 import com.sapuseven.untis.data.databases.LinkDatabase
-import com.sapuseven.untis.data.databases.UserDatabase
 import com.sapuseven.untis.data.timetable.TimegridItem
 import com.sapuseven.untis.dialogs.DatePickerDialog
 import com.sapuseven.untis.dialogs.ErrorReportingDialog
@@ -42,7 +39,6 @@ import com.sapuseven.untis.fragments.TimetableItemDetailsFragment
 import com.sapuseven.untis.helpers.ConversionUtils
 import com.sapuseven.untis.helpers.ErrorMessageDictionary
 import com.sapuseven.untis.helpers.config.PreferenceUtils
-import com.sapuseven.untis.helpers.timetable.TimetableDatabaseInterface
 import com.sapuseven.untis.helpers.timetable.TimetableLoader
 import com.sapuseven.untis.interfaces.TimetableDisplay
 import com.sapuseven.untis.models.untis.UntisDate
@@ -101,7 +97,6 @@ class MainActivity :
 	private var lastBackPress: Long = 0
 	private var profileId: Long = -1
 	private val weeklyTimetableItems: MutableMap<Int, WeeklyTimetableItems?> = mutableMapOf()
-	private var displayedElement: PeriodElement? = null
 	private var lastPickedDate: DateTime? = null
 	private var profileUpdateDialog: AlertDialog? = null
 	private var currentWeekIndex = 0
@@ -336,16 +331,13 @@ class MainActivity :
 
 	private fun setupSwipeRefresh() {
 		swiperefreshlayout_main_timetable.setOnRefreshListener {
-			displayedElement?.let { element ->
-				weeklyTimetableItems[currentWeekIndex]?.dateRange?.let { dateRange ->
-					loadTimetable(
-						TimetableLoader.TimetableLoaderTarget(
-							dateRange.first,
-							dateRange.second,
-							element.id
-						), true
-					)
-				}
+			weeklyTimetableItems[currentWeekIndex]?.dateRange?.let { dateRange ->
+				loadTimetable(
+					TimetableLoader.TimetableLoaderTarget(
+						dateRange.first,
+						dateRange.second
+					), true
+				)
 			}
 		}
 	}
@@ -506,21 +498,18 @@ class MainActivity :
 	): List<WeekViewDisplayable<TimegridItem>> {
 		val weekIndex = convertDateTimeToWeekIndex(startDate)
 		return weeklyTimetableItems[weekIndex]?.items ?: run {
-			displayedElement?.let { displayedElement ->
-				weeklyTimetableItems[weekIndex] = WeeklyTimetableItems().apply {
-					dateRange =
-						(UntisDate.fromLocalDate(LocalDate(startDate)) to UntisDate.fromLocalDate(
-							LocalDate(endDate)
-						)).also { dateRange ->
-							loadTimetable(
-								TimetableLoader.TimetableLoaderTarget(
-									dateRange.first,
-									dateRange.second,
-									displayedElement.id
-								)
+			weeklyTimetableItems[weekIndex] = WeeklyTimetableItems().apply {
+				dateRange =
+					(UntisDate.fromLocalDate(LocalDate(startDate)) to UntisDate.fromLocalDate(
+						LocalDate(endDate)
+					)).also { dateRange ->
+						loadTimetable(
+							TimetableLoader.TimetableLoaderTarget(
+								dateRange.first,
+								dateRange.second
 							)
-						}
-				}
+						)
+					}
 			}
 			emptyList()
 		}
@@ -699,38 +688,7 @@ class MainActivity :
 		}
 	}
 
-	private fun setTarget(anonymous: Boolean): Boolean {
-		if (anonymous) {
-			showLoading(false)
-
-			weeklyTimetableItems.clear()
-			weekView.notifyDataSetChanged()
-
-			if (displayedElement == null) return false
-			displayedElement = null
-		}
-		return true
-	}
-
 	private fun setTarget(): Boolean {
-		PeriodElement(0).let {
-			if (it == displayedElement) return false
-			displayedElement = it
-		}
-
-		weeklyTimetableItems.clear()
-		weekView.notifyDataSetChanged()
-		return true
-	}
-
-	private fun setTarget(id: Int): Boolean {
-		PeriodElement(id).let {
-			if (it == displayedElement) return false
-			displayedElement = it
-		}
-
-		setTarget(false)
-
 		weeklyTimetableItems.clear()
 		weekView.notifyDataSetChanged()
 		return true
@@ -762,25 +720,12 @@ class MainActivity :
 		element: PeriodElement?,
 		useOrgId: Boolean
 	) {
-		if (fragment is DialogFragment)
-			fragment.dismiss()
-		else
-			removeFragment(fragment)
-		element?.let {
-			setTarget(element.id)
-		} ?: run {
-			showPersonalTimetable()
-		}
 	}
 
 	override fun onPeriodAbsencesClick() {
 	}
 
 	override fun onLessonTopicClick() {
-	}
-
-	private fun removeFragment(fragment: Fragment) {
-		supportFragmentManager.popBackStack(fragment.tag, FragmentManager.POP_BACK_STACK_INCLUSIVE)
 	}
 
 	private fun setLastRefresh(timestamp: Long) {

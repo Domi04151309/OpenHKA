@@ -25,8 +25,8 @@ class Period(component: Component, timeZone: DateTimeZone) {
 		REGULAR, IRREGULAR, CANCELLED
 	}
 
-	//TODO: will break in 1000 years
-	//TODO: might break for daylight savings
+	//TODO: will break in 10000 years
+	//TODO: might break for daylight savings; Edit: it does
 	private fun stringToDate(string: String, timeZone: DateTimeZone): DateTime {
 		return DateTime(
 			string.substring(0, 4).toInt(),
@@ -35,7 +35,7 @@ class Period(component: Component, timeZone: DateTimeZone) {
 			string.substring(9, 11).toInt() + 1, //this
 			string.substring(11, 13).toInt(),
 			string.substring(13, 15).toInt(),
-			timeZone
+			timeZone //and this
 		)
 	}
 

@@ -40,8 +40,6 @@ class TimetableLoader(
 
 	private val requestList = ArrayList<TimetableLoaderTarget>()
 
-	private var ids: Long = 0
-
 	fun load(target: TimetableLoaderTarget, flags: Int = 0) =
 		GlobalScope.launch(Dispatchers.Main) {
 			requestList.add(target)
@@ -54,7 +52,7 @@ class TimetableLoader(
 
 	private fun loadFromCache(target: TimetableLoaderTarget, requestId: Int) {
 		val cache = TimetableCache(context)
-		cache.setTarget(target.startDate, target.endDate, target.id)
+		cache.setTarget(target.startDate, target.endDate)
 
 		if (cache.exists()) {
 			Log.d(
@@ -67,7 +65,6 @@ class TimetableLoader(
 					DateTimeZone.forID(calendar.getProperty("X-WR-TIMEZONE").value)
 				timetableDisplay.addTimetableItems(calendar.components.map {
 					TimegridItem(
-						ids,
 						Period(it as Component, timeZone)
 					)
 				}, target.startDate, target.endDate, cacheObject.timestamp)
@@ -101,7 +98,7 @@ class TimetableLoader(
 		requestId: Int
 	) {
 		val cache = TimetableCache(context)
-		cache.setTarget(target.startDate, target.endDate, target.id)
+		cache.setTarget(target.startDate, target.endDate)
 
 		link.iCalUrl
 			.httpGet()
@@ -113,7 +110,6 @@ class TimetableLoader(
 				val timestamp = Instant.now().millis
 				timetableDisplay.addTimetableItems(calendar.components.map {
 					TimegridItem(
-						ids,
 						Period(it as Component, timeZone)
 					)
 				}, target.startDate, target.endDate, timestamp)
@@ -141,7 +137,6 @@ class TimetableLoader(
 
 	data class TimetableLoaderTarget(
 		val startDate: UntisDate,
-		val endDate: UntisDate,
-		val id: Int
+		val endDate: UntisDate
 	)
 }

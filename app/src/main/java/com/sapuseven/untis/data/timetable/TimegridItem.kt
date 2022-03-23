@@ -4,9 +4,8 @@ import com.sapuseven.untis.models.untis.timetable.Period
 import com.sapuseven.untis.views.weekview.WeekViewEvent
 
 class TimegridItem(
-	id: Long,
 	val period: Period,
-) : WeekViewEvent<TimegridItem>(id, startTime = period.startDate, endTime = period.endDate) {
+) : WeekViewEvent<TimegridItem>(0, startTime = period.startDate, endTime = period.endDate) {
 
 	init {
 		title = period.title

@@ -44,7 +44,7 @@ abstract class LessonEventSetup : BroadcastReceiver() {
 
 		val currentDate = UntisDate.fromLocalDate(LocalDate.now())
 
-		val target = TimetableLoader.TimetableLoaderTarget(currentDate, currentDate, 0)
+		val target = TimetableLoader.TimetableLoaderTarget(currentDate, currentDate)
 		lateinit var timetableLoader: TimetableLoader
 		timetableLoader = TimetableLoader(WeakReference(context), object : TimetableDisplay {
 			override fun addTimetableItems(items: List<TimegridItem>, startDate: UntisDate, endDate: UntisDate, timestamp: Long) {

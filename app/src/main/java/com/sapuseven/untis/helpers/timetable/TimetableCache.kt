@@ -13,8 +13,8 @@ import java.lang.ref.WeakReference
 class TimetableCache(val context: WeakReference<Context>) {
 	private var target: CacheTarget? = null
 
-	fun setTarget(startDate: UntisDate, endDate: UntisDate, id: Int) {
-		target = CacheTarget(startDate, endDate, id)
+	fun setTarget(startDate: UntisDate, endDate: UntisDate) {
+		target = CacheTarget(startDate, endDate)
 	}
 
 	fun exists(): Boolean {
@@ -57,11 +57,10 @@ class TimetableCache(val context: WeakReference<Context>) {
 
 	private inner class CacheTarget(
 		val startDate: UntisDate,
-		val endDate: UntisDate,
-		val id: Int
+		val endDate: UntisDate
 	) {
 		fun getName(): String {
-			return String.format("%s-%s-%s", id, startDate, endDate)
+			return String.format("%s-%s", startDate, endDate)
 		}
 	}
 }
