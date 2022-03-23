@@ -33,9 +33,6 @@ import com.google.android.material.snackbar.Snackbar
 import com.sapuseven.untis.R
 import com.sapuseven.untis.activities.LinkInputActivity.Companion.EXTRA_BOOLEAN_PROFILE_UPDATE
 import com.sapuseven.untis.adapters.ProfileListAdapter
-import com.sapuseven.untis.data.connectivity.UntisApiConstants
-import com.sapuseven.untis.data.connectivity.UntisAuthentication
-import com.sapuseven.untis.data.connectivity.UntisRequest
 import com.sapuseven.untis.data.databases.LinkDatabase
 import com.sapuseven.untis.data.databases.UserDatabase
 import com.sapuseven.untis.data.timetable.TimegridItem
@@ -44,15 +41,11 @@ import com.sapuseven.untis.dialogs.ErrorReportingDialog
 import com.sapuseven.untis.fragments.TimetableItemDetailsFragment
 import com.sapuseven.untis.helpers.ConversionUtils
 import com.sapuseven.untis.helpers.ErrorMessageDictionary
-import com.sapuseven.untis.helpers.SerializationUtils
 import com.sapuseven.untis.helpers.config.PreferenceUtils
 import com.sapuseven.untis.helpers.timetable.TimetableDatabaseInterface
 import com.sapuseven.untis.helpers.timetable.TimetableLoader
 import com.sapuseven.untis.interfaces.TimetableDisplay
-import com.sapuseven.untis.models.UntisMessage
 import com.sapuseven.untis.models.untis.UntisDate
-import com.sapuseven.untis.models.untis.params.MessageParams
-import com.sapuseven.untis.models.untis.response.MessageResponse
 import com.sapuseven.untis.models.untis.timetable.Period
 import com.sapuseven.untis.models.untis.timetable.PeriodElement
 import com.sapuseven.untis.preferences.RangePreference
@@ -71,11 +64,9 @@ import kotlinx.android.synthetic.main.activity_main_content.*
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
-import kotlinx.serialization.decodeFromString
 import org.joda.time.DateTime
 import org.joda.time.Instant
 import org.joda.time.LocalDate
-import org.joda.time.format.DateTimeFormat
 import java.lang.ref.WeakReference
 import java.text.SimpleDateFormat
 import java.util.*
@@ -167,12 +158,11 @@ class MainActivity :
 		super.onPause()
 	}
 
-	//TODO: reenable
 	override fun onResume() {
 		super.onResume()
 		if (timetableLoader == null) return
 
-		//refreshMessages(profileUser, navigationview_main)
+		refreshMessages(profileLink, navigationview_main)
 
 		if (::weekView.isInitialized) {
 			setupWeekViewConfig()
@@ -196,7 +186,7 @@ class MainActivity :
 			.setTitle(getString(R.string.main_dialog_update_profile_title))
 			.setMessage(getString(R.string.main_dialog_update_profile_message))
 			.setPositiveButton(getString(R.string.main_dialog_update_profile_button)) { _, _ ->
-				updateProfile(profileUser)
+				updateProfile(profileLink)
 			}
 			.setCancelable(false)
 			.show()
@@ -291,9 +281,9 @@ class MainActivity :
 		startActivityForResult(loginIntent, REQUEST_CODE_LOGINDATAINPUT_EDIT)
 	}
 
-	private fun updateProfile(user: UserDatabase.User) {
+	private fun updateProfile(link: LinkDatabase.Link) {
 		val loginIntent = Intent(this, LinkInputActivity::class.java)
-			.putExtra(LinkInputActivity.EXTRA_LONG_PROFILE_ID, user.id)
+			.putExtra(LinkInputActivity.EXTRA_LONG_PROFILE_ID, link.id)
 			.putExtra(EXTRA_BOOLEAN_PROFILE_UPDATE, true)
 		startActivityForResult(loginIntent, REQUEST_CODE_LOGINDATAINPUT_EDIT)
 	}
@@ -313,9 +303,9 @@ class MainActivity :
 		}
 	}
 
-	private fun refreshMessages(user: UserDatabase.User, navigationView: NavigationView) =
+	private fun refreshMessages(link: LinkDatabase.Link, navigationView: NavigationView) =
 		GlobalScope.launch(Dispatchers.Main) {
-			loadMessages(user)?.let {
+			InfoCenterActivity.loadMessages(this@MainActivity, link)?.let {
 				navigationView.menu.findItem(R.id.nav_infocenter).icon = if (
 					it.size > preferences.defaultPrefs.getInt(
 						"preference_last_messages_count",
@@ -336,29 +326,6 @@ class MainActivity :
 				}
 			}
 		}
-
-	//TODO: Duplicated function from info center
-	private suspend fun loadMessages(user: UserDatabase.User): List<UntisMessage>? {
-
-		val query = UntisRequest.UntisRequestQuery(user)
-
-		query.data.method = UntisApiConstants.METHOD_GET_MESSAGES
-		query.proxyHost =
-			preferences.defaultPrefs.getString("preference_connectivity_proxy_host", null)
-		query.data.params = listOf(
-			MessageParams(
-				UntisDate.fromLocalDate(LocalDate.now()),
-				auth = UntisAuthentication.createAuthObject(user)
-			)
-		)
-
-		val result = UntisRequest().request(query)
-		return result.fold({ data ->
-			val untisResponse = SerializationUtils.getJSON().decodeFromString<MessageResponse>(data)
-
-			untisResponse.result?.messages
-		}, { null })
-	}
 
 	private fun setupViews() {
 		setupWeekView()
@@ -467,21 +434,19 @@ class MainActivity :
 			preferences.defaultPrefs.getInt(PERSISTENT_INT_ZOOM_LEVEL, weekView.hourHeight)
 	}
 
-	//TODO: check
 	private fun setupWeekViewConfig() {
 		weekView.weekLength = preferences.defaultPrefs.getStringSet(
 			"preference_week_custom_range",
 			emptySet()
 		)?.size?.zeroToNull
-			?: 0//profileUser.timeGrid.days.size
+			?: 6
 		weekView.numberOfVisibleDays =
 			preferences.defaultPrefs.getInt("preference_week_custom_display_length", 0).zeroToNull
 				?: weekView.weekLength
 		weekView.firstDayOfWeek =
 			preferences.defaultPrefs.getStringSet("preference_week_custom_range", emptySet())
 				?.map { MaterialDayPicker.Weekday.valueOf(it) }?.minOrNull()?.ordinal
-				?: DateTimeFormat.forPattern("E").withLocale(Locale.ENGLISH)
-					.parseDateTime("Monday"/*profileUser.timeGrid.days[0].day*/).dayOfWeek
+				?: 1
 
 		weekView.timeColumnVisibility =
 			!PreferenceUtils.getPrefBool(preferences, "preference_timetable_hide_time_stamps")
@@ -567,10 +532,9 @@ class MainActivity :
 
 	private fun convertDateTimeToWeekIndex(date: LocalDate) = date.year * 100 + date.dayOfYear / 7
 
-	//TODO: redo this with normal time grid
 	private fun setupHours() {
-		val lines = MutableList(0) { return@MutableList 0 }
-		val labels = MutableList(0) { return@MutableList "" }
+		val lines = mutableListOf(480, 570, 590, 680, 690, 780, 840, 930, 940, 1030, 1040, 1130)
+		val labels = mutableListOf("1", "2", "3", "4", "5", "6")
 		val range = RangePreference.convertToPair(
 			PreferenceUtils.getPrefString(
 				preferences,
@@ -578,25 +542,6 @@ class MainActivity :
 				null
 			)
 		)
-
-		//TODO: reenable
-		/*profileUser.timeGrid.days.maxByOrNull { it.units.size }?.units?.forEachIndexed { index, hour ->
-			if (range?.let { index < it.first - 1 || index >= it.second } == true) return@forEachIndexed
-
-			val startTime =
-				hour.startTime.toLocalTime().toString(DateTimeUtils.shortDisplayableTime())
-			val endTime = hour.endTime.toLocalTime().toString(DateTimeUtils.shortDisplayableTime())
-
-			val startTimeParts = startTime.split(":")
-			val endTimeParts = endTime.split(":")
-
-			val startTimeInt = startTimeParts[0].toInt() * 60 + startTimeParts[1].toInt()
-			val endTimeInt = endTimeParts[0].toInt() * 60 + endTimeParts[1].toInt()
-
-			lines.add(startTimeInt)
-			lines.add(endTimeInt)
-			labels.add(hour.label)
-		}*/
 
 		if (!PreferenceUtils.getPrefBool(preferences, "preference_timetable_range_index_reset"))
 			weekView.hourIndexOffset = (range?.first ?: 1) - 1
@@ -607,8 +552,8 @@ class MainActivity :
 				fun(idx: Int): Int { return idx + 1 }).map { it.toString() }.toTypedArray()
 			else hourLabelArray
 		}
-		/*weekView.startTime = lines.first()
-		weekView.endTime = lines.last() + 30 // TODO: Don't hard-code this offset*/
+		weekView.startTime = lines.first()
+		weekView.endTime = lines.last() + 30 // TODO: Don't hard-code this offset
 	}
 
 	private fun setupActionBar() {
@@ -664,7 +609,6 @@ class MainActivity :
 
 	private fun colorItems(items: List<TimegridItem>) {
 		val regularColor = PreferenceUtils.getPrefInt(preferences, "preference_background_regular")
-		val examColor = PreferenceUtils.getPrefInt(preferences, "preference_background_exam")
 		val cancelledColor =
 			PreferenceUtils.getPrefInt(preferences, "preference_background_cancelled")
 		val irregularColor =
@@ -672,8 +616,6 @@ class MainActivity :
 
 		val regularPastColor =
 			PreferenceUtils.getPrefInt(preferences, "preference_background_regular_past")
-		val examPastColor =
-			PreferenceUtils.getPrefInt(preferences, "preference_background_exam_past")
 		val cancelledPastColor =
 			PreferenceUtils.getPrefInt(preferences, "preference_background_cancelled_past")
 		val irregularPastColor =

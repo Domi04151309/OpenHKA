@@ -1,5 +1,6 @@
 package com.sapuseven.untis.activities
 
+import android.content.Context
 import android.os.Bundle
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -28,6 +29,20 @@ class InfoCenterActivity : BaseActivity() {
 
 	companion object {
 		const val EXTRA_LONG_PROFILE_ID = "com.sapuseven.untis.activities.profileid"
+
+		suspend fun loadMessages(context: Context, link: LinkDatabase.Link): List<Article>? {
+			val parser = Parser.Builder()
+				.context(context)
+				.charset(Charset.forName("ISO-8859-7"))
+				.cacheExpirationMillis(24L * 60L * 60L * 100L) // one day
+				.build()
+
+			return try {
+				parser.getChannel(link.rssUrl).articles
+			} catch (e: Exception) {
+				null
+			}
+		}
 	}
 
 	override fun onCreate(savedInstanceState: Bundle?) {
@@ -62,7 +77,7 @@ class InfoCenterActivity : BaseActivity() {
 
 	private fun refreshMessages(link: LinkDatabase.Link) = GlobalScope.launch(Dispatchers.Main) {
 		messagesLoading = true
-		loadMessages(link)?.let {
+		loadMessages(this@InfoCenterActivity, link)?.let {
 			messageList.clear()
 			messageList.addAll(it)
 			messageAdapter.notifyDataSetChanged()
@@ -77,21 +92,5 @@ class InfoCenterActivity : BaseActivity() {
 		}
 		messagesLoading = false
 		swiperefreshlayout_infocenter.isRefreshing = false
-	}
-
-	private suspend fun loadMessages(link: LinkDatabase.Link): List<Article>? {
-		messagesLoading = true
-
-		val parser = Parser.Builder()
-			.context(this)
-			.charset(Charset.forName("ISO-8859-7"))
-			.cacheExpirationMillis(24L * 60L * 60L * 100L) // one day
-			.build()
-
-		return try {
-			parser.getChannel(link.rssUrl).articles
-		} catch (e: Exception) {
-			null
-		}
 	}
 }
