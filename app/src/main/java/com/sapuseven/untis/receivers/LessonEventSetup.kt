@@ -42,12 +42,9 @@ abstract class LessonEventSetup : BroadcastReceiver() {
 	private fun loadTimetable(context: Context) {
 		Log.d("NotificationSetup", "loadTimetable for user ${profileLink.id}")
 
-		val currentDate = UntisDate.fromLocalDate(LocalDate.now())
-
-		val target = TimetableLoader.TimetableLoaderTarget(currentDate, currentDate)
 		lateinit var timetableLoader: TimetableLoader
 		timetableLoader = TimetableLoader(WeakReference(context), object : TimetableDisplay {
-			override fun addTimetableItems(items: List<TimegridItem>, startDate: UntisDate, endDate: UntisDate, timestamp: Long) {
+			override fun addTimetableItems(items: List<TimegridItem>, timestamp: Long) {
 				onLoadingSuccess(context, items)
 			}
 
@@ -60,7 +57,7 @@ abstract class LessonEventSetup : BroadcastReceiver() {
 				}
 			}
 		}, profileLink)
-		timetableLoader.load(target, TimetableLoader.FLAG_LOAD_CACHE)
+		timetableLoader.load(TimetableLoader.FLAG_LOAD_CACHE)
 	}
 
 	abstract fun onLoadingSuccess(context: Context, items: List<TimegridItem>)

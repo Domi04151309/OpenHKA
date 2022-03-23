@@ -38,26 +38,25 @@ class TimetableLoader(
 		const val CODE_REQUEST_PARSING_EXCEPTION = 3
 	}
 
-	private val requestList = ArrayList<TimetableLoaderTarget>()
+	private val requestList = ArrayList<Int>()
 
-	fun load(target: TimetableLoaderTarget, flags: Int = 0) =
+	fun load(flags: Int = 0) =
 		GlobalScope.launch(Dispatchers.Main) {
-			requestList.add(target)
+			requestList.add(0)
 
 			if (flags and FLAG_LOAD_CACHE > 0)
-				loadFromCache(target, requestList.size - 1)
+				loadFromCache(requestList.size - 1)
 			if (flags and FLAG_LOAD_SERVER > 0)
-				loadFromServer(target, requestList.size - 1)
+				loadFromServer(requestList.size - 1)
 		}
 
-	private fun loadFromCache(target: TimetableLoaderTarget, requestId: Int) {
+	private fun loadFromCache(requestId: Int) {
 		val cache = TimetableCache(context)
-		cache.setTarget(target.startDate, target.endDate)
 
 		if (cache.exists()) {
 			Log.d(
 				"TimetableLoaderDebug",
-				"target $target (requestId $requestId): cached file found"
+				"requestId $requestId: cached file found"
 			)
 			cache.load()?.let { cacheObject ->
 				val calendar = parseICal(cacheObject.data)
@@ -67,12 +66,12 @@ class TimetableLoader(
 					TimegridItem(
 						Period(it as Component, timeZone)
 					)
-				}, target.startDate, target.endDate, cacheObject.timestamp)
+				}, cacheObject.timestamp)
 			} ?: run {
 				cache.delete()
 				Log.d(
 					"TimetableLoaderDebug",
-					"target $target (requestId $requestId): cached file corrupted"
+					"requestId $requestId: cached file corrupted"
 				)
 				timetableDisplay.onTimetableLoadingError(
 					requestId,
@@ -83,7 +82,7 @@ class TimetableLoader(
 		} else {
 			Log.d(
 				"TimetableLoaderDebug",
-				"target $target (requestId $requestId): cached file missing"
+				"requestId $requestId: cached file missing"
 			)
 			timetableDisplay.onTimetableLoadingError(
 				requestId,
@@ -93,12 +92,8 @@ class TimetableLoader(
 		}
 	}
 
-	private suspend fun loadFromServer(
-		target: TimetableLoaderTarget,
-		requestId: Int
-	) {
+	private suspend fun loadFromServer(requestId: Int) {
 		val cache = TimetableCache(context)
-		cache.setTarget(target.startDate, target.endDate)
 
 		link.iCalUrl
 			.httpGet()
@@ -109,13 +104,14 @@ class TimetableLoader(
 					DateTimeZone.forID(calendar.getProperty("X-WR-TIMEZONE").value)
 				val timestamp = Instant.now().millis
 				timetableDisplay.addTimetableItems(calendar.components.map {
+
 					TimegridItem(
 						Period(it as Component, timeZone)
 					)
-				}, target.startDate, target.endDate, timestamp)
+				}, timestamp)
 				Log.d(
 					"TimetableLoaderDebug",
-					"target $target (requestId $requestId): saving to cache: $cache"
+					"requestId $requestId: saving to cache: $cache"
 				)
 				cache.save(TimetableCache.CacheObject(timestamp, data))
 			}, {
@@ -130,13 +126,8 @@ class TimetableLoader(
 	fun repeat(requestId: Int, flags: Int = 0) {
 		Log.d(
 			"TimetableLoaderDebug",
-			"target ${requestList[requestId]} (requestId $requestId): repeat"
+			"requestId $requestId: repeat"
 		)
-		load(requestList[requestId], flags)
+		load(flags)
 	}
-
-	data class TimetableLoaderTarget(
-		val startDate: UntisDate,
-		val endDate: UntisDate
-	)
 }

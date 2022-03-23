@@ -96,10 +96,9 @@ class MainActivity :
 	private val linkDatabase = LinkDatabase.createInstance(this)
 	private var lastBackPress: Long = 0
 	private var profileId: Long = -1
-	private val weeklyTimetableItems: MutableMap<Int, WeeklyTimetableItems?> = mutableMapOf()
+	private var weeklyTimetableItems: WeeklyTimetableItems? = null
 	private var lastPickedDate: DateTime? = null
 	private var profileUpdateDialog: AlertDialog? = null
-	private var currentWeekIndex = 0
 	private val weekViewRefreshHandler = Handler(Looper.getMainLooper())
 	private var timetableLoader: TimetableLoader? = null
 	private lateinit var profileLink: LinkDatabase.Link
@@ -331,23 +330,14 @@ class MainActivity :
 
 	private fun setupSwipeRefresh() {
 		swiperefreshlayout_main_timetable.setOnRefreshListener {
-			weeklyTimetableItems[currentWeekIndex]?.dateRange?.let { dateRange ->
-				loadTimetable(
-					TimetableLoader.TimetableLoaderTarget(
-						dateRange.first,
-						dateRange.second
-					), true
-				)
-			}
+			loadTimetable(true)
 		}
 	}
 
 	//TODO: fix items shown three times
 	private fun loadTimetable(
-		target: TimetableLoader.TimetableLoaderTarget,
 		forceRefresh: Boolean = false
 	) {
-		Log.wtf("aaa", "load timetable")
 		if (timetableLoader == null) return
 
 		weekView.notifyDataSetChanged()
@@ -359,7 +349,7 @@ class MainActivity :
 		)
 		val flags =
 			(if (!forceRefresh) TimetableLoader.FLAG_LOAD_CACHE else 0) or (if (alwaysLoad || forceRefresh) TimetableLoader.FLAG_LOAD_SERVER else 0)
-		timetableLoader!!.load(target, flags)
+		timetableLoader!!.load(flags)
 	}
 
 	private fun loadProfile(): Boolean {
@@ -395,9 +385,8 @@ class MainActivity :
 				newFirstVisibleDay: LocalDate,
 				oldFirstVisibleDay: LocalDate?
 			) {
-				currentWeekIndex = convertDateTimeToWeekIndex(newFirstVisibleDay)
 				setLastRefresh(
-					weeklyTimetableItems[currentWeekIndex]?.lastUpdated
+					weeklyTimetableItems?.lastUpdated
 						?: 0
 				)
 			}
@@ -496,26 +485,13 @@ class MainActivity :
 		startDate: LocalDate,
 		endDate: LocalDate
 	): List<WeekViewDisplayable<TimegridItem>> {
-		val weekIndex = convertDateTimeToWeekIndex(startDate)
-		return weeklyTimetableItems[weekIndex]?.items ?: run {
-			weeklyTimetableItems[weekIndex] = WeeklyTimetableItems().apply {
-				dateRange =
-					(UntisDate.fromLocalDate(LocalDate(startDate)) to UntisDate.fromLocalDate(
-						LocalDate(endDate)
-					)).also { dateRange ->
-						loadTimetable(
-							TimetableLoader.TimetableLoaderTarget(
-								dateRange.first,
-								dateRange.second
-							)
-						)
-					}
+		return weeklyTimetableItems?.items ?: run {
+			weeklyTimetableItems = WeeklyTimetableItems().apply {
+				loadTimetable()
 			}
 			emptyList()
 		}
 	}
-
-	private fun convertDateTimeToWeekIndex(date: LocalDate) = date.year * 100 + date.dayOfYear / 7
 
 	private fun setupHours() {
 		val lines = mutableListOf(480, 570, 590, 680, 690, 780, 840, 930, 940, 1030, 1040, 1130)
@@ -689,7 +665,7 @@ class MainActivity :
 	}
 
 	private fun setTarget(): Boolean {
-		weeklyTimetableItems.clear()
+		weeklyTimetableItems = null
 		weekView.notifyDataSetChanged()
 		return true
 	}
@@ -761,11 +737,9 @@ class MainActivity :
 
 	override fun addTimetableItems(
 		items: List<TimegridItem>,
-		startDate: UntisDate,
-		endDate: UntisDate,
 		timestamp: Long
 	) {
-		weeklyTimetableItems[convertDateTimeToWeekIndex(startDate.toLocalDate())]?.apply {
+		weeklyTimetableItems?.apply {
 			this.items = prepareItems(items).map { it.toWeekViewEvent() }
 			lastUpdated = timestamp
 		}
@@ -845,7 +819,6 @@ class MainActivity :
 	internal class WeeklyTimetableItems {
 		var items: List<WeekViewEvent<TimegridItem>> = emptyList()
 		var lastUpdated: Long = 0
-		var dateRange: Pair<UntisDate, UntisDate>? = null
 	}
 }
 
