@@ -268,8 +268,13 @@ class SettingsActivity : BaseActivity(), PreferenceFragmentCompat.OnPreferenceSt
 			val preferenceScreen = this.preferenceScreen
 			val indicator = findPreference<Preference>("preferences_contributors_indicator")
 			if (success) {
-				val contributors = getJSON().decodeFromString<List<GithubUser>>(original) +
-						getJSON().decodeFromString<List<GithubUser>>(data)
+				val contributors = (getJSON().decodeFromString<List<GithubUser>>(original) +
+						getJSON().decodeFromString<List<GithubUser>>(data)).groupBy { it.login }
+					.map { entry ->
+						val user = entry.value[0]
+						user.contributions = entry.value.sumOf { item -> item.contributions }
+						user
+					}
 
 				preferenceScreen.removePreference(indicator)
 

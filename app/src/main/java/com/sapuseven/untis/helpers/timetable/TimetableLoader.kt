@@ -41,10 +41,10 @@ class TimetableLoader(
 		GlobalScope.launch(Dispatchers.Main) {
 			requestList.add(0)
 
-			/*if (flags and FLAG_LOAD_CACHE > 0)
+			if (flags and FLAG_LOAD_CACHE > 0)
 				loadFromCache(requestList.size - 1)
 			if (flags and FLAG_LOAD_SERVER > 0)
-				loadFromServer(requestList.size - 1)*/
+				loadFromServer(requestList.size - 1)
 		}
 
 	private fun loadFromCache(requestId: Int) {
