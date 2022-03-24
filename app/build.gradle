@@ -6,7 +6,7 @@ apply plugin: 'kotlinx-serialization'
 
 configurations {
 	// referenced in some portable lib. use android internal instead
-	compile.exclude group: 'commons-logging'
+	implementation.exclude group: 'commons-logging'
 }
 
 android {
@@ -23,42 +23,11 @@ android {
 		testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
 	}
 
-	signingConfigs {
-		def propertiesFile = file("signing.properties")
-
-		ext.signingProperties = new Properties()
-		if (propertiesFile.exists()) {
-			propertiesFile.withInputStream {
-				stream -> signingProperties.load(stream)
-			}
-		}
-
-		if (file("BetterUntis.jks").exists()) {
-			release {
-				storeFile file("BetterUntis.jks")
-				storePassword signingProperties["keystorePassword"] != null ? signingProperties["keystorePassword"] : System.getenv("KEYSTORE_PASSWORD")
-				keyAlias "release"
-				keyPassword signingProperties["keyReleasePassword"] != null ? signingProperties["keyReleasePassword"] : System.getenv("KEY_RELEASE_PASSWORD")
-			}
-
-			debug {
-				storeFile file("BetterUntis.jks")
-				storePassword signingProperties["keystorePassword"] != null ? signingProperties["keystorePassword"] : System.getenv("KEYSTORE_PASSWORD")
-				keyAlias "debug"
-				keyPassword signingProperties["keyDebugPassword"] != null ? signingProperties["keyDebugPassword"] : System.getenv("KEY_DEBUG_PASSWORD")
-			}
-		}
-	}
-
 	buildTypes {
 		release {
 			minifyEnabled true
 			shrinkResources true
 			proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
-
-			if (file("BetterUntis.jks").exists()) {
-				signingConfig signingConfigs.release
-			}
 		}
 
 		debug {
@@ -66,10 +35,6 @@ android {
 			shrinkResources false
 			applicationIdSuffix '.debug'
 			versionNameSuffix '-DEBUG'
-
-			if (file("BetterUntis.jks").exists()) {
-				signingConfig signingConfigs.debug
-			}
 		}
 	}
 
@@ -87,8 +52,7 @@ android {
 	}
 
 	packagingOptions {
-		//!!! andoird buildToolsVersion 19.0.3 does not support exclude with wildcards yet :-(
-		exclude('org/apache/commons/codec/language/bm/*.txt')       //  124 files (uncompressed 215kb) with unused language specific rules
+		exclude('org/apache/commons/codec/language/bm/*.txt')
 	}
 }
 

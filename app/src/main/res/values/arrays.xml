@@ -43,18 +43,4 @@
 		<item>short</item>
 		<item>long</item>
 	</string-array>
-
-	<string-array name="preference_schoolcolors">
-		<item>@string/preference_schoolcolors_regular</item>
-		<item>@string/preference_schoolcolors_exam</item>
-		<item>@string/preference_schoolcolors_irregular</item>
-		<item>@string/preference_schoolcolors_cancelled</item>
-	</string-array>
-
-	<string-array name="preference_schoolcolors_values" translatable="false">
-		<item>regular</item>
-		<item>exam</item>
-		<item>irregular</item>
-		<item>cancelled</item>
-	</string-array>
 </resources>

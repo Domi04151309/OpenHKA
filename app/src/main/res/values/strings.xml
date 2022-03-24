@@ -6,54 +6,30 @@
 	<string name="all_help">Help</string>
 	<string name="all_success">success</string>
 	<string name="all_failed">failed</string>
-	<string name="all_personal">Personal</string>
 	<string name="all_subjects">Subjects</string>
-	<string name="all_teachers">Teachers</string>
-	<string name="all_classes">Classes</string>
 	<string name="all_rooms">Rooms</string>
 	<string name="all_info">Info</string>
-	<string name="all_anonymous">Anonymous</string>
 	<string name="all_personal_timetable">Personal Timetable</string>
-	<string name="all_contact_email">betteruntis@sapuseven.com</string>
 	<string name="all_ok">OK</string>
-	<string name="all_yes">Yes</string>
-	<string name="all_no">No</string>
-	<string name="all_close">Close</string>
 	<string name="all_cancel">Cancel</string>
 	<string name="all_error">Error</string>
 	<string name="all_report">Report</string>
-	<string name="all_add">Add</string>
 	<string name="all_delete">Delete</string>
 	<string name="all_reset">Reset</string>
-	<string name="all_absences">Absences</string>
 	<string name="all_lesson_details">Lesson details</string>
 	<string name="all_lesson_cancelled">%1$s (cancelled)</string>
 	<string name="all_lesson_irregular">%1$s (irregular)</string>
-	<string name="all_lesson_exam">%1$s (exam!)</string>
-	<string name="all_lessontopic">Lesson topic</string>
-	<string name="all_lessontopic_none">(No topic)</string>
-	<string name="all_dialog_absences_checked">Absences checked.</string>
-	<string name="all_dialog_absences_not_checked">Absences not checked.</string>
 	<string name="all_dialog_datepicker_button_today">Today</string>
 	<string name="all_dialog_error_title">Error information</string>
 	<string name="all_dialog_error_message">Request ID: %1$d\nError code: %2$d\nError message: %3$s</string>
-	<string name="all_dialog_crash_title">Crash log found</string>
-	<string name="all_dialog_crash_copied">Crash log copied to clipboard.</string>
-	<string name="all_hint_tap_to_edit">(Tap to edit)</string>
 
 	<string name="activity_title_errors">Errors</string>
-	<string name="activity_title_free_rooms">Free Rooms</string>
 	<string name="activity_title_info_center">Info Center</string>
-	<string name="activity_title_messenger">Messenger</string>
 	<string name="activity_title_settings">Settings</string>
 
 	<string name="errors_github_attach_file_message">Please attach the compressed log files to this issue.\nThey have been saved to `%1$s`</string>
 
 	<string name="menu_nav_timetables">Timetables</string>
-	<string name="menu_infocenter_messagesofday">Messages</string>
-	<string name="menu_infocenter_officehours">Office Hours</string>
-	<string name="menu_infocenter_events">Events</string>
-	<string name="menu_infocenter_absences">Absences</string>
 
 	<string name="mainactivitydrawer_dropdown_show">Show profile list</string>
 	<string name="mainactivitydrawer_profile_add">Add a profile</string>
@@ -64,14 +40,9 @@
 	<string name="main_dialog_update_profile_title">Profile update required</string>
 	<string name="main_dialog_update_profile_message">A recent app update has changed the way user data is saved. Please update your current profile to continue using the app.</string>
 	<string name="main_dialog_update_profile_button">Update profile</string>
-	<string name="main_dialog_itemdetails_error_not_found">Item not found</string>
-	<string name="main_dialog_itemdetails_image_infos">Info</string>
-	<string name="main_dialog_itemdetails_image_homeworks">Homework</string>
 	<string name="main_dialog_itemdetails_timeformat">%1$s - %2$s</string>
 	<string name="main_last_refreshed">Last refreshed: %1$s</string>
 	<string name="main_last_refreshed_never">never</string>
-	<string name="main_anonymous_login_info_text">You have to setup a personal timetable if you are logged in as an anonymous user.</string>
-	<string name="main_go_to_settings">Go to settings</string>
 	<string name="main_drawer_open">Open navigation drawer</string>
 	<string name="main_drawer_close">Close navigation drawer</string>
 	<string name="main_drawer_image_logo">SimpleHKA Logo</string>
@@ -81,38 +52,13 @@
 	<string name="link_input_rss_link">RSS Link</string>
 	<string name="link_input_ical_link">iCal Link</string>
 
-	<string name="login_scan_code">Scan QR code</string>
-	<string name="login_welcome">Welcome to SimpleHKA!</string>
-	<string name="login_please_log_in">Choose one of the following options to login:</string>
-	<string name="login_no_results">No results</string>
-	<string name="login_search_by_school_name_or_address">Search by school name or address</string>
-	<string name="login_manual_data_input">Manual data input</string>
-
-	<string name="logindatainput_adding_user_unknown_error">An unknown error happened while adding the user.</string>
-	<string name="logindatainput_anonymous_login">Anonymous login</string>
-	<string name="logindatainput_api_url">Untis API path</string>
-	<string name="logindatainput_aquiring_app_secret">Acquiring app secret…</string>
-	<string name="logindatainput_aquiring_schoolid">Loading school…</string>
 	<string name="logindatainput_connecting">Connecting…</string>
 	<string name="logindatainput_data_loaded">Data loaded.</string>
 	<string name="logindatainput_delete">Delete profile</string>
 	<string name="link_input_error_field_empty">This field cannot be empty!</string>
 	<string name="link_input_error_invalid_url">Must be a valid URL!</string>
-	<string name="logindatainput_error_generic">Error: %1$s</string>
-	<string name="logindatainput_error_invalid_school">Invalid school ID!</string>
-	<string name="logindatainput_error_invalid_url">Invalid URL!</string>
-	<string name="logindatainput_key">Key or Password</string>
-	<string name="logindatainput_loading_user_data">Loading user data…</string>
-	<string name="logindatainput_login">Login</string>
-	<string name="logindatainput_profilename">Profile name (optional)</string>
-	<string name="logindatainput_proxy_host">Proxy server (optional)</string>
-	<string name="logindatainput_school">School name or ID</string>
-	<string name="logindatainput_show_advanced">Show advanced settings</string>
-	<string name="logindatainput_skip_app_secret">Skip app secret resolution</string>
-	<string name="logindatainput_skip_school_id">Skip school ID resolution</string>
 	<string name="logindatainput_title_add">Add profile</string>
 	<string name="logindatainput_title_edit">Edit profile</string>
-	<string name="logindatainput_username">Username</string>
 	<string name="errormessagedictionary_generic">Unknown error</string>
 	<string name="errormessagedictionary_invalid_credentials">Wrong username or key!</string>
 	<string name="errormessagedictionary_invalid_school">The specified school doesn\'t exist!</string>
@@ -123,30 +69,6 @@
 	<string name="errormessagedictionary_server_webuntis_not_installed">The specified Server doesn\'t have WebUntis installed!</string>
 	<string name="errormessagedictionary_too_many_results">Too many results</string>
 	<string name="errormessagedictionary_user_locked">User locked!</string>
-	<string name="roomfinder_current_hour">%1$s, %2$d. Lesson</string>
-	<string name="roomfinder_current_hour_time">%1$s - %2$s</string>
-	<string name="roomfinder_delete_item">Delete item</string>
-	<string name="roomfinder_dialog_itemdelete_text">Are you sure you want to remove this room from the list?</string>
-	<string name="roomfinder_dialog_itemdelete_title">Delete %1$s</string>
-	<string name="roomfinder_image_availability_indicator">Room availability indicator</string>
-	<string name="roomfinder_image_next_hour">next hour</string>
-	<string name="roomfinder_image_previous_hour">previous hour</string>
-	<string name="roomfinder_item_desc_occupied">This Room is occupied.</string>
-	<string name="roomfinder_loading_data">Loading data…</string>
-	<string name="roomfinder_no_rooms">No rooms to display.\nTap + to add one!</string>
-	<string name="infocenter_absences_empty">No absences</string>
-	<string name="infocenter_events_empty">No events</string>
-	<string name="infocenter_events_exam_name_long">%1$s - %2$s</string>
-	<string name="infocenter_messages_attachments">Attachments</string>
-	<string name="infocenter_messages_empty">No messages</string>
-	<string name="infocenter_officehours_empty">No office hours</string>
-	<string name="infocenter_timeformat">%2$s, %1$s - %4$s, %3$s</string>
-	<string name="infocenter_timeformat_sameday">%2$s - %4$s, %1$s</string>
-	<string name="infocenter_absence_unknown_reason">Unknown reason</string>
-	<string name="elementpicker_hint_search">Search…</string>
-	<string name="elementpicker_hint_search_classes">Search for classes…</string>
-	<string name="elementpicker_hint_search_rooms">Search for rooms…</string>
-	<string name="elementpicker_hint_search_teachers">Search for teachers…</string>
 
 	<string name="preference_automute_cancelled_lessons">Also mute in cancelled lessons</string>
 	<string name="preference_automute_enable">Enable auto-mute</string>
@@ -156,15 +78,12 @@
 	<string name="preference_automute_minimum_break_length">Minimum break length</string>
 	<string name="preference_background_cancelled">Cancelled lessons</string>
 	<string name="preference_background_cancelled_past">Past cancelled lessons</string>
-	<string name="preference_background_exam">Lessons with tests</string>
-	<string name="preference_background_exam_past">Past lessons with tests</string>
 	<string name="preference_background_future">Future day background</string>
 	<string name="preference_background_irregular">Irregular lessons</string>
 	<string name="preference_background_irregular_past">Past irregular lessons</string>
 	<string name="preference_background_past">Past day background</string>
 	<string name="preference_background_regular">Regular lessons</string>
 	<string name="preference_background_regular_past">Past regular lessons</string>
-	<string name="preference_category_connectivity_proxy">WebUntis Proxy</string>
 	<string name="preference_category_general_automute">Auto-Mute</string>
 	<string name="preference_category_general_behaviour">Behaviour</string>
 	<string name="preference_category_general_week_display">Week Display Settings</string>
@@ -175,8 +94,6 @@
 	<string name="preference_category_timetable_item_appearance">Item Appearance</string>
 	<string name="preference_category_timetable_lesson_text">Lesson Text</string>
 	<string name="preference_category_timetable_range">Timetable Range</string>
-	<string name="preference_connectivity_proxy_about">About this feature</string>
-	<string name="preference_connectivity_proxy_host">Proxy server host</string>
 	<string name="preference_connectivity_refresh_in_background">Always refresh timetable</string>
 	<string name="preference_connectivity_refresh_in_background_desc">Disable to save data with less frequent timetable updates</string>
 	<string name="preference_dark_theme">Dark theme</string>
@@ -205,17 +122,9 @@
 	<string name="preference_notifications_first_lesson_desc">Show a notification right before school starts</string>
 	<string name="preference_notifications_first_lesson_time">Notification time</string>
 	<string name="preference_notifications_first_lesson_time_unit">min before first lesson</string>
-	<string name="preference_notifications_multiple">Enable in multiple-hour lesson</string>
-	<string name="preference_notifications_multiple_desc">Notifications will be shown in breaks within multiple-hour lessons.</string>
 	<string name="preference_notifications_visibility_hidden">Hidden</string>
 	<string name="preference_notifications_visibility_long">Long name</string>
 	<string name="preference_notifications_visibility_short">Short name</string>
-	<string name="preference_school_background">Use colors provided from your school</string>
-	<string name="preference_school_background_desc">Some schools send their own background colors</string>
-	<string name="preference_schoolcolors_cancelled">For cancelled lessons</string>
-	<string name="preference_schoolcolors_exam">For lessons with tests</string>
-	<string name="preference_schoolcolors_irregular">For irregular lessons</string>
-	<string name="preference_schoolcolors_regular">For regular lessons</string>
 	<string name="preference_theme">Select a theme</string>
 	<string name="preference_theme_blue">Blue</string>
 	<string name="preference_theme_cyan">Cyan</string>
@@ -224,8 +133,6 @@
 	<string name="preference_theme_pixel">Pixel</string>
 	<string name="preference_theme_stock">Default</string>
 	<string name="preference_theme_untis">Original Untis-App</string>
-	<string name="preference_timetable_background_irregular">Consider item background</string>
-	<string name="preference_timetable_background_irregular_desc">Use this if you have no access to teachers</string>
 	<string name="preference_timetable_bold_lesson_name">Bold lesson name</string>
 	<string name="preference_timetable_centered_lesson_info">Center lesson infos</string>
 	<string name="preference_timetable_colors_reset">Reset colors</string>
@@ -240,12 +147,9 @@
 	<string name="preference_timetable_item_text_light">Use white text for timetable items</string>
 	<string name="preference_timetable_lesson_info_font_size">Font size for lesson infos</string>
 	<string name="preference_timetable_lesson_name_font_size">Font size for lesson name</string>
-	<string name="preference_timetable_personal_timetable">Custom Personal Timetable</string>
 	<string name="preference_timetable_range">Hours to display</string>
 	<string name="preference_timetable_range_desc">Hours %1$d to %2$d</string>
 	<string name="preference_timetable_range_index_reset">Reset lesson numbering</string>
-	<string name="preference_timetable_substitutions_irregular">Detect irregular lessons</string>
-	<string name="preference_timetable_substitutions_irregular_desc">Treat lessons with substitutions as irregular</string>
 	<string name="preference_use_theme_background">Use theme colors</string>
 	<string name="preference_use_theme_background_desc">This only applies to regular lessons</string>
 	<string name="preference_week_custom_range">Custom week range</string>
@@ -262,9 +166,6 @@
 	<string name="preferences_styling">Customization</string>
 	<string name="preferences_timetable">Timetable</string>
 
-	<string name="settings_designing_message">Contribute by creating the missing settings icons!</string>
-	<string name="settings_designing_hide">Don\'t show again</string>
-	<string name="settings_designing_info">Learn more</string>
 	<string name="notifications_channel_breakinfo">Break info</string>
 	<string name="notifications_channel_breakinfo_desc">Shows information about the current break and the following lesson</string>
 	<string name="notifications_channel_backgrounderrors">Background errors</string>
@@ -278,8 +179,6 @@
 	<string name="notifications_text_message_teachers">Teacher: %1$s</string>
 	<string name="notifications_text_message_classes">Class: %1$s</string>
 	<string name="notifications_text_message_separator"> / </string>
-	<string name="homeworks_due_time">until %1$s</string>
-	<string name="homeworks_due_time_format">EEE, dd. MMM</string>
 	<string name="errors_crash_title">It looks like SimpleHKA crashed.</string>
 	<string name="errors_crash_message">Sorry for that.</string>
 	<string name="errors_report">Please help to fix the app by reporting the errors below:</string>
@@ -313,10 +212,8 @@
 
 	<string name="widget_configuration">Widget Configuration</string>
 	<string name="widget_timetable">Timetable</string>
-	<string name="widget_timetable_empty">No timetable available for today</string>
 	<string name="widget_daily_messages">Daily Messages</string>
 	<string name="widget_select_profile">Please select a profile for the widget</string>
-	<string name="widget_timetable_link">Timetable Link</string>
 
 	<plurals name="main_time_diff_minutes">
 		<item quantity="one">a minute ago</item>
@@ -329,10 +226,6 @@
 	<plurals name="main_time_diff_days">
 		<item quantity="one">a day ago</item>
 		<item quantity="other">%d days ago</item>
-	</plurals>
-	<plurals name="roomfinder_item_desc">
-		<item quantity="one">This Room is free right now.</item>
-		<item quantity="other">This Room is free for %d hours.</item>
 	</plurals>
 	<plurals name="preferences_contributors_contributions">
 		<item quantity="one">%1$d contribution</item>
