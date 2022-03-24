@@ -23,7 +23,7 @@
 	<bool name="preference_additional_error_messages_default">false</bool>
 
 	<integer name="preference_background_regular_default">0xFFD72305</integer>
-	<integer name="preference_background_regular_past_default">0xFFD32F2F</integer>
+	<integer name="preference_background_regular_past_default">0xFFB51D04</integer>
 	<integer name="preference_background_exam_default">0xFF03A9F4</integer>
 	<integer name="preference_background_exam_past_default">0xFF0288D1</integer>
 	<integer name="preference_background_irregular_default">0xFF4CAF50</integer>
