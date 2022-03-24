@@ -26,17 +26,17 @@ class Period(component: Component, timeZone: DateTimeZone) {
 	}
 
 	//TODO: will break in 10000 years
-	//TODO: might break for daylight savings; Edit: it does
 	private fun stringToDate(string: String, timeZone: DateTimeZone): DateTime {
-		return DateTime(
+		val dateTime = DateTime(
 			string.substring(0, 4).toInt(),
 			string.substring(4, 6).toInt(),
 			string.substring(6, 8).toInt(),
-			string.substring(9, 11).toInt() + 1, //this
+			string.substring(9, 11).toInt(),
 			string.substring(11, 13).toInt(),
 			string.substring(13, 15).toInt(),
-			timeZone //and this
+			timeZone
 		)
+		return dateTime.plusMillis(timeZone.getOffset(dateTime.toInstant()))
 	}
 
 	private fun formatTitle(title: String): String {
