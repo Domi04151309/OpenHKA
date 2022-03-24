@@ -14,6 +14,7 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
 import java.nio.charset.Charset
+import java.nio.charset.StandardCharsets
 import java.text.SimpleDateFormat
 import java.util.*
 
@@ -33,7 +34,7 @@ class InfoCenterActivity : BaseActivity() {
 		suspend fun loadMessages(context: Context, link: LinkDatabase.Link): List<Article>? {
 			val parser = Parser.Builder()
 				.context(context)
-				.charset(Charset.forName("ISO-8859-7"))
+				.charset(StandardCharsets.UTF_8)
 				.cacheExpirationMillis(24L * 60L * 60L * 100L) // one day
 				.build()
 
