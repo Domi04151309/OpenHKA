@@ -9,6 +9,8 @@ import com.sapuseven.untis.data.timetable.TimegridItem
 import com.sapuseven.untis.helpers.config.PreferenceManager
 import com.sapuseven.untis.helpers.timetable.TimetableLoader
 import com.sapuseven.untis.interfaces.TimetableDisplay
+import org.joda.time.DateTime
+import org.joda.time.Instant
 import java.lang.ref.WeakReference
 
 /**
@@ -43,7 +45,10 @@ abstract class LessonEventSetup : BroadcastReceiver() {
 		lateinit var timetableLoader: TimetableLoader
 		timetableLoader = TimetableLoader(WeakReference(context), object : TimetableDisplay {
 			override fun addTimetableItems(items: List<TimegridItem>, timestamp: Long) {
-				onLoadingSuccess(context, items)
+				val now = DateTime(Instant.now().millis)
+				onLoadingSuccess(context, items.filter {
+					it.startTime.dayOfYear() == now.dayOfYear() && it.startTime.year() == now.year()
+				})
 			}
 
 			override fun onTimetableLoadingError(requestId: Int, code: Int?, message: String?) {
