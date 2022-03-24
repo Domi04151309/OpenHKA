@@ -7,7 +7,6 @@ import android.graphics.RectF
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
-import android.util.Log
 import android.view.MenuItem
 import android.view.View
 import android.view.ViewGroup
@@ -20,7 +19,6 @@ import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.graphics.ColorUtils
 import androidx.core.view.GravityCompat
 import androidx.drawerlayout.widget.DrawerLayout
-import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentTransaction
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -41,9 +39,7 @@ import com.sapuseven.untis.helpers.ErrorMessageDictionary
 import com.sapuseven.untis.helpers.config.PreferenceUtils
 import com.sapuseven.untis.helpers.timetable.TimetableLoader
 import com.sapuseven.untis.interfaces.TimetableDisplay
-import com.sapuseven.untis.models.untis.UntisDate
 import com.sapuseven.untis.models.untis.timetable.Period
-import com.sapuseven.untis.models.untis.timetable.PeriodElement
 import com.sapuseven.untis.preferences.RangePreference
 import com.sapuseven.untis.receivers.NotificationSetup.Companion.EXTRA_BOOLEAN_MANUAL
 import com.sapuseven.untis.receivers.StartupReceiver
@@ -74,8 +70,7 @@ class MainActivity :
 	WeekViewLoader.PeriodChangeListener<TimegridItem>,
 	EventClickListener<TimegridItem>,
 	TopLeftCornerClickListener,
-	TimetableDisplay,
-	TimetableItemDetailsFragment.TimetableItemDetailsDialogListener {
+	TimetableDisplay {
 
 	companion object {
 		private const val MINUTE_MILLIS: Int = 60 * 1000
@@ -689,19 +684,6 @@ class MainActivity :
 			addToBackStack(fragment.tag)
 			commit()
 		}
-	}
-
-	override fun onPeriodElementClick(
-		fragment: Fragment,
-		element: PeriodElement?,
-		useOrgId: Boolean
-	) {
-	}
-
-	override fun onPeriodAbsencesClick() {
-	}
-
-	override fun onLessonTopicClick() {
 	}
 
 	private fun setLastRefresh(timestamp: Long) {

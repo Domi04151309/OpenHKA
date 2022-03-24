@@ -9,8 +9,6 @@ import com.sapuseven.untis.data.timetable.TimegridItem
 import com.sapuseven.untis.helpers.config.PreferenceManager
 import com.sapuseven.untis.helpers.timetable.TimetableLoader
 import com.sapuseven.untis.interfaces.TimetableDisplay
-import com.sapuseven.untis.models.untis.UntisDate
-import org.joda.time.LocalDate
 import java.lang.ref.WeakReference
 
 /**

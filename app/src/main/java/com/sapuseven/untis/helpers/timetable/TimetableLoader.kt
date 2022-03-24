@@ -7,7 +7,6 @@ import com.github.kittinunf.fuel.httpGet
 import com.sapuseven.untis.data.databases.LinkDatabase
 import com.sapuseven.untis.data.timetable.TimegridItem
 import com.sapuseven.untis.interfaces.TimetableDisplay
-import com.sapuseven.untis.models.untis.UntisDate
 import com.sapuseven.untis.models.untis.timetable.Period
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
@@ -15,12 +14,10 @@ import kotlinx.coroutines.launch
 import net.fortuna.ical4j.data.CalendarBuilder
 import net.fortuna.ical4j.model.Calendar
 import net.fortuna.ical4j.model.Component
-import net.fortuna.ical4j.model.ComponentList
 import org.joda.time.DateTimeZone
 import org.joda.time.Instant
 import java.io.StringReader
 import java.lang.ref.WeakReference
-import java.util.*
 import kotlin.collections.ArrayList
 
 

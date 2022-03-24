@@ -1,6 +1,5 @@
 package com.sapuseven.untis.fragments
 
-import android.content.Context
 import android.os.Bundle
 import android.view.Gravity
 import android.view.LayoutInflater
@@ -17,7 +16,6 @@ import com.sapuseven.untis.activities.MainActivity
 import com.sapuseven.untis.data.timetable.TimegridItem
 import com.sapuseven.untis.helpers.ConversionUtils
 import com.sapuseven.untis.models.untis.timetable.Period
-import com.sapuseven.untis.models.untis.timetable.PeriodElement
 import com.sapuseven.untis.viewmodels.PeriodDataViewModel
 import org.joda.time.LocalDateTime
 import org.joda.time.format.DateTimeFormat
@@ -29,24 +27,6 @@ class TimetableItemDetailsFragment(item: TimegridItem?) : Fragment() {
 		PeriodDataViewModel.Factory(
 			item,
 		)
-	}
-
-	private lateinit var listener: TimetableItemDetailsDialogListener
-
-	interface TimetableItemDetailsDialogListener {
-		fun onPeriodElementClick(fragment: Fragment, element: PeriodElement?, useOrgId: Boolean)
-
-		fun onPeriodAbsencesClick()
-
-		fun onLessonTopicClick()
-	}
-
-	override fun onAttach(context: Context) {
-		super.onAttach(context)
-		if (context is TimetableItemDetailsDialogListener)
-			listener = context
-		else
-			throw ClassCastException("$context must implement TimetableItemDetailsDialogListener")
 	}
 
 	override fun onCreateView(

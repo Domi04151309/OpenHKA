@@ -32,6 +32,5 @@
 -keepclassmembernames class kotlinx.** {
     volatile <fields>;
 }
--keepclasseswithmembers class com.sapuseven.untis.** implements com.sapuseven.untis.interfaces.TableModel { *; }
 
 -keep public class * extends androidx.lifecycle.ViewModel {*;}
