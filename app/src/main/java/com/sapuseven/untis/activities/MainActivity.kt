@@ -14,7 +14,6 @@ import android.view.WindowManager
 import android.widget.ImageView
 import android.widget.LinearLayout
 import androidx.appcompat.app.ActionBarDrawerToggle
-import androidx.appcompat.app.AlertDialog
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.graphics.ColorUtils
 import androidx.core.view.GravityCompat
@@ -23,11 +22,9 @@ import androidx.fragment.app.FragmentTransaction
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import ca.antonious.materialdaypicker.MaterialDayPicker
-import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.google.android.material.navigation.NavigationView
 import com.google.android.material.snackbar.Snackbar
 import com.sapuseven.untis.R
-import com.sapuseven.untis.activities.LinkInputActivity.Companion.EXTRA_BOOLEAN_PROFILE_UPDATE
 import com.sapuseven.untis.adapters.ProfileListAdapter
 import com.sapuseven.untis.data.databases.LinkDatabase
 import com.sapuseven.untis.data.timetable.TimegridItem
@@ -93,7 +90,6 @@ class MainActivity :
 	private var profileId: Long = -1
 	private var weeklyTimetableItems: WeeklyTimetableItems? = null
 	private var lastPickedDate: DateTime? = null
-	private var profileUpdateDialog: AlertDialog? = null
 	private val weekViewRefreshHandler = Handler(Looper.getMainLooper())
 	private var timetableLoader: TimetableLoader? = null
 	private lateinit var profileLink: LinkDatabase.Link
@@ -135,10 +131,6 @@ class MainActivity :
 		}
 	}
 
-	private fun checkForProfileUpdateRequired(): Boolean {
-		return profileLink.rssUrl.isBlank() || profileLink.iCalUrl.isBlank()
-	}
-
 	override fun onPause() {
 		weekViewRefreshHandler.removeCallbacks(weekViewUpdate)
 		super.onPause()
@@ -165,17 +157,6 @@ class MainActivity :
 					startActivity(Intent(this, ErrorsActivity::class.java))
 				}
 				.show()
-	}
-
-	private fun showProfileUpdateRequired() {
-		profileUpdateDialog = MaterialAlertDialogBuilder(this)
-			.setTitle(getString(R.string.main_dialog_update_profile_title))
-			.setMessage(getString(R.string.main_dialog_update_profile_message))
-			.setPositiveButton(getString(R.string.main_dialog_update_profile_button)) { _, _ ->
-				updateProfile(profileLink)
-			}
-			.setCancelable(false)
-			.show()
 	}
 
 	private fun login() {
@@ -267,13 +248,6 @@ class MainActivity :
 		startActivityForResult(loginIntent, REQUEST_CODE_LOGINDATAINPUT_EDIT)
 	}
 
-	private fun updateProfile(link: LinkDatabase.Link) {
-		val loginIntent = Intent(this, LinkInputActivity::class.java)
-			.putExtra(LinkInputActivity.EXTRA_LONG_PROFILE_ID, link.id)
-			.putExtra(EXTRA_BOOLEAN_PROFILE_UPDATE, true)
-		startActivityForResult(loginIntent, REQUEST_CODE_LOGINDATAINPUT_EDIT)
-	}
-
 	private fun switchToProfile(link: LinkDatabase.Link) {
 		profileId = link.id!!
 		preferences.saveProfileId(profileId)
@@ -361,11 +335,6 @@ class MainActivity :
 
 		preferences.saveProfileId(profileId)
 		preferences.reload(profileId)
-
-		if (checkForProfileUpdateRequired()) {
-			showProfileUpdateRequired()
-			return false
-		}
 
 		return true
 	}

@@ -9,7 +9,7 @@ import com.sapuseven.untis.R
 import com.sapuseven.untis.activities.ErrorsActivity
 
 class ErrorsAdapter(
-		val errorList: List<ErrorsActivity.ErrorData> = ArrayList()
+		private val errorList: List<ErrorsActivity.ErrorData> = ArrayList()
 ) : RecyclerView.Adapter<ErrorsAdapter.ViewHolder>() {
 	private var onClickListener: (ErrorsActivity.ErrorData) -> Unit = {}
 

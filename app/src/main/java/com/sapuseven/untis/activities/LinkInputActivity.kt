@@ -12,12 +12,8 @@ import android.widget.EditText
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.sapuseven.untis.R
 import com.sapuseven.untis.data.databases.LinkDatabase
-import com.sapuseven.untis.dialogs.ProfileUpdateDialog
 import com.sapuseven.untis.helpers.config.PreferenceManager
 import kotlinx.android.synthetic.main.activity_link_input.*
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.GlobalScope
-import kotlinx.coroutines.launch
 
 class LinkInputActivity : BaseActivity() {
 
@@ -28,7 +24,6 @@ class LinkInputActivity : BaseActivity() {
 		private const val FRAGMENT_TAG_PROFILE_UPDATE = "profileUpdate"
 
 		const val EXTRA_LONG_PROFILE_ID = "com.sapuseven.untis.activities.profileId"
-		const val EXTRA_BOOLEAN_PROFILE_UPDATE = "com.sapuseven.untis.activities.profileupdate"
 	}
 
 	private var existingLink: LinkDatabase.Link? = null
@@ -78,18 +73,6 @@ class LinkInputActivity : BaseActivity() {
 		focusFirstFreeField()
 
 		setElementsEnabled(true)
-
-		if (intent.getBooleanExtra(EXTRA_BOOLEAN_PROFILE_UPDATE, false)) {
-			supportFragmentManager
-				.beginTransaction()
-				.replace(
-					android.R.id.content, ProfileUpdateDialog(),
-					FRAGMENT_TAG_PROFILE_UPDATE
-				)
-				.commit()
-
-			loadData()
-		}
 	}
 
 	private fun validate(): EditText? {

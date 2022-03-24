@@ -37,9 +37,6 @@
 
 	<string name="main_dialog_delete_profile_title">Delete profile?</string>
 	<string name="main_dialog_delete_profile_message">Are you sure you want to delete this profile?</string>
-	<string name="main_dialog_update_profile_title">Profile update required</string>
-	<string name="main_dialog_update_profile_message">A recent app update has changed the way user data is saved. Please update your current profile to continue using the app.</string>
-	<string name="main_dialog_update_profile_button">Update profile</string>
 	<string name="main_dialog_itemdetails_timeformat">%1$s - %2$s</string>
 	<string name="main_last_refreshed">Last refreshed: %1$s</string>
 	<string name="main_last_refreshed_never">never</string>

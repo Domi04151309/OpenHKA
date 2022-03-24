@@ -11,8 +11,4 @@ object ConversionUtils {
 	fun spToPx(sp: Float, context: Context): Float {
 		return TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_SP, sp, context.resources.displayMetrics)
 	}
-
-	fun dpToSp(dp: Float, context: Context): Int {
-		return (dpToPx(dp, context) / context.resources.displayMetrics.scaledDensity).toInt()
-	}
 }

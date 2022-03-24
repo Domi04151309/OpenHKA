@@ -13,7 +13,6 @@ import kotlinx.android.synthetic.main.activity_infocenter.*
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
-import java.nio.charset.Charset
 import java.nio.charset.StandardCharsets
 import java.text.SimpleDateFormat
 import java.util.*

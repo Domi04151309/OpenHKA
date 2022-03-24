@@ -12,15 +12,13 @@ import java.lang.ref.WeakReference
 class TimetableCache(val context: WeakReference<Context>) {
 
 	fun exists(): Boolean {
-		return targetCacheFile()?.exists() ?: false
+		return targetCacheFile().exists()
 	}
 
 	fun load(): CacheObject? {
 		return try {
 			Cbor.decodeFromByteArray<CacheObject>(
-				targetCacheFile()?.readBytes() ?: ByteArray(
-					0
-				)
+				targetCacheFile().readBytes()
 			)
 		} catch (e: Exception) {
 			null
@@ -28,10 +26,10 @@ class TimetableCache(val context: WeakReference<Context>) {
 	}
 
 	fun save(items: CacheObject) {
-		targetCacheFile()?.writeBytes(Cbor.encodeToByteArray(items))
+		targetCacheFile().writeBytes(Cbor.encodeToByteArray(items))
 	}
 
-	private fun targetCacheFile(): File? {
+	private fun targetCacheFile(): File {
 		return File(context.get()?.cacheDir, "default")
 	}
 
@@ -40,7 +38,7 @@ class TimetableCache(val context: WeakReference<Context>) {
 	}
 
 	fun delete() {
-		targetCacheFile()?.delete()
+		targetCacheFile().delete()
 	}
 
 	@Serializable

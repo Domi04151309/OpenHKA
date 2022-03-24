@@ -26,10 +26,7 @@
     <string name="mainactivitydrawer_profile_add">Profil hinzufügen</string>
     <string name="mainactivitydrawer_profile_delete_hint">Lange auf ein Profil tippen, um zu bearbeiten</string>
     <string name="main_dialog_delete_profile_title">Profil löschen?</string>
-    <string name="main_dialog_delete_profile_message">Bist du sicher, dass du dein Profil mit dem Benutzer %1$s an der Schule %2$s löschen möchtest\?</string>
-    <string name="main_dialog_update_profile_title">Profilaktualisierung notwendig</string>
-    <string name="main_dialog_update_profile_message">Eine Aktualisierung der App hat den Benutzerdatenspeicher geändert. Bitte aktualisiere dein aktuelles Profil, um die App weiter nutzen zu können.</string>
-    <string name="main_dialog_update_profile_button">Profil aktualisieren</string>
+    <string name="main_dialog_delete_profile_message">Bist du sicher, dass du das Profil möchtest?</string>
     <string name="main_last_refreshed">Zuletzt aktualisiert: %1$s</string>
     <string name="main_last_refreshed_never">nie</string>
     <string name="main_drawer_open">Navigationsleiste öffnen</string>

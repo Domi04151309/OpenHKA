@@ -176,7 +176,7 @@ class WeekView<T>(
 	 *
 	 * @return The event loader.
 	 */
-	var weekViewLoader: WeekViewLoader<T>?
+	private var weekViewLoader: WeekViewLoader<T>?
 		get() = gestureHandler.weekViewLoader
 		set(weekViewLoader) {
 			gestureHandler.weekViewLoader = weekViewLoader

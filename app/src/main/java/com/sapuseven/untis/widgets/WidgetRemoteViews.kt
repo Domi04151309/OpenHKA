@@ -89,7 +89,7 @@ class WidgetRemoteViewsFactory(private val applicationContext: Context, intent: 
 	}
 
 	// TODO: This function duplicates code from TimetableLoader. This should be resolved during backend refactoring.
-	private fun loadTimetable(): List<WidgetListItem>? {
+	private fun loadTimetable(): List<WidgetListItem> {
 		if (link == null) {
 			status = STATUS_ERROR
 			listOf(errorItem)

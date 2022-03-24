@@ -312,32 +312,6 @@ class SettingsActivity : BaseActivity(), PreferenceFragmentCompat.OnPreferenceSt
 		private fun clearNotifications() =
 			(context?.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager).cancelAll()
 
-		private fun refreshColorPreferences(newValue: Set<*>) {
-			val regularColors = listOf(
-				"preference_background_regular",
-				"preference_background_regular_past",
-				"preference_use_theme_background"
-			)
-			val irregularColors =
-				listOf("preference_background_irregular", "preference_background_irregular_past")
-			val cancelledColors =
-				listOf("preference_background_cancelled", "preference_background_cancelled_past")
-			val examColors = listOf("preference_background_exam", "preference_background_exam_past")
-
-			regularColors.forEach {
-				findPreference<Preference>(it)?.isEnabled = !newValue.contains("regular")
-			}
-			irregularColors.forEach {
-				findPreference<Preference>(it)?.isEnabled = !newValue.contains("irregular")
-			}
-			cancelledColors.forEach {
-				findPreference<Preference>(it)?.isEnabled = !newValue.contains("cancelled")
-			}
-			examColors.forEach {
-				findPreference<Preference>(it)?.isEnabled = !newValue.contains("exam")
-			}
-		}
-
 		override fun onDisplayPreferenceDialog(preference: Preference) {
 			fragmentManager?.let { manager ->
 				if (manager.findFragmentByTag(DIALOG_FRAGMENT_TAG) != null) return
