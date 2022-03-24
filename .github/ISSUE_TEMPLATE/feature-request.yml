@@ -7,7 +7,7 @@ body:
     id: problem
     attributes:
       label: Problem Statement
-      description: What problem does BetterUntis currently have?
+      description: What problem does SimpleHKA currently have?
     validations:
       required: true
   - type: textarea

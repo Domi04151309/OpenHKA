@@ -72,7 +72,7 @@
 	<string name="main_go_to_settings">Go to settings</string>
 	<string name="main_drawer_open">Open navigation drawer</string>
 	<string name="main_drawer_close">Close navigation drawer</string>
-	<string name="main_drawer_image_logo">BetterUntis Logo</string>
+	<string name="main_drawer_image_logo">SimpleHKA Logo</string>
 	<string name="main_press_back_double">Press BACK twice to exit</string>
 	<string name="main_time_diff_just_now">just now</string>
 
@@ -80,7 +80,7 @@
 	<string name="link_input_ical_link">iCal Link</string>
 
 	<string name="login_scan_code">Scan QR code</string>
-	<string name="login_welcome">Welcome to BetterUntis!</string>
+	<string name="login_welcome">Welcome to SimpleHKA!</string>
 	<string name="login_please_log_in">Choose one of the following options to login:</string>
 	<string name="login_no_results">No results</string>
 	<string name="login_search_by_school_name_or_address">Search by school name or address</string>
@@ -277,7 +277,7 @@
 	<string name="notifications_text_message_separator"> / </string>
 	<string name="homeworks_due_time">until %1$s</string>
 	<string name="homeworks_due_time_format">EEE, dd. MMM</string>
-	<string name="errors_crash_title">It looks like BetterUntis crashed.</string>
+	<string name="errors_crash_title">It looks like SimpleHKA crashed.</string>
 	<string name="errors_crash_message">Sorry for that.</string>
 	<string name="errors_report">Please help to fix the app by reporting the errors below:</string>
 	<string name="errors_button_dismiss">Dismiss all</string>

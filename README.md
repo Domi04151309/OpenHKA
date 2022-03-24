@@ -1,4 +1,4 @@
-![App Icon](https://raw.githubusercontent.com/Domi04151309/SimpleHKA/master/app/src/main/res/mipmap-xxxhdpi/ic_launcher.png)
+![App Icon](https://raw.githubusercontent.com/Domi04151309/SimpleHKA/main/app/src/main/res/mipmap-xxxhdpi/ic_launcher.png)
 # SimpleHKA
 A mobile client for the IWI HKA system
 

@@ -17,7 +17,7 @@ class GithubIssue(type: Type, log: String) : Issue(type, log) {
 		val uri = Uri.Builder()
 				.scheme("https")
 				.authority("github.com")
-				.path("/SapuSeven/BetterUntis/issues/new")
+				.path("/Domi04151309/SimpleHKA/issues/new")
 				.appendQueryParameter("labels", "bug")
 				.appendQueryParameter("template", "bug-report.md")
 				.appendQueryParameter("title", generateTitle())
@@ -59,6 +59,6 @@ class GithubIssue(type: Type, log: String) : Issue(type, log) {
 		"**Additional information**\n" +
 		"\n" +
 		"- Android version: _${Build.VERSION.RELEASE}_\n" +
-		"- BetterUntis version: _${version}_\n" +
+		"- App version: _${version}_\n" +
 		"- Installation source: _${installationSource}_"
 }

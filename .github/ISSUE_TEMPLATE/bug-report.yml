@@ -42,8 +42,8 @@ body:
   - type: input
     id: app-version
     attributes:
-      label: BetterUntis Version
-      description: BetterUntis Settings -> About -> App version
+      label: SimpleHKA Version
+      description: SimpleHKA Settings -> About -> App version
       placeholder: ex. 1.0.0 (1)
     validations:
       required: true
@@ -54,7 +54,6 @@ body:
       options:
         - Google Play
         - F-Droid
-        - SapuSeven.com
         - Own Build
     validations:
       required: false

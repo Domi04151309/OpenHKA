@@ -55,11 +55,11 @@
     <string name="main_go_to_settings">Zu den Einstellungen</string>
     <string name="main_drawer_open">Navigationsleiste öffnen</string>
     <string name="main_drawer_close">Navigationsleiste schließen</string>
-    <string name="main_drawer_image_logo">BetterUntis Logo</string>
+    <string name="main_drawer_image_logo">SimpleHKA Logo</string>
     <string name="main_press_back_double">Drücke erneut auf die ZURÜCK-Taste, um die App zu beenden</string>
     <string name="main_time_diff_just_now">gerade eben</string>
     <string name="login_scan_code">QR-Code scannen</string>
-    <string name="login_welcome">Herzlich Willkommen bei BetterUntis!</string>
+    <string name="login_welcome">Herzlich Willkommen bei SimpleHKA!</string>
     <string name="login_please_log_in">Bitte melde dich an, um die App nutzen zu können:</string>
     <string name="login_no_results">Keine Ergebnisse</string>
     <string name="login_search_by_school_name_or_address">Nach Schule oder Adresse suchen</string>
@@ -247,7 +247,7 @@
     <string name="notifications_text_message_separator"> / </string>
     <string name="homeworks_due_time">bis %1$s</string>
     <string name="homeworks_due_time_format">EEE, dd. MMM</string>
-    <string name="errors_crash_title">Es sieht aus als wäre BetterUntis abgestürzt.</string>
+    <string name="errors_crash_title">Es sieht aus als wäre SimpleHKA abgestürzt.</string>
     <string name="errors_crash_message">Entschuldigung.</string>
     <string name="errors_report">Bitte hilf, die App zu verbessern, indem du die Fehler unten meldest:</string>
     <string name="errors_button_dismiss">Alle verwerfen</string>
