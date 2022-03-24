@@ -3,6 +3,7 @@
 	<string name="app_name" translatable="false">SimpleHKA</string>
 	<string name="app_desc">A mobile client for the IWI HKA system</string>
 
+	<string name="all_help">Help</string>
 	<string name="all_success">success</string>
 	<string name="all_failed">failed</string>
 	<string name="all_personal">Personal</string>
@@ -59,7 +60,7 @@
 	<string name="mainactivitydrawer_profile_delete_hint">Long-press a profile to edit</string>
 
 	<string name="main_dialog_delete_profile_title">Delete profile?</string>
-	<string name="main_dialog_delete_profile_message">Are you sure you want to delete your profile with user %1$s at school %2$s\?</string>
+	<string name="main_dialog_delete_profile_message">Are you sure you want to delete this profile?</string>
 	<string name="main_dialog_update_profile_title">Profile update required</string>
 	<string name="main_dialog_update_profile_message">A recent app update has changed the way user data is saved. Please update your current profile to continue using the app.</string>
 	<string name="main_dialog_update_profile_button">Update profile</string>

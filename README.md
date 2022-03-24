@@ -8,8 +8,8 @@ A mobile client for the IWI HKA system
 
 ## Screenshots
 
-| <img src="https://raw.githubusercontent.com/SapuSeven/BetterUntis/master/fastlane/metadata/android/en-US/images/phoneScreenshots/1.jpg" alt="Screenshot" /> | <img src="https://raw.githubusercontent.com/SapuSeven/BetterUntis/master/fastlane/metadata/android/en-US/images/phoneScreenshots/2.jpg" alt="Screenshot" /> | <img src="https://raw.githubusercontent.com/SapuSeven/BetterUntis/master/fastlane/metadata/android/en-US/images/phoneScreenshots/3.jpg" alt="Screenshot" /> | <img src="https://raw.githubusercontent.com/SapuSeven/BetterUntis/master/fastlane/metadata/android/en-US/images/phoneScreenshots/4.jpg" alt="Screenshot" /> |
-| --- | --- | --- | --- |
+| <img src="https://raw.githubusercontent.com/Domi04151309/SimpleHKA/main/fastlane/metadata/android/en-US/images/phoneScreenshots/1.jpg" alt="Screenshot" /> | <img src="https://raw.githubusercontent.com/Domi04151309/SimpleHKA/main/fastlane/metadata/android/en-US/images/phoneScreenshots/2.jpg" alt="Screenshot" /> |
+| --- | --- |
 
 ## Development notes
 This app is based on [BetterUntis](https://github.com/SapuSeven/BetterUntis) by [SapuSeven](https://github.com/SapuSeven). Make sure to check out his project as well.

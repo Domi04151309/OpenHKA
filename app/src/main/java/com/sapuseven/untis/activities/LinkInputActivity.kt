@@ -2,7 +2,9 @@ package com.sapuseven.untis.activities
 
 import android.app.Activity
 import android.content.Context
+import android.content.Intent
 import android.content.SharedPreferences
+import android.net.Uri
 import android.os.Bundle
 import android.view.View
 import android.webkit.URLUtil
@@ -21,6 +23,7 @@ class LinkInputActivity : BaseActivity() {
 
 	companion object {
 		private const val BACKUP_PREF_NAME = "linkDataInputBackup"
+		private const val HELP_URL = "https://github.com/Domi04151309/SimpleHKA/wiki/Help"
 
 		private const val FRAGMENT_TAG_PROFILE_UPDATE = "profileUpdate"
 
@@ -61,6 +64,9 @@ class LinkInputActivity : BaseActivity() {
 			validate()?.requestFocus() ?: run { loadData() }
 		}
 
+		button_link_input_help?.setOnClickListener {
+			startActivity(Intent(Intent.ACTION_VIEW).setData(Uri.parse(HELP_URL)))
+		}
 
 		existingLink?.let { link ->
 			button_link_input_delete?.visibility = View.VISIBLE
@@ -198,11 +204,7 @@ class LinkInputActivity : BaseActivity() {
 		MaterialAlertDialogBuilder(this)
 			.setTitle(getString(R.string.main_dialog_delete_profile_title))
 			.setMessage(
-				getString(
-					R.string.main_dialog_delete_profile_message,
-					"HKA",
-					"HKA"
-				)
+				getString(R.string.main_dialog_delete_profile_message)
 			)
 			.setNegativeButton(getString(R.string.all_cancel), null)
 			.setPositiveButton(getString(R.string.all_delete)) { _, _ ->
