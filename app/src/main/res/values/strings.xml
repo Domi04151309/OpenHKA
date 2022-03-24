@@ -95,7 +95,8 @@
 	<string name="logindatainput_connecting">Connecting…</string>
 	<string name="logindatainput_data_loaded">Data loaded.</string>
 	<string name="logindatainput_delete">Delete profile</string>
-	<string name="logindatainput_error_field_empty">This field cannot be empty!</string>
+	<string name="link_input_error_field_empty">This field cannot be empty!</string>
+	<string name="link_input_error_invalid_url">Must be a valid URL!</string>
 	<string name="logindatainput_error_generic">Error: %1$s</string>
 	<string name="logindatainput_error_invalid_school">Invalid school ID!</string>
 	<string name="logindatainput_error_invalid_url">Invalid URL!</string>

@@ -12,6 +12,7 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
 import net.fortuna.ical4j.data.CalendarBuilder
+import net.fortuna.ical4j.data.ParserException
 import net.fortuna.ical4j.model.Calendar
 import net.fortuna.ical4j.model.Component
 import org.joda.time.DateTimeZone
@@ -56,7 +57,7 @@ class TimetableLoader(
 				"requestId $requestId: cached file found"
 			)
 			cache.load()?.let { cacheObject ->
-				val calendar = parseICal(cacheObject.data)
+				val calendar = parseICal(cacheObject.data) ?: return
 				val timeZone: DateTimeZone =
 					DateTimeZone.forID(calendar.getProperty("X-WR-TIMEZONE").value)
 				timetableDisplay.addTimetableItems(calendar.components.map {
@@ -96,7 +97,7 @@ class TimetableLoader(
 			.httpGet()
 			.awaitStringResult()
 			.fold({ data ->
-				val calendar = parseICal(data)
+				val calendar = parseICal(data) ?: return
 				val timeZone: DateTimeZone =
 					DateTimeZone.forID(calendar.getProperty("X-WR-TIMEZONE").value)
 				val timestamp = Instant.now().millis
@@ -116,8 +117,12 @@ class TimetableLoader(
 			})
 	}
 
-	private fun parseICal(data: String): Calendar {
-		return CalendarBuilder().build(StringReader(data))!!
+	private fun parseICal(data: String): Calendar? {
+		return try {
+			CalendarBuilder().build(StringReader(data))
+		} catch (e: ParserException) {
+			null
+		}
 	}
 
 	fun repeat(requestId: Int, flags: Int = 0) {

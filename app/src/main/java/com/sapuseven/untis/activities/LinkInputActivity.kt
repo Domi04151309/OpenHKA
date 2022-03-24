@@ -5,6 +5,7 @@ import android.content.Context
 import android.content.SharedPreferences
 import android.os.Bundle
 import android.view.View
+import android.webkit.URLUtil
 import android.widget.EditText
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.sapuseven.untis.R
@@ -88,12 +89,22 @@ class LinkInputActivity : BaseActivity() {
 	private fun validate(): EditText? {
 		if (edittext_link_input_rss?.text?.isEmpty() == true) {
 			edittext_link_input_rss.error =
-				getString(R.string.logindatainput_error_field_empty)
+				getString(R.string.link_input_error_field_empty)
+			return edittext_link_input_rss
+		}
+		if (!URLUtil.isValidUrl(edittext_link_input_rss.text.toString())) {
+			edittext_link_input_rss.error =
+				getString(R.string.link_input_error_invalid_url)
 			return edittext_link_input_rss
 		}
 		if (edittext_link_input_ical?.text?.isEmpty() == true) {
 			edittext_link_input_ical.error =
-				getString(R.string.logindatainput_error_field_empty)
+				getString(R.string.link_input_error_field_empty)
+			return edittext_link_input_ical
+		}
+		if (!URLUtil.isValidUrl(edittext_link_input_ical.text.toString())) {
+			edittext_link_input_ical.error =
+				getString(R.string.link_input_error_invalid_url)
 			return edittext_link_input_ical
 		}
 		return null
@@ -152,12 +163,10 @@ class LinkInputActivity : BaseActivity() {
 		textview_link_input_loadingstatus?.visibility = View.VISIBLE
 
 		setElementsEnabled(false)
-		GlobalScope.launch(Dispatchers.Main) {
-			sendRequest()
-		}
+		sendRequest()
 	}
 
-	private suspend fun sendRequest() {
+	private fun sendRequest() {
 		val link = LinkDatabase.Link(
 			existingLinkId,
 			edittext_link_input_rss?.text.toString(),
