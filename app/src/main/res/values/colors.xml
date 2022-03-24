@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-	<color name="colorPrimary">#F44336</color>
-	<color name="colorPrimaryDark">#D32F2F</color>
+	<color name="colorPrimary">#D72305</color>
+	<color name="colorPrimaryDark">#D72305</color>
 	<color name="colorAccent">#56BABD</color>
 	<color name="colorDivider">#1F000000</color>
 	<color name="daySelected">@color/colorPrimary</color>
@@ -31,7 +31,7 @@
 	<color name="appBarColorThemePixel">#fff</color>
 	<color name="colorAccentThemePixel">@color/colorPrimaryThemePixel</color>
 
-	<color name="colorAbsenceUnexcused">#fff44336</color>
+	<color name="colorAbsenceUnexcused">#D72305</color>
 	<color name="colorAbsenceExcused">#ff4caf50</color>
 
 	<color name="color_launcher_background">#FFFFFF</color>

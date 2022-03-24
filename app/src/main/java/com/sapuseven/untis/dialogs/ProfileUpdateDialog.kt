@@ -6,16 +6,16 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import com.sapuseven.untis.R
-import com.sapuseven.untis.data.databases.UserDatabase
+import com.sapuseven.untis.data.databases.LinkDatabase
 
 
 class ProfileUpdateDialog : Fragment() {
-	private var user: UserDatabase.User? = null
+	private var link: LinkDatabase.Link? = null
 
 	companion object {
-		fun createInstance(user: UserDatabase.User): ProfileUpdateDialog {
+		fun createInstance(link: LinkDatabase.Link): ProfileUpdateDialog {
 			return ProfileUpdateDialog().apply {
-				this.user = user
+				this.link = link
 			}
 		}
 	}

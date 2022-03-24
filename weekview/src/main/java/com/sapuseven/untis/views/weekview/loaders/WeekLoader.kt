@@ -1,5 +1,6 @@
 package com.sapuseven.untis.views.weekview.loaders
 
+import android.util.Log
 import com.sapuseven.untis.views.weekview.WeekView
 import com.sapuseven.untis.views.weekview.WeekViewDisplayable
 import com.sapuseven.untis.views.weekview.WeekViewEvent

@@ -5,7 +5,6 @@
 
 	<uses-permission android:name="android.permission.ACCESS_NOTIFICATION_POLICY" />
 	<uses-permission android:name="android.permission.INTERNET" />
-	<uses-permission android:name="android.permission.CAMERA" />
 	<uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
 
 	<application
@@ -13,31 +12,9 @@
 		android:fullBackupContent="@xml/backup_descriptor"
 		android:icon="@mipmap/ic_launcher"
 		android:label="@string/app_name"
-		android:roundIcon="@mipmap/ic_launcher_round"
+		android:roundIcon="@mipmap/ic_launcher"
 		android:supportsRtl="true"
 		android:theme="@style/AppTheme">
-
-		<activity
-			android:name=".activities.ShortcutConfigureActivity"
-			android:icon="@mipmap/ic_shortcut"
-			android:label="@string/widget_timetable_link"
-			android:exported="false">
-
-			<intent-filter>
-				<category android:name="android.intent.category.DEFAULT" />
-				<action android:name="android.intent.action.CREATE_SHORTCUT" />
-			</intent-filter>
-		</activity>
-
-		<activity
-			android:name=".activities.BaseWidgetConfigureActivity"
-			android:label="@string/widget_configuration"
-			android:exported="true">
-
-			<intent-filter>
-				<action android:name="android.appwidget.action.APPWIDGET_CONFIGURE" />
-			</intent-filter>
-		</activity>
 
 		<activity
 			android:name=".activities.MainActivity"
@@ -53,28 +30,8 @@
 		</activity>
 
 		<activity
-			android:name=".activities.LoginActivity"
+			android:name=".activities.LinkInputActivity"
 			android:launchMode="singleTop" />
-
-		<activity
-			android:name=".activities.ScanCodeActivity"
-			android:label="@string/login_scan_code"
-			android:parentActivityName=".activities.LoginActivity">
-
-			<meta-data
-				android:name="android.support.PARENT_ACTIVITY"
-				android:value=".activities.LoginActivity" />
-		</activity>
-
-		<activity
-			android:name=".activities.RoomFinderActivity"
-			android:label="@string/activity_title_free_rooms"
-			android:parentActivityName=".activities.MainActivity">
-
-			<meta-data
-				android:name="android.support.PARENT_ACTIVITY"
-				android:value=".activities.MainActivity" />
-		</activity>
 
 		<activity
 			android:name=".activities.InfoCenterActivity"
@@ -84,28 +41,6 @@
 			<meta-data
 				android:name="android.support.PARENT_ACTIVITY"
 				android:value=".activities.MainActivity" />
-		</activity>
-
-		<activity
-			android:name=".activities.LoginDataInputActivity"
-			android:parentActivityName=".activities.LoginActivity"
-			android:windowSoftInputMode="adjustResize"
-			android:exported="true">
-
-			<meta-data
-				android:name="android.support.PARENT_ACTIVITY"
-				android:value=".activities.LoginActivity" />
-
-			<intent-filter>
-				<action android:name="android.intent.action.VIEW" />
-
-				<category android:name="android.intent.category.DEFAULT" />
-				<category android:name="android.intent.category.BROWSABLE" />
-
-				<data
-					android:host="setschool"
-					android:scheme="untis" />
-			</intent-filter>
 		</activity>
 
 		<activity
@@ -136,37 +71,5 @@
 		<receiver android:name=".receivers.AutoMuteSetup" />
 
 		<receiver android:name=".receivers.AutoMuteReceiver" />
-
-		<receiver
-			android:name=".widgets.TimetableWidget"
-			android:label="@string/widget_timetable"
-			android:exported="true">
-
-			<intent-filter>
-				<action android:name="android.appwidget.action.APPWIDGET_UPDATE" />
-			</intent-filter>
-
-			<meta-data
-				android:name="android.appwidget.provider"
-				android:resource="@xml/widget_info" />
-		</receiver>
-
-		<receiver
-			android:name=".widgets.MessagesWidget"
-			android:label="@string/widget_daily_messages"
-			android:exported="true">
-
-			<intent-filter>
-				<action android:name="android.appwidget.action.APPWIDGET_UPDATE" />
-			</intent-filter>
-
-			<meta-data
-				android:name="android.appwidget.provider"
-				android:resource="@xml/widget_info" />
-		</receiver>
-
-		<service
-			android:name=".widgets.WidgetRemoteViewsService"
-			android:permission="android.permission.BIND_REMOTEVIEWS" />
 	</application>
 </manifest>

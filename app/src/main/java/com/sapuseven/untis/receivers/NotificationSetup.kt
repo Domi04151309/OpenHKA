@@ -16,19 +16,16 @@ import com.sapuseven.untis.data.timetable.TimegridItem
 import com.sapuseven.untis.helpers.DateTimeUtils
 import com.sapuseven.untis.helpers.config.PreferenceManager
 import com.sapuseven.untis.helpers.config.PreferenceUtils
+import com.sapuseven.untis.models.untis.timetable.Period
 import com.sapuseven.untis.receivers.NotificationReceiver.Companion.EXTRA_BOOLEAN_CLEAR
 import com.sapuseven.untis.receivers.NotificationReceiver.Companion.EXTRA_BOOLEAN_FIRST
 import com.sapuseven.untis.receivers.NotificationReceiver.Companion.EXTRA_INT_BREAK_END_TIME
 import com.sapuseven.untis.receivers.NotificationReceiver.Companion.EXTRA_INT_ID
 import com.sapuseven.untis.receivers.NotificationReceiver.Companion.EXTRA_STRING_BREAK_END_TIME
-import com.sapuseven.untis.receivers.NotificationReceiver.Companion.EXTRA_STRING_NEXT_CLASS
-import com.sapuseven.untis.receivers.NotificationReceiver.Companion.EXTRA_STRING_NEXT_CLASS_LONG
 import com.sapuseven.untis.receivers.NotificationReceiver.Companion.EXTRA_STRING_NEXT_ROOM
 import com.sapuseven.untis.receivers.NotificationReceiver.Companion.EXTRA_STRING_NEXT_ROOM_LONG
 import com.sapuseven.untis.receivers.NotificationReceiver.Companion.EXTRA_STRING_NEXT_SUBJECT
 import com.sapuseven.untis.receivers.NotificationReceiver.Companion.EXTRA_STRING_NEXT_SUBJECT_LONG
-import com.sapuseven.untis.receivers.NotificationReceiver.Companion.EXTRA_STRING_NEXT_TEACHER
-import com.sapuseven.untis.receivers.NotificationReceiver.Companion.EXTRA_STRING_NEXT_TEACHER_LONG
 import org.joda.time.DateTime
 import org.joda.time.LocalDateTime
 
@@ -58,29 +55,25 @@ class NotificationSetup : LessonEventSetup() {
 	}
 
 	override fun onLoadingSuccess(context: Context, items: List<TimegridItem>) {
-		val preparedItems = items.filter { !it.periodData.isCancelled() }.sortedBy { it.startDateTime }.merged().zipWithNext()
+		val preparedItems = items.filter { it.period.type != Period.Type.CANCELLED }.sortedBy { it.startTime }.zipWithNext()
 
 		if (preparedItems.isNotEmpty() && PreferenceUtils.getPrefBool(preferenceManager, "preference_notifications_before_first"))
 			with(preparedItems.first().first) {
-				if (startDateTime.millisOfDay < LocalDateTime.now().millisOfDay) return@with
+				if (startTime.millisOfDay < LocalDateTime.now().millisOfDay) return@with
 
 				scheduleNotification(context,
-						startDateTime.minusMinutes(PreferenceUtils.getPrefInt(preferenceManager, "preference_notifications_before_first_time")),
+					startTime.minusMinutes(PreferenceUtils.getPrefInt(preferenceManager, "preference_notifications_before_first_time")),
 						this,
 						true)
 			}
 
 		preparedItems.forEach { item ->
-			if (item.first.endDateTime == item.second.startDateTime) return // No break exists
+			if (item.first.endTime == item.second.startTime) return // No break exists
 
-			if (item.first.equalsIgnoreTime(item.second)
-					&& !PreferenceUtils.getPrefBool(preferenceManager, "preference_notifications_in_multiple"))
-				return@forEach // multi-hour lesson
+			if (item.second.startTime.millisOfDay < LocalDateTime.now().millisOfDay) return@forEach // ignore lessons in the past
 
-			if (item.second.startDateTime.millisOfDay < LocalDateTime.now().millisOfDay) return@forEach // ignore lessons in the past
-
-			Log.d("NotificationSetup", "found ${item.first.periodData.getShortTitle()}")
-			scheduleNotification(context, item.first.endDateTime, item.second)
+			Log.d("NotificationSetup", "found ${item.first.period.title}")
+			scheduleNotification(context, item.first.endTime, item.second)
 		}
 	}
 
@@ -90,29 +83,25 @@ class NotificationSetup : LessonEventSetup() {
 
 		val intent = Intent(context, NotificationReceiver::class.java)
 				.putExtra(EXTRA_INT_ID, id)
-				.putExtra(EXTRA_INT_BREAK_END_TIME, notificationEndLesson.startDateTime.millisOfDay)
-				.putExtra(EXTRA_STRING_BREAK_END_TIME, notificationEndLesson.startDateTime.toString(DateTimeUtils.shortDisplayableTime()))
-				.putExtra(EXTRA_STRING_NEXT_SUBJECT, notificationEndLesson.periodData.getShortTitle())
-				.putExtra(EXTRA_STRING_NEXT_SUBJECT_LONG, notificationEndLesson.periodData.getLongTitle())
-				.putExtra(EXTRA_STRING_NEXT_ROOM, notificationEndLesson.periodData.getShortRooms())
-				.putExtra(EXTRA_STRING_NEXT_ROOM_LONG, notificationEndLesson.periodData.getLongRooms())
-				.putExtra(EXTRA_STRING_NEXT_TEACHER, notificationEndLesson.periodData.getShortTeachers())
-				.putExtra(EXTRA_STRING_NEXT_TEACHER_LONG, notificationEndLesson.periodData.getLongTeachers())
-				.putExtra(EXTRA_STRING_NEXT_CLASS, notificationEndLesson.periodData.getShortClasses())
-				.putExtra(EXTRA_STRING_NEXT_CLASS_LONG, notificationEndLesson.periodData.getLongClasses())
+				.putExtra(EXTRA_INT_BREAK_END_TIME, notificationEndLesson.startTime.millisOfDay)
+				.putExtra(EXTRA_STRING_BREAK_END_TIME, notificationEndLesson.startTime.toString(DateTimeUtils.shortDisplayableTime()))
+				.putExtra(EXTRA_STRING_NEXT_SUBJECT, notificationEndLesson.period.title)
+				.putExtra(EXTRA_STRING_NEXT_SUBJECT_LONG, notificationEndLesson.period.title)
+				.putExtra(EXTRA_STRING_NEXT_ROOM, notificationEndLesson.period.location)
+				.putExtra(EXTRA_STRING_NEXT_ROOM_LONG, notificationEndLesson.period.location)
 
 		if (isFirst) intent.putExtra(EXTRA_BOOLEAN_FIRST, true)
 
 		val pendingIntent = PendingIntent.getBroadcast(context, notificationTime.millisOfDay, intent, 0)
 		alarmManager.setExact(AlarmManager.RTC_WAKEUP, notificationTime.millis, pendingIntent)
-		Log.d("NotificationSetup", "${notificationEndLesson.periodData.getShortTitle()} scheduled for $notificationTime")
+		Log.d("NotificationSetup", "${notificationEndLesson.period.title} scheduled for $notificationTime")
 
 		val deletingIntent = Intent(context, NotificationReceiver::class.java)
 				.putExtra(EXTRA_INT_ID, id)
 				.putExtra(EXTRA_BOOLEAN_CLEAR, true)
 		val deletingPendingIntent = PendingIntent.getBroadcast(context, notificationTime.millisOfDay + 1, deletingIntent, 0)
-		alarmManager.setExact(AlarmManager.RTC_WAKEUP, notificationEndLesson.startDateTime.millis, deletingPendingIntent)
-		Log.d("NotificationSetup", "${notificationEndLesson.periodData.getShortTitle()} delete scheduled for ${notificationEndLesson.startDateTime}")
+		alarmManager.setExact(AlarmManager.RTC_WAKEUP, notificationEndLesson.startTime.millis, deletingPendingIntent)
+		Log.d("NotificationSetup", "${notificationEndLesson.period.title} delete scheduled for ${notificationEndLesson.startTime}")
 	}
 
 	override fun onLoadingError(context: Context, requestId: Int, code: Int?, message: String?) {

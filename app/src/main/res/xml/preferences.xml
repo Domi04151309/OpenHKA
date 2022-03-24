@@ -114,13 +114,6 @@
 
 		<PreferenceCategory android:title="@string/preference_category_styling_backgrounds">
 
-			<MultiSelectListPreference
-				android:entries="@array/preference_schoolcolors"
-				android:entryValues="@array/preference_schoolcolors_values"
-				android:key="preference_school_background"
-				android:summary="@string/preference_school_background_desc"
-				android:title="@string/preference_school_background" />
-
 			<SwitchPreference
 				android:defaultValue="@bool/preference_use_theme_background_default"
 				android:disableDependentsState="true"
@@ -139,16 +132,6 @@
 				android:dependency="preference_use_theme_background"
 				android:key="preference_background_regular_past"
 				android:title="@string/preference_background_regular_past" />
-
-			<com.jaredrummler.android.colorpicker.ColorPreferenceCompat
-				android:defaultValue="@integer/preference_background_exam_default"
-				android:key="preference_background_exam"
-				android:title="@string/preference_background_exam" />
-
-			<com.jaredrummler.android.colorpicker.ColorPreferenceCompat
-				android:defaultValue="@integer/preference_background_exam_past_default"
-				android:key="preference_background_exam_past"
-				android:title="@string/preference_background_exam_past" />
 
 			<com.jaredrummler.android.colorpicker.ColorPreferenceCompat
 				android:defaultValue="@integer/preference_background_irregular_default"
@@ -212,10 +195,6 @@
 		android:icon="@drawable/settings_timetable"
 		android:key="preferences_timetable"
 		android:title="@string/preferences_timetable">
-
-		<com.sapuseven.untis.preferences.ElementPickerPreference
-			android:key="preference_timetable_personal_timetable"
-			android:title="@string/preference_timetable_personal_timetable" />
 
 		<SwitchPreference
 			android:defaultValue="@bool/preference_timetable_hide_time_stamps_default"
@@ -327,13 +306,6 @@
 			android:title="@string/preference_notifications_enable" />
 
 		<SwitchPreference
-			android:defaultValue="@bool/preference_notifications_in_multiple_default"
-			android:dependency="preference_notifications_enable"
-			android:key="preference_notifications_in_multiple"
-			android:summary="@string/preference_notifications_multiple_desc"
-			android:title="@string/preference_notifications_multiple" />
-
-		<SwitchPreference
 			android:defaultValue="@bool/preference_notifications_before_first_default"
 			android:dependency="preference_notifications_enable"
 			android:key="preference_notifications_before_first"
@@ -374,26 +346,6 @@
 				android:summary="%s"
 				android:title="@string/all_rooms" />
 
-			<ListPreference
-				android:defaultValue="@string/preference_notifications_visibility_teachers_default"
-				android:dependency="preference_notifications_enable"
-				android:entries="@array/preference_notifications_visibility"
-				android:entryValues="@array/preference_notifications_visibility_values"
-				android:icon="@drawable/all_teacher"
-				android:key="preference_notifications_visibility_teachers"
-				android:summary="%s"
-				android:title="@string/all_teachers" />
-
-			<ListPreference
-				android:defaultValue="@string/preference_notifications_visibility_classes_default"
-				android:dependency="preference_notifications_enable"
-				android:entries="@array/preference_notifications_visibility"
-				android:entryValues="@array/preference_notifications_visibility_values"
-				android:icon="@drawable/all_classes"
-				android:key="preference_notifications_visibility_classes"
-				android:summary="%s"
-				android:title="@string/all_classes" />
-
 		</PreferenceCategory>
 
 	</PreferenceScreen>
@@ -409,19 +361,6 @@
 			android:summary="@string/preference_connectivity_refresh_in_background_desc"
 			android:title="@string/preference_connectivity_refresh_in_background" />
 
-		<PreferenceCategory android:title="@string/preference_category_connectivity_proxy">
-
-			<EditTextPreference
-				android:icon="@drawable/settings_connectivity_proxy"
-				android:key="preference_connectivity_proxy_host"
-				android:title="@string/preference_connectivity_proxy_host"
-				app:useSimpleSummaryProvider="true" />
-
-			<Preference
-				android:icon="@drawable/settings_info"
-				android:key="preference_connectivity_proxy_about"
-				android:title="@string/preference_connectivity_proxy_about" />
-		</PreferenceCategory>
 	</PreferenceScreen>
 
 	<PreferenceScreen

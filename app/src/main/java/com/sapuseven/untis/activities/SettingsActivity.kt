@@ -2,7 +2,6 @@ package com.sapuseven.untis.activities
 
 import android.app.NotificationManager
 import android.content.Context
-import android.content.DialogInterface
 import android.content.Intent
 import android.content.res.Resources
 import android.graphics.BitmapFactory
@@ -13,10 +12,8 @@ import android.os.Build
 import android.os.Bundle
 import android.provider.Settings
 import android.view.MenuItem
-import android.view.View
 import androidx.core.content.pm.PackageInfoCompat
 import androidx.fragment.app.DialogFragment
-import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentTransaction
 import androidx.preference.*
 import com.github.kittinunf.fuel.coroutines.awaitByteArrayResult
@@ -24,19 +21,12 @@ import com.github.kittinunf.fuel.coroutines.awaitStringResult
 import com.github.kittinunf.fuel.httpGet
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.sapuseven.untis.R
-import com.sapuseven.untis.data.databases.UserDatabase
 import com.sapuseven.untis.dialogs.AlertPreferenceDialog
-import com.sapuseven.untis.dialogs.ElementPickerDialog
 import com.sapuseven.untis.dialogs.WeekRangePickerPreferenceDialog
 import com.sapuseven.untis.helpers.SerializationUtils.getJSON
-import com.sapuseven.untis.helpers.config.PreferenceManager
-import com.sapuseven.untis.helpers.timetable.TimetableDatabaseInterface
 import com.sapuseven.untis.models.github.GithubUser
-import com.sapuseven.untis.models.untis.timetable.PeriodElement
 import com.sapuseven.untis.preferences.AlertPreference
-import com.sapuseven.untis.preferences.ElementPickerPreference
 import com.sapuseven.untis.preferences.WeekRangePickerPreference
-import kotlinx.android.synthetic.main.activity_settings.*
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
@@ -48,12 +38,7 @@ class SettingsActivity : BaseActivity(), PreferenceFragmentCompat.OnPreferenceSt
 
 	companion object {
 		const val EXTRA_LONG_PROFILE_ID = "com.sapuseven.untis.activities.profileId"
-
-		private const val DIALOG_DESIGNING_HIDE = "preference_dialog_designing_hide"
-
 		private const val REPOSITORY_URL_GITHUB = "https://github.com/SapuSeven/BetterUntis"
-		private const val WIKI_URL_DESIGNING = "$REPOSITORY_URL_GITHUB/wiki/Designing"
-		private const val WIKI_URL_PROXY = "$REPOSITORY_URL_GITHUB/wiki/Proxy"
 	}
 
 	override fun onCreate(savedInstanceState: Bundle?) {
@@ -63,7 +48,6 @@ class SettingsActivity : BaseActivity(), PreferenceFragmentCompat.OnPreferenceSt
 
 		setupActionBar()
 		setContentView(R.layout.activity_settings)
-		setupDesigningDialog()
 
 		if (savedInstanceState == null) {
 			// Create the fragment only when the activity is created for the first time.
@@ -86,23 +70,6 @@ class SettingsActivity : BaseActivity(), PreferenceFragmentCompat.OnPreferenceSt
 		if (item.itemId == android.R.id.home)
 			onBackPressed()
 		return true
-	}
-
-	private fun setupDesigningDialog() {
-		val prefs = PreferenceManager(this)
-		if (!prefs.defaultPrefs.getBoolean(DIALOG_DESIGNING_HIDE, false))
-			banner_settings_designing.visibility = View.VISIBLE
-
-		banner_settings_designing.setLeftButtonAction {
-			banner_settings_designing.dismiss()
-
-			val editor = prefs.defaultPrefs.edit()
-			editor.putBoolean(DIALOG_DESIGNING_HIDE, true)
-			editor.apply()
-		}
-		banner_settings_designing.setRightButtonAction {
-			startActivity(Intent(Intent.ACTION_VIEW, Uri.parse(WIKI_URL_DESIGNING)))
-		}
 	}
 
 	private fun setupActionBar() {
@@ -183,18 +150,6 @@ class SettingsActivity : BaseActivity(), PreferenceFragmentCompat.OnPreferenceSt
 						}
 					}
 					"preferences_styling" -> {
-						findPreference<MultiSelectListPreference>("preference_school_background")?.apply {
-							setOnPreferenceChangeListener { _, newValue ->
-								if (newValue !is Set<*>) return@setOnPreferenceChangeListener false
-
-								refreshColorPreferences(newValue)
-
-								true
-							}
-
-							refreshColorPreferences(values)
-						}
-
 						listOf("preference_theme", "preference_dark_theme", "preference_dark_theme_oled").forEach { key ->
 							findPreference<Preference>(key)?.setOnPreferenceChangeListener { _, _ ->
 								activity?.recreate()
@@ -225,12 +180,6 @@ class SettingsActivity : BaseActivity(), PreferenceFragmentCompat.OnPreferenceSt
 							true
 						}
 					}
-					"preferences_connectivity" ->
-						findPreference<Preference>("preference_connectivity_proxy_about")?.setOnPreferenceClickListener {
-							startActivity(Intent(Intent.ACTION_VIEW, Uri.parse(WIKI_URL_PROXY)))
-							true
-						}
-
 					"preferences_notifications" -> {
 						findPreference<Preference>("preference_notifications_enable")?.setOnPreferenceChangeListener { _, newValue ->
 							if (newValue == false) clearNotifications()
@@ -319,38 +268,6 @@ class SettingsActivity : BaseActivity(), PreferenceFragmentCompat.OnPreferenceSt
 			irregularColors.forEach { findPreference<Preference>(it)?.isEnabled = !newValue.contains("irregular") }
 			cancelledColors.forEach { findPreference<Preference>(it)?.isEnabled = !newValue.contains("cancelled") }
 			examColors.forEach { findPreference<Preference>(it)?.isEnabled = !newValue.contains("exam") }
-		}
-
-		override fun onPreferenceTreeClick(preference: Preference): Boolean {
-			if (preference is ElementPickerPreference) {
-				val userDatabase = UserDatabase.createInstance(requireContext())
-				val timetableDatabaseInterface = TimetableDatabaseInterface(userDatabase, profileId)
-
-				ElementPickerDialog.newInstance(
-						timetableDatabaseInterface,
-						ElementPickerDialog.Companion.ElementPickerDialogConfig(TimetableDatabaseInterface.Type.valueOf(preference.getSavedType())),
-						object : ElementPickerDialog.ElementPickerDialogListener {
-							override fun onDialogDismissed(dialog: DialogInterface?) {
-								// ignore
-							}
-
-							override fun onPeriodElementClick(fragment: Fragment, element: PeriodElement?, useOrgId: Boolean) {
-								preference.setElement(
-										element,
-										element?.let {
-											timetableDatabaseInterface.getShortName(it.id, TimetableDatabaseInterface.Type.valueOf(it.type))
-										} ?: "")
-								(fragment as DialogFragment).dismiss()
-							}
-
-							override fun onPositiveButtonClicked(dialog: ElementPickerDialog) {
-								// positive button not used
-							}
-						}
-				).show(requireFragmentManager(), "elementPicker")
-			}
-
-			return true
 		}
 
 		override fun onDisplayPreferenceDialog(preference: Preference) {
