@@ -1,30 +1,15 @@
-BetterUntis ist eine Open-Source-App für Untis,
-mit der du auf deinen Stundenplan ganz bequem vom Smartphone aus zugreifen kannst.
+SimpleHKA ist ein mobiler Open-Source-Client für das IWI HKA Stundenplansystem,
+womit Sie Ihren Stundenplan auf Ihrem Smartphone anzeigen können.
 
-Die App erlaubt endlose Anpassungsmöglichkeiten des Stundenplans und verfügt über mehrere Themes,
-inklusive Nacht-Modus.
+Die App ermöglicht die Anpassung fast aller Aspekte Ihres Stundenplans,
+einschließlich mehrerer Themen und dunklem Modus.
 
-Verwende mehrere Profile auf einmal mit separaten Einstellungen und Stundenplänen.
+Fügen Sie einfach mehrere Profile mit separaten Einstellungen und Stundenplänen hinzu.
 
-Schütze deine Privatsphäre durch Proxy-Server-Unterstützung.
+Verwenden Sie Benachrichtigungen, um Informationen über die nächste Stunde anzuzeigen.
 
-Lass dir über Benachrichtigungen Details zur nächsten Stunde anzeigen.
-
-Weitere Funktionen beinhalten einen Raum-Finder,
-mit dem du freie Räume in deiner Schule finden kannst,
-und das Info-Center, um Abwesenheiten, Tests und mehr im Auge behalten zu können.
-
-Genieße eine schnelle und flüssige Erfahrung mit BetterUntis.
+Genießen Sie ein schnelles und reibungsloses Erlebnis mit SimpleHKA.
 
 
-Untis ist eine proprietäre Stundenplan-Software. Mehr Informationen über Untis
-findest du unter https://untis.at.
-Um Untis zu benutzen, muss deine Schule es zur Verfügung stellen.
-Deine Schule muss dir auch einen Account geben, mit dem du deinen aktuellen
-Stundenplan aufrufen kannst, sollte kein anonymer Zugang verfügbar sein.
-
-Warum solltest du noch diese App anstatt der offiziellen benutzen?
-Die offizielle App ist proprietär und beinhaltet Tracking-Software und In-App-Käufe.
-BetterUntis ist kostenlos und Open Source, funktionsreich und schützt deine Privatsphäre.
-
-WebUntis ist ein propritäres Netzwerk.
+Diese App ist spezialisiert auf die Hochschule Karlsruhe.
+Die Unterstützung für andere Stundenpläne kann nicht garantiert werden.

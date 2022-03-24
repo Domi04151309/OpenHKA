@@ -1,1 +1,1 @@
-Eine mobile App für das Untis Stundenplansystem.
+Ein mobiler Client für das IWI HKA-System
