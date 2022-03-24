@@ -25,24 +25,26 @@ class Period(component: Component, timeZone: DateTimeZone) {
 		REGULAR, IRREGULAR, CANCELLED
 	}
 
-	//TODO: will break in 10000 years
-	private fun stringToDate(string: String, timeZone: DateTimeZone): DateTime {
-		val dateTime = DateTime(
-			string.substring(0, 4).toInt(),
-			string.substring(4, 6).toInt(),
-			string.substring(6, 8).toInt(),
-			string.substring(9, 11).toInt(),
-			string.substring(11, 13).toInt(),
-			string.substring(13, 15).toInt(),
-			timeZone
-		)
-		return dateTime.plusMillis(timeZone.getOffset(dateTime.toInstant()))
-	}
-
 	private fun formatTitle(title: String): String {
 		var returnValue = title
 		if (returnValue.startsWith('+')) returnValue = returnValue.substring(15).trim()
 		if (returnValue.startsWith('*')) returnValue = returnValue.substring(1).trim()
 		return returnValue
+	}
+
+	companion object {
+		//TODO: will break in 10000 years
+		fun stringToDate(string: String, timeZone: DateTimeZone): DateTime {
+			val dateTime = DateTime(
+				string.substring(0, 4).toInt(),
+				string.substring(4, 6).toInt(),
+				string.substring(6, 8).toInt(),
+				string.substring(9, 11).toInt(),
+				string.substring(11, 13).toInt(),
+				string.substring(13, 15).toInt(),
+				timeZone
+			)
+			return dateTime.plusMillis(timeZone.getOffset(dateTime.toInstant()))
+		}
 	}
 }
