@@ -19,7 +19,9 @@ class Period(component: Component, timeZone: DateTimeZone) {
 		"AKTUELL" -> Type.IRREGULAR
 		else -> Type.REGULAR
 	}
-	val hasIndicator = unformattedTitle.startsWith('*')
+	val hasIndicator: Boolean = unformattedTitle.startsWith('*')
+	val info: String = properties.getProperty("DESCRIPTION").value
+		.split(' ').drop(4).joinToString(" ")
 
 	enum class Type {
 		REGULAR, IRREGULAR, CANCELLED

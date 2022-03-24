@@ -68,8 +68,13 @@ class TimetableItemDetailsFragment(item: TimegridItem?) : Fragment() {
 		val color = ta?.getColor(0, 0)
 		ta?.recycle()
 
-		val roomList = linearLayout.findViewById<LinearLayout>(R.id.llRoomList)
-		populateList(roomList, period.location, color)
+		populateList(linearLayout.findViewById(R.id.llRoomList), period.location, color)
+
+		linearLayout.findViewById<LinearLayout>(R.id.llInfo).visibility =
+			if (period.hasIndicator) View.VISIBLE else View.GONE
+		if (period.hasIndicator) {
+			populateList(linearLayout.findViewById(R.id.llInfoList), period.info, color)
+		}
 
 		var title = period.title
 		if (period.type == Period.Type.CANCELLED)
