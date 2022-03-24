@@ -76,15 +76,10 @@ open class BaseWidget : AppWidgetProvider() {
 		val remoteViews = RemoteViews(context.packageName, R.layout.widget_base)
 		if (link == null) {
 			remoteViews.setTextViewText(
-				R.id.textview_base_widget_account,
-				context.resources.getString(R.string.all_error)
-			)
-			remoteViews.setTextViewText(
 				R.id.textview_base_widget_school,
 				context.resources.getString(R.string.all_error)
 			)
 		} else {
-			remoteViews.setTextViewText(R.id.textview_base_widget_account, link.id.toString())
 			remoteViews.setTextViewText(R.id.textview_base_widget_school, link.id.toString())
 
 			val primaryColor =

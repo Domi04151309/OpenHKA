@@ -115,12 +115,12 @@ class WidgetRemoteViewsFactory(private val applicationContext: Context, intent: 
 						val timegridItem = TimegridItem(Period(it as Component, timeZone))
 						WidgetListItem(
 							timegridItem.id,
+							timegridItem.title.toString(),
 							"${timegridItem.startTime.toString(timeFormatter)} - ${
 								timegridItem.endTime.toString(
 									timeFormatter
 								)
-							} | ${timegridItem.title}",
-							arrayOf(
+							} | " + arrayOf(
 								timegridItem.top,
 								timegridItem.bottom
 							).filter { s -> s.isNotBlank() }
