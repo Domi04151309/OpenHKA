@@ -74,7 +74,6 @@ dependencies {
 	implementation 'com.google.android.material:material:1.2.0-alpha04' //Newer versions will break DatePickerDialog
 	implementation 'com.jaredrummler:colorpicker-compat:1.0.5'
 	implementation 'ca.antonious:materialdaypicker:0.6.0'
-	implementation 'com.prof18.rssparser:rssparser:4.0.2'
 	testImplementation 'junit:junit:4.13.2'
 	testImplementation 'org.mockito:mockito-core:4.1.0'
 	androidTestImplementation 'androidx.test:runner:1.4.0'
@@ -86,10 +85,14 @@ dependencies {
 	androidTestImplementation 'androidx.test.uiautomator:uiautomator:2.2.0'
 	androidTestImplementation 'tools.fastlane:screengrab:2.0.0'
 
+	implementation 'com.prof18.rssparser:rssparser:4.0.2'
 	implementation 'org.mnode.ical4j:ical4j:1.0.5'
 	implementation 'backport-util-concurrent:backport-util-concurrent:3.1'
 	implementation 'commons-codec:commons-codec:1.10'
 	implementation 'commons-lang:commons-lang:2.6'
+
+	implementation 'androidx.localbroadcastmanager:localbroadcastmanager:1.0.0'
+	implementation 'com.google.android.gms:play-services-wearable:17.0.0'
 
 	implementation project(':weekview')
 }

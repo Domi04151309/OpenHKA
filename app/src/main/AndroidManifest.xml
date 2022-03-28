@@ -58,11 +58,22 @@
 		<activity
 			android:name=".activities.SettingsActivity"
 			android:label="@string/activity_title_settings"
+			android:launchMode="singleTop"
 			android:parentActivityName=".activities.MainActivity">
 
 			<meta-data
 				android:name="android.support.PARENT_ACTIVITY"
 				android:value=".activities.MainActivity" />
+		</activity>
+
+
+		<activity
+			android:name=".activities.WearOSActivity"
+			android:label="@string/preference_wear_os_support"
+			android:parentActivityName=".activities.SettingsActivity">
+			<meta-data
+				android:name="android.support.PARENT_ACTIVITY"
+				android:value=".activities.SettingsActivity" />
 		</activity>
 
 		<activity

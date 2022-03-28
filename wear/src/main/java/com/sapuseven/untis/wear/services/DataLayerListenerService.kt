@@ -21,12 +21,12 @@ class DataLayerListenerService : WearableListenerService() {
 
 				val editor = PreferenceManager.getDefaultSharedPreferences(this).edit()
 				editor.putString(
-					"edittext_link_input_rss",
-					map.getString("edittext_link_input_rss")
+					"link_input_rss",
+					map.getString("link_input_rss")
 				)
 				editor.putString(
-					"edittext_link_input_ical",
-					map.getString("edittext_link_input_ical")
+					"link_input_ical",
+					map.getString("link_input_ical")
 				)
 				editor.apply()
 

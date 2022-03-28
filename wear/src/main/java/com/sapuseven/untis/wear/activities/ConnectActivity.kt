@@ -25,8 +25,8 @@ class ConnectActivity : WearableActivity() {
 		override fun onReceive(c: Context, intent: Intent) {
 			val prefs = PreferenceManager.getDefaultSharedPreferences(c)
 			sendRequest(
-				prefs.getString("edittext_link_input_rss", "") ?: "",
-				prefs.getString("edittext_link_input_ical", "") ?: ""
+				prefs.getString("link_input_rss", "") ?: "",
+				prefs.getString("link_input_ical", "") ?: ""
 			)
 		}
 	}

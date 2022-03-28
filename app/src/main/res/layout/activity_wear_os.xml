@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context="com.sapuseven.untis.activities.WearOSActivity">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_centerInParent="true"
+        android:padding="?dialogPreferredPadding"
+        android:orientation="vertical"
+        tools:ignore="UselessParent">
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="@dimen/size_wear_icons"
+            android:layout_marginBottom="?dialogPreferredPadding"
+            android:layout_gravity="center"
+            android:orientation="horizontal">
+
+            <ImageView
+                android:layout_width="@dimen/size_wear_icons"
+                android:layout_height="match_parent"
+                app:srcCompat="@drawable/settings_wear_phone"
+                android:contentDescription="@null" />
+
+            <ImageView
+                android:id="@+id/status"
+                android:layout_width="@dimen/size_wear_icons"
+                android:layout_height="match_parent"
+                app:srcCompat="@drawable/settings_wear_connecting"
+                android:contentDescription="@string/preference_wear_os_support" />
+
+            <ImageView
+                android:layout_width="@dimen/size_wear_icons"
+                android:layout_height="match_parent"
+                app:srcCompat="@drawable/settings_wear_watch"
+                android:contentDescription="@null" />
+        </LinearLayout>
+
+        <TextView
+            android:id="@+id/title"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="?dialogPreferredPadding"
+            android:gravity="center"
+            android:text="@string/preference_wear_os_support_connecting"
+            android:textAppearance="@style/TextAppearance.AppCompat.Large" />
+
+        <TextView
+            android:id="@+id/description"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:text="@string/preference_wear_os_support_connecting_desc"
+            android:textAppearance="@style/TextAppearance.AppCompat.Small" />
+    </LinearLayout>
+</RelativeLayout>
