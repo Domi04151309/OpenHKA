@@ -26,7 +26,7 @@
                 android:layout_height="@dimen/login_icon_size"
                 android:layout_marginBottom="@dimen/inner_frame_layout_padding"
                 android:contentDescription="@string/app_name"
-                android:src="@mipmap/ic_launcher_round" />
+                android:src="@mipmap/ic_launcher" />
 
             <TextView
                 android:layout_width="match_parent"
