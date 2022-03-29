@@ -174,7 +174,7 @@ class LinkDatabase private constructor(context: Context) :
 	)
 }
 
-private fun Cursor.getLongOrNull(columnIndex: Int): Long? {
+internal fun Cursor.getLongOrNull(columnIndex: Int): Long? {
 	return if (getType(columnIndex) == FIELD_TYPE_INTEGER)
 		getLong(columnIndex)
 	else null

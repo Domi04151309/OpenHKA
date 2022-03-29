@@ -18,6 +18,7 @@ import com.sapuseven.untis.helpers.timetable.TimetableLoader
 import com.sapuseven.untis.interfaces.TimetableDisplay
 import com.sapuseven.untis.models.untis.timetable.Period
 import com.sapuseven.untis.wear.adapters.TimetableListAdapter
+import org.joda.time.DateTime
 import org.joda.time.format.DateTimeFormat
 import org.joda.time.format.DateTimeFormatter
 import java.lang.ref.WeakReference
@@ -49,7 +50,7 @@ class MainActivity : WearableActivity(), TimetableDisplay {
 			TimetableLoader(WeakReference(this), this, profileLink)
 
 		findViewById<Button>(R.id.reload).setOnClickListener {
-			timetableListAdapter!!.resetListLoading()
+			timetableListAdapter?.resetListLoading()
 			loadTimetable(true)
 		}
 
@@ -91,15 +92,20 @@ class MainActivity : WearableActivity(), TimetableDisplay {
 		var title: String
 		var room: String
 		var text: String
-		timetableListAdapter!!.clearList()
-		items.forEach {
+		timetableListAdapter?.clearList()
+		items.filter {
+			val dateTime = DateTime(timestamp)
+			it.startTime.dayOfYear() == dateTime.dayOfYear() && it.startTime.year() == dateTime.year()
+		}.sortedBy {
+			it.startTime
+		}.forEach {
 			time = it.period.startDate.toString(fmt) + " - " + it.period.endDate.toString(fmt)
 			title = it.period.title
 			room = it.period.location
 
 			text = "$time\n$title"
 			if (room != "") text += ", $room"
-			timetableListAdapter!!.addItem(text, it.period.type == Period.Type.CANCELLED)
+			timetableListAdapter?.addItem(text, it.period.type == Period.Type.CANCELLED)
 		}
 	}
 
@@ -111,7 +117,7 @@ class MainActivity : WearableActivity(), TimetableDisplay {
 				TimetableLoader.FLAG_LOAD_SERVER
 			)
 			else -> {
-				timetableListAdapter!!.resetListUnavailable()
+				timetableListAdapter?.resetListUnavailable()
 			}
 		}
 	}

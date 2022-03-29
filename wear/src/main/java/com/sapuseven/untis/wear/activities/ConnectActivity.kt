@@ -1,34 +1,22 @@
 package com.sapuseven.untis.wear.activities
 
-import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
-import android.content.IntentFilter
 import android.os.Bundle
 import android.support.wearable.activity.WearableActivity
-import androidx.localbroadcastmanager.content.LocalBroadcastManager
 import androidx.preference.PreferenceManager
+import com.google.android.gms.common.data.FreezableUtils
 import com.google.android.gms.tasks.Task
 import com.google.android.gms.tasks.Tasks
-import com.google.android.gms.wearable.Node
-import com.google.android.gms.wearable.Wearable
+import com.google.android.gms.wearable.*
 import com.sapuseven.untis.R
 import com.sapuseven.untis.data.databases.LinkDatabase
 
-class ConnectActivity : WearableActivity() {
+class ConnectActivity : WearableActivity(), DataClient.OnDataChangedListener {
 
 	companion object {
+		private const val UNTIS_LOGIN = "/untis_login"
 		private const val UNTIS_SUCCESS = "/untis_success"
-	}
-
-	private val receiver = object : BroadcastReceiver() {
-		override fun onReceive(c: Context, intent: Intent) {
-			val prefs = PreferenceManager.getDefaultSharedPreferences(c)
-			sendRequest(
-				prefs.getString("link_input_rss", "") ?: "",
-				prefs.getString("link_input_ical", "") ?: ""
-			)
-		}
 	}
 
 	private var status: Byte = 0x01
@@ -41,16 +29,46 @@ class ConnectActivity : WearableActivity() {
 		setContentView(R.layout.activity_connect)
 
 		linkDatabase = LinkDatabase.createInstance(this)
-		LocalBroadcastManager.getInstance(this)
-			.registerReceiver(receiver, IntentFilter("LOGIN_SUCCESS"))
+
+		Wearable.getDataClient(this).dataItems.addOnCompleteListener {
+			if (it.isSuccessful) {
+				it.result?.get(0)?.let { item ->
+					if (item.uri.path == UNTIS_LOGIN) saveItems(DataMapItem.fromDataItem(item).dataMap)
+				}
+			}
+			it.result?.release()
+		}
 	}
 
-	internal fun sendRequest(rss: String, iCal: String) {
+	override fun onStart() {
+		super.onStart()
+		Wearable.getDataClient(this).addListener(this)
+	}
+
+	override fun onStop() {
+		super.onStop()
+		Wearable.getDataClient(this).removeListener(this)
+	}
+
+	override fun onDataChanged(dataEvents: DataEventBuffer) {
+		FreezableUtils.freezeIterable(dataEvents).forEach {
+			val item = it.dataItem
+			if (item.uri.path == UNTIS_LOGIN) saveItems(DataMapItem.fromDataItem(item).dataMap)
+		}
+		dataEvents.release()
+	}
+
+	private fun saveItems(map: DataMap) {
+		if (!map.containsKey("rss") || !map.containsKey("iCal")) return
+
+		PreferenceManager.getDefaultSharedPreferences(this).edit()
+			.putBoolean("signed_in", true).apply()
+
 		linkDatabase.addLink(
 			LinkDatabase.Link(
 				existingLinkId,
-				rss,
-				iCal
+				map.getString("rss") ?: "",
+				map.getString("iCal") ?: ""
 			)
 		)
 

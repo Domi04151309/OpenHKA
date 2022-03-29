@@ -28,9 +28,9 @@ class WearOSActivity : BaseActivity() {
 					resources.getString(R.string.preference_wear_os_support_success_desc)
 			} else {
 				statusImg.setImageResource(R.drawable.all_failed)
-				title.text = resources.getString(R.string.preference_wear_os_support_success)
+				title.text = resources.getString(R.string.preference_wear_os_support_error)
 				summary.text =
-					resources.getString(R.string.preference_wear_os_support_success_desc)
+					resources.getString(R.string.preference_wear_os_support_error_desc)
 			}
 		}
 	}
@@ -59,12 +59,13 @@ class WearOSActivity : BaseActivity() {
 			linkDatabase.getAllLinks()[0].id ?: 0
 		val profileLink = linkDatabase.getLink(profileId)
 
+		val dataClient: DataClient = Wearable.getDataClient(this)
 		val putDataMapRequest = PutDataMapRequest.create(UNTIS_LOGIN)
 		val map = putDataMapRequest.dataMap
-		map.putString("link_input_rss", profileLink?.rssUrl ?: "")
-		map.putString("link_input_ical", profileLink?.iCalUrl ?: "")
+		map.putString("rss", profileLink?.rssUrl ?: "")
+		map.putString("iCal", profileLink?.iCalUrl ?: "")
 		val request = putDataMapRequest.asPutDataRequest()
 		request.setUrgent()
-		Wearable.getDataClient(this).putDataItem(request)
+		dataClient.putDataItem(request)
 	}
 }

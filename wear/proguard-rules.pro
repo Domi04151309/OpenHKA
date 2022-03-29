@@ -22,3 +22,18 @@
 # If you keep the line number information, uncomment this to
 # hide the original source file name.
 #-renamesourcefileattribute SourceFile
+
+-keepattributes *Annotation*, InnerClasses
+-dontnote kotlinx.serialization.SerializationKt
+-keep,includedescriptorclasses class com.sapuseven.untis.**$$serializer { *; }
+-keepclassmembers class com.sapuseven.untis.** {
+    *** Companion;
+}
+-keepclasseswithmembers class com.sapuseven.untis.** {
+    kotlinx.serialization.KSerializer serializer(...);
+}
+-keepclassmembernames class kotlinx.** {
+    volatile <fields>;
+}
+
+-keep public class * extends androidx.lifecycle.ViewModel {*;}

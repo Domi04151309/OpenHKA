@@ -363,7 +363,7 @@ class MainActivity :
 		setupWeekViewConfig()
 	}
 
-	private fun saveZoomLevel() {
+	internal fun saveZoomLevel() {
 		preferences.defaultPrefs.edit().apply {
 			putInt(PERSISTENT_INT_ZOOM_LEVEL, weekView.hourHeight)
 			apply()
@@ -655,7 +655,7 @@ class MainActivity :
 		}
 	}
 
-	private fun setLastRefresh(timestamp: Long) {
+	internal fun setLastRefresh(timestamp: Long) {
 		textview_main_lastrefresh?.text = if (timestamp > 0L)
 			getString(
 				R.string.main_last_refreshed,
