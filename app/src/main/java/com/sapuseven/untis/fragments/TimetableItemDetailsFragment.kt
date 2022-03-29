@@ -1,7 +1,6 @@
 package com.sapuseven.untis.fragments
 
 import android.os.Bundle
-import android.view.Gravity
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -14,7 +13,6 @@ import androidx.fragment.app.activityViewModels
 import com.sapuseven.untis.R
 import com.sapuseven.untis.activities.MainActivity
 import com.sapuseven.untis.data.timetable.TimegridItem
-import com.sapuseven.untis.helpers.ConversionUtils
 import com.sapuseven.untis.models.untis.timetable.Period
 import com.sapuseven.untis.viewmodels.PeriodDataViewModel
 import org.joda.time.LocalDateTime
@@ -63,17 +61,12 @@ class TimetableItemDetailsFragment(item: TimegridItem?) : Fragment() {
 		) as ScrollView
 		val linearLayout = root.getChildAt(0) as LinearLayout
 
-		val attrs = intArrayOf(android.R.attr.textColorPrimary)
-		val ta = context?.obtainStyledAttributes(attrs)
-		val color = ta?.getColor(0, 0)
-		ta?.recycle()
+		linearLayout.findViewById<TextView>(R.id.tvRooms).text = period.location
 
-		populateList(linearLayout.findViewById(R.id.llRoomList), period.location, color)
-
-		linearLayout.findViewById<LinearLayout>(R.id.llInfo).visibility =
-			if (period.hasIndicator) View.VISIBLE else View.GONE
+		val tvInfo = linearLayout.findViewById<TextView>(R.id.tvInfo)
+		tvInfo.visibility = if (period.hasIndicator) View.VISIBLE else View.GONE
 		if (period.hasIndicator) {
-			populateList(linearLayout.findViewById(R.id.llInfoList), period.info, color)
+			tvInfo.text = period.info
 		}
 
 		var title = period.title
@@ -88,36 +81,6 @@ class TimetableItemDetailsFragment(item: TimegridItem?) : Fragment() {
 			formatLessonTime(period.startDate.toLocalDateTime(), period.endDate.toLocalDateTime())
 
 		return root
-	}
-
-	private fun populateList(
-		list: LinearLayout,
-		text: String,
-		textColor: Int?
-	): Boolean {
-		generateTextViewForElement(
-			text,
-			textColor
-		)?.let { list.addView(it) }
-		return false
-	}
-
-	private fun generateTextViewForElement(
-		text: String,
-		textColor: Int?
-	): TextView? {
-		val tv = TextView(requireContext())
-		val params = LinearLayout.LayoutParams(
-			ViewGroup.LayoutParams.WRAP_CONTENT,
-			ViewGroup.LayoutParams.MATCH_PARENT
-		)
-		params.setMargins(0, 0, ConversionUtils.dpToPx(12.0f, requireContext()).toInt(), 0)
-		tv.text = text
-		if (tv.text.isBlank()) return null
-		tv.layoutParams = params
-		textColor?.let { tv.setTextColor(it) }
-		tv.gravity = Gravity.CENTER_VERTICAL
-		return tv
 	}
 
 	private fun formatLessonTime(startDateTime: LocalDateTime, endDateTime: LocalDateTime): String {

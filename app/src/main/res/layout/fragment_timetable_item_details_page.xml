@@ -44,66 +44,27 @@
 			android:layout_marginBottom="12dp"
 			android:background="?android:attr/listDivider" />
 
-		<LinearLayout
-			android:id="@+id/llRooms"
+		<TextView
+			android:id="@+id/tvRooms"
 			android:layout_width="match_parent"
 			android:layout_height="wrap_content"
-			android:orientation="horizontal"
-			android:paddingHorizontal="24dp">
+			android:gravity="center_vertical"
+			android:drawablePadding="24dp"
+			android:paddingHorizontal="24dp"
+			android:paddingVertical="12dp"
+			app:drawableStartCompat="@drawable/all_rooms"
+			android:textColor="?android:attr/textColorPrimary"
+			android:textIsSelectable="false" />
 
-			<ImageView
-				android:layout_width="wrap_content"
-				android:layout_height="wrap_content"
-				android:layout_marginTop="12dp"
-				android:layout_marginEnd="24dp"
-				android:layout_marginBottom="12dp"
-				android:contentDescription="@string/all_rooms"
-				android:tint="?android:attr/textColorPrimary"
-				app:srcCompat="@drawable/all_rooms" />
-
-			<HorizontalScrollView
-				android:layout_width="match_parent"
-				android:layout_height="match_parent">
-
-				<LinearLayout
-					android:id="@+id/llRoomList"
-					android:layout_width="wrap_content"
-					android:layout_height="match_parent"
-					android:orientation="horizontal">
-
-				</LinearLayout>
-			</HorizontalScrollView>
-		</LinearLayout>
-
-		<LinearLayout
-			android:id="@+id/llInfo"
+		<TextView
+			android:id="@+id/tvInfo"
 			android:layout_width="match_parent"
 			android:layout_height="wrap_content"
-			android:orientation="horizontal"
-			android:paddingHorizontal="24dp">
-
-			<ImageView
-				android:layout_width="wrap_content"
-				android:layout_height="wrap_content"
-				android:layout_marginTop="12dp"
-				android:layout_marginEnd="24dp"
-				android:layout_marginBottom="12dp"
-				android:contentDescription="@string/all_info"
-				android:tint="?android:attr/textColorPrimary"
-				app:srcCompat="@drawable/all_info" />
-
-			<HorizontalScrollView
-				android:layout_width="match_parent"
-				android:layout_height="match_parent">
-
-				<LinearLayout
-					android:id="@+id/llInfoList"
-					android:layout_width="wrap_content"
-					android:layout_height="match_parent"
-					android:orientation="horizontal">
-
-				</LinearLayout>
-			</HorizontalScrollView>
-		</LinearLayout>
+			android:drawablePadding="24dp"
+			android:paddingHorizontal="24dp"
+			android:paddingVertical="12dp"
+			app:drawableStartCompat="@drawable/all_info"
+			android:textColor="?android:attr/textColorPrimary"
+			android:textIsSelectable="true" />
 	</LinearLayout>
 </ScrollView>
