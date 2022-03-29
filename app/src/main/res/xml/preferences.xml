@@ -313,24 +313,22 @@
 
 		<PreferenceCategory android:title="@string/preference_category_notifications_visible_fields">
 
-			<ListPreference
-				android:defaultValue="@string/preference_notifications_visibility_subjects_default"
+			<CheckBoxPreference
+				android:defaultValue="@bool/preference_notifications_subjects_default"
 				android:dependency="preference_notifications_enable"
-				android:entries="@array/preference_notifications_visibility"
-				android:entryValues="@array/preference_notifications_visibility_values"
 				android:icon="@drawable/all_subject"
-				android:key="preference_notifications_visibility_subjects"
-				android:summary="%s"
+				android:key="preference_notifications_subjects"
+				android:summaryOn="@string/all_enabled"
+				android:summaryOff="@string/all_disabled"
 				android:title="@string/all_subjects" />
 
-			<ListPreference
-				android:defaultValue="@string/preference_notifications_visibility_rooms_default"
+			<CheckBoxPreference
+				android:defaultValue="@bool/preference_notifications_rooms_default"
 				android:dependency="preference_notifications_enable"
-				android:entries="@array/preference_notifications_visibility"
-				android:entryValues="@array/preference_notifications_visibility_values"
 				android:icon="@drawable/all_rooms"
-				android:key="preference_notifications_visibility_rooms"
-				android:summary="%s"
+				android:key="preference_notifications_rooms"
+				android:summaryOn="@string/all_enabled"
+				android:summaryOff="@string/all_disabled"
 				android:title="@string/all_rooms" />
 
 		</PreferenceCategory>

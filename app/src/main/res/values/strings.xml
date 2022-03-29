@@ -3,6 +3,8 @@
 	<string name="app_name" translatable="false">SimpleHKA</string>
 	<string name="app_desc">A mobile client for the IWI HKA system</string>
 
+	<string name="all_enabled">Enabled</string>
+	<string name="all_disabled">Disabled</string>
 	<string name="all_help">Help</string>
 	<string name="all_success">success</string>
 	<string name="all_failed">failed</string>
@@ -119,9 +121,6 @@
 	<string name="preference_notifications_first_lesson_desc">Show a notification right before school starts</string>
 	<string name="preference_notifications_first_lesson_time">Notification time</string>
 	<string name="preference_notifications_first_lesson_time_unit">min before first lesson</string>
-	<string name="preference_notifications_visibility_hidden">Hidden</string>
-	<string name="preference_notifications_visibility_long">Long name</string>
-	<string name="preference_notifications_visibility_short">Short name</string>
 	<string name="preference_theme">Select a theme</string>
 	<string name="preference_theme_blue">Blue</string>
 	<string name="preference_theme_cyan">Cyan</string>
@@ -180,8 +179,6 @@
 	<string name="notifications_text_first_title">School starts at %1$s</string>
 	<string name="notifications_text_message_subjects">Next lesson: %1$s</string>
 	<string name="notifications_text_message_rooms">Room: %1$s</string>
-	<string name="notifications_text_message_teachers">Teacher: %1$s</string>
-	<string name="notifications_text_message_classes">Class: %1$s</string>
 	<string name="notifications_text_message_separator"> / </string>
 	<string name="errors_crash_title">It looks like SimpleHKA crashed.</string>
 	<string name="errors_crash_message">Sorry for that.</string>

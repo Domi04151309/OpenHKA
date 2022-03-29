@@ -23,9 +23,7 @@ import com.sapuseven.untis.receivers.NotificationReceiver.Companion.EXTRA_INT_BR
 import com.sapuseven.untis.receivers.NotificationReceiver.Companion.EXTRA_INT_ID
 import com.sapuseven.untis.receivers.NotificationReceiver.Companion.EXTRA_STRING_BREAK_END_TIME
 import com.sapuseven.untis.receivers.NotificationReceiver.Companion.EXTRA_STRING_NEXT_ROOM
-import com.sapuseven.untis.receivers.NotificationReceiver.Companion.EXTRA_STRING_NEXT_ROOM_LONG
 import com.sapuseven.untis.receivers.NotificationReceiver.Companion.EXTRA_STRING_NEXT_SUBJECT
-import com.sapuseven.untis.receivers.NotificationReceiver.Companion.EXTRA_STRING_NEXT_SUBJECT_LONG
 import org.joda.time.DateTime
 import org.joda.time.LocalDateTime
 
@@ -86,9 +84,7 @@ class NotificationSetup : LessonEventSetup() {
 				.putExtra(EXTRA_INT_BREAK_END_TIME, notificationEndLesson.startTime.millisOfDay)
 				.putExtra(EXTRA_STRING_BREAK_END_TIME, notificationEndLesson.startTime.toString(DateTimeUtils.shortDisplayableTime()))
 				.putExtra(EXTRA_STRING_NEXT_SUBJECT, notificationEndLesson.period.title)
-				.putExtra(EXTRA_STRING_NEXT_SUBJECT_LONG, notificationEndLesson.period.title)
 				.putExtra(EXTRA_STRING_NEXT_ROOM, notificationEndLesson.period.location)
-				.putExtra(EXTRA_STRING_NEXT_ROOM_LONG, notificationEndLesson.period.location)
 
 		if (isFirst) intent.putExtra(EXTRA_BOOLEAN_FIRST, true)
 

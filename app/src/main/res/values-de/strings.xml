@@ -108,9 +108,6 @@
     <string name="preference_notifications_first_lesson_desc">Zeigt eine zusätzliche Benachrichtigung vor Beginn der ersten Stunde an</string>
     <string name="preference_notifications_first_lesson_time">Benachrichtigungszeit</string>
     <string name="preference_notifications_first_lesson_time_unit">min vor der ersten Stunde</string>
-    <string name="preference_notifications_visibility_hidden">Nicht anzeigen</string>
-    <string name="preference_notifications_visibility_long">Langer Name</string>
-    <string name="preference_notifications_visibility_short">Kurzer Name</string>
     <string name="preference_theme">Design auswählen</string>
     <string name="preference_theme_blue">Blau</string>
     <string name="preference_theme_cyan">Türkis</string>
@@ -154,8 +151,6 @@
     <string name="notifications_text_first_title">Unterrichtsbeginn um %1$s</string>
     <string name="notifications_text_message_subjects">Nächste Stunde: %1$s</string>
     <string name="notifications_text_message_rooms">Raum: %1$s</string>
-    <string name="notifications_text_message_teachers">Lehrer: %1$s</string>
-    <string name="notifications_text_message_classes">Klasse: %1$s</string>
     <string name="notifications_text_message_separator"> / </string>
     <string name="errors_crash_title">Es sieht aus als wäre SimpleHKA abgestürzt.</string>
     <string name="errors_crash_message">Entschuldigung.</string>
