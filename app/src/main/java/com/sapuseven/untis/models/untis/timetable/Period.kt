@@ -31,7 +31,9 @@ class Period(component: Component, timeZone: DateTimeZone) {
 		var returnValue = title
 		if (returnValue.startsWith('+')) returnValue = returnValue.substring(15).trim()
 		if (returnValue.startsWith('*')) returnValue = returnValue.substring(1).trim()
-		return returnValue
+		return returnValue.replace("(online)", "")
+			.replace("(präsenz)", "")
+			.trim()
 	}
 
 	companion object {

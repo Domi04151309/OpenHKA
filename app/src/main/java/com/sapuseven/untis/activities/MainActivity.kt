@@ -165,7 +165,6 @@ class MainActivity :
 		finish()
 	}
 
-	//TODO: show actual timetable
 	private fun showPersonalTimetable(): Boolean {
 		return setTarget()
 	}
