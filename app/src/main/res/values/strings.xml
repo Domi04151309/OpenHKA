@@ -71,6 +71,7 @@
 	<string name="errormessagedictionary_user_locked">User locked!</string>
 
 	<string name="mensa_meal_summary">Additives: %1$s\nStudent: %2$s €\nGuest: %3$s €\nEmployee: %4$s €\nPupil: %5$s €</string>
+	<string name="mensa_meal_additives">Additives</string>
 
 	<string name="preference_automute_cancelled_lessons">Also mute in cancelled lessons</string>
 	<string name="preference_automute_enable">Enable auto-mute</string>

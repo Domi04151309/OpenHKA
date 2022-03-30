@@ -1,10 +1,13 @@
 package com.sapuseven.untis.activities
 
 import android.os.Bundle
+import android.view.Menu
+import android.view.MenuItem
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.github.kittinunf.fuel.coroutines.awaitStringResult
 import com.github.kittinunf.fuel.httpGet
+import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.sapuseven.untis.R
 import com.sapuseven.untis.adapters.MensaMenuAdapter
 import com.sapuseven.untis.data.mensa.ListItem
@@ -23,8 +26,6 @@ import java.util.*
 import kotlin.collections.ArrayList
 import kotlin.math.min
 
-//TODO: add description for additives
-//TODO: add mensa selection
 class MensaActivity : BaseActivity() {
 	private val menu = arrayListOf<ListItem>()
 	private val menuAdapter = MensaMenuAdapter(menu)
@@ -57,6 +58,37 @@ class MensaActivity : BaseActivity() {
 		) { refreshMenu() }
 	}
 
+	override fun onCreateOptionsMenu(menu: Menu): Boolean {
+		menuInflater.inflate(R.menu.activity_mensa_menu, menu)
+		return true
+	}
+
+	override fun onOptionsItemSelected(item: MenuItem): Boolean {
+		loadAdditives()
+		return true
+	}
+
+	private fun loadAdditives() = GlobalScope.launch(Dispatchers.Main) {
+		"$API_URL/canteen/v2/foodadditives".httpGet()
+			.awaitStringResult()
+			.fold({ data ->
+				val json = JSONArray(data)
+				val items = Array<CharSequence>(json.length()) { "" }
+				var currentItem: JSONObject
+				for (i in 0 until json.length()) {
+					currentItem = json.getJSONObject(i)
+					items[i] = currentItem.optString("id") + ": " + currentItem.optString("name")
+				}
+				MaterialAlertDialogBuilder(this@MensaActivity)
+					.setTitle(R.string.mensa_meal_additives)
+					.setItems(items) { _, _ -> }
+					.setPositiveButton(R.string.all_ok) { _, _ -> }
+					.show()
+			}, {
+				//TODO: handle error
+			})
+	}
+
 	private fun showList(
 		adapter: RecyclerView.Adapter<*>,
 		refreshing: Boolean,
@@ -68,7 +100,7 @@ class MensaActivity : BaseActivity() {
 	}
 
 	private fun loadCanteens() = GlobalScope.launch(Dispatchers.Main) {
-		("$API_URL/canteen/names").httpGet()
+		"$API_URL/canteen/names".httpGet()
 			.awaitStringResult()
 			.fold({ data ->
 				val json = JSONArray(data)
@@ -102,7 +134,7 @@ class MensaActivity : BaseActivity() {
 	private suspend fun loadMenu(): ArrayList<ListItem> {
 		val list = arrayListOf<ListItem>()
 		val date = SimpleDateFormat("yyyy-MM-dd", Locale.US).format(System.currentTimeMillis())
-		("$API_URL/canteen/v2/$currentID/$date").httpGet()
+		"$API_URL/canteen/v2/$currentID/$date".httpGet()
 			.awaitStringResult()
 			.fold({ data ->
 				val json = JSONObject(data)
