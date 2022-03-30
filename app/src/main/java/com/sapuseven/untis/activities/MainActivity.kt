@@ -582,7 +582,10 @@ class MainActivity :
 			R.id.nav_infocenter -> {
 				val i = Intent(this@MainActivity, InfoCenterActivity::class.java)
 				i.putExtra(InfoCenterActivity.EXTRA_LONG_PROFILE_ID, profileId)
-				startActivityForResult(i, REQUEST_CODE_ROOM_FINDER)
+				startActivity(i)
+			}
+			R.id.nav_mensa -> {
+				startActivity(Intent(this@MainActivity, MensaActivity::class.java))
 			}
 		}
 
