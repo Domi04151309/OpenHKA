@@ -64,8 +64,10 @@ class MensaActivity : BaseActivity() {
 	}
 
 	override fun onOptionsItemSelected(item: MenuItem): Boolean {
-		loadAdditives()
-		return true
+		return if (item.title == resources.getString(R.string.mensa_meal_additives)) {
+			loadAdditives()
+			true
+		} else false
 	}
 
 	private fun loadAdditives() = GlobalScope.launch(Dispatchers.Main) {
