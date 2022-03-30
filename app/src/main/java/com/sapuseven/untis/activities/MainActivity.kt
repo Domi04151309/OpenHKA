@@ -575,17 +575,20 @@ class MainActivity :
 	override fun onNavigationItemSelected(item: MenuItem): Boolean {
 		when (item.itemId) {
 			R.id.nav_settings -> {
-				val i = Intent(this@MainActivity, SettingsActivity::class.java)
+				val i = Intent(this, SettingsActivity::class.java)
 				i.putExtra(SettingsActivity.EXTRA_LONG_PROFILE_ID, profileId)
 				startActivityForResult(i, REQUEST_CODE_SETTINGS)
 			}
 			R.id.nav_infocenter -> {
-				val i = Intent(this@MainActivity, InfoCenterActivity::class.java)
+				val i = Intent(this, InfoCenterActivity::class.java)
 				i.putExtra(InfoCenterActivity.EXTRA_LONG_PROFILE_ID, profileId)
 				startActivity(i)
 			}
+			R.id.nav_locations -> {
+				startActivity(Intent(this, LocationActivity::class.java))
+			}
 			R.id.nav_mensa -> {
-				startActivity(Intent(this@MainActivity, MensaActivity::class.java))
+				startActivity(Intent(this, MensaActivity::class.java))
 			}
 		}
 

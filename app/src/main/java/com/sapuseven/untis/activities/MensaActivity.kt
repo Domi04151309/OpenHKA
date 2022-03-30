@@ -34,8 +34,8 @@ class MensaActivity : BaseActivity() {
 	private var currentID = DEFAULT_ID
 
 	companion object {
-		const val API_URL: String = "https://www.iwi.hs-karlsruhe.de/iwii/REST"
-		const val DEFAULT_ID: Int = 1
+		private const val API_URL: String = "https://www.iwi.hs-karlsruhe.de/iwii/REST"
+		private const val DEFAULT_ID: Int = 1
 	}
 
 	override fun onCreate(savedInstanceState: Bundle?) {

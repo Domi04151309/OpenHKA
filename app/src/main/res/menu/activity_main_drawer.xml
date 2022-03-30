@@ -19,6 +19,11 @@
 			android:title="@string/activity_title_info_center" />
 
 		<item
+			android:id="@+id/nav_locations"
+			android:icon="@drawable/all_location"
+			android:title="@string/activity_title_locations" />
+
+		<item
 			android:id="@+id/nav_mensa"
 			android:icon="@drawable/all_mensa"
 			android:title="@string/activity_title_mensa" />
