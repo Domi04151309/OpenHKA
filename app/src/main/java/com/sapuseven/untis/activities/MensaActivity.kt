@@ -8,7 +8,9 @@ import com.github.kittinunf.fuel.httpGet
 import com.sapuseven.untis.R
 import com.sapuseven.untis.adapters.MensaMenuAdapter
 import com.sapuseven.untis.data.mensa.ListItem
-import kotlinx.android.synthetic.main.activity_infocenter.*
+import kotlinx.android.synthetic.main.activity_infocenter.recyclerview_infocenter
+import kotlinx.android.synthetic.main.activity_infocenter.swiperefreshlayout_infocenter
+import kotlinx.android.synthetic.main.activity_mensa.*
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
@@ -19,34 +21,39 @@ import java.text.DecimalFormatSymbols
 import java.text.SimpleDateFormat
 import java.util.*
 import kotlin.collections.ArrayList
+import kotlin.math.min
 
 //TODO: add description for additives
 //TODO: add mensa selection
 class MensaActivity : BaseActivity() {
 	private val menu = arrayListOf<ListItem>()
-
 	private val menuAdapter = MensaMenuAdapter(menu)
-
-	private var messagesLoading = true
-
+	private var menuLoading = true
+	private val idMap: MutableMap<String, Int> = mutableMapOf()
+	private var currentID = DEFAULT_ID
 
 	companion object {
 		const val API_URL: String = "https://www.iwi.hs-karlsruhe.de/iwii/REST"
-
-		const val HARDCODED_ID: String = "2"
+		const val DEFAULT_ID: Int = 1
 	}
 
 	override fun onCreate(savedInstanceState: Bundle?) {
 		super.onCreate(savedInstanceState)
-		setContentView(R.layout.activity_infocenter)
+		setContentView(R.layout.activity_mensa)
 
 		recyclerview_infocenter.layoutManager = LinearLayoutManager(this)
 
-		refreshMenu()
+		loadCanteens()
+
+		bottomnavigationview_mensa.setOnNavigationItemSelectedListener {
+			currentID = idMap[it.title] ?: DEFAULT_ID
+			refreshMenu()
+			true
+		}
 
 		showList(
 			menuAdapter,
-			messagesLoading,
+			menuLoading,
 		) { refreshMenu() }
 	}
 
@@ -60,14 +67,34 @@ class MensaActivity : BaseActivity() {
 		swiperefreshlayout_infocenter.setOnRefreshListener { refreshFunction() }
 	}
 
+	private fun loadCanteens() = GlobalScope.launch(Dispatchers.Main) {
+		("$API_URL/canteen/names").httpGet()
+			.awaitStringResult()
+			.fold({ data ->
+				val json = JSONArray(data)
+				var currentItem: JSONObject
+				var currentTitle: String
+				for (i in 0 until min(json.length(), 5)) {
+					currentItem = json.getJSONObject(i)
+					currentTitle = currentItem.optString("name").replace("Mensa ", "")
+					idMap[currentTitle] = currentItem.optInt("id")
+					bottomnavigationview_mensa.menu.add(currentTitle)
+						.setIcon(R.drawable.all_mensa)
+				}
+				refreshMenu()
+			}, {
+				//TODO: handle error
+			})
+	}
+
 	private fun refreshMenu() = GlobalScope.launch(Dispatchers.Main) {
-		messagesLoading = true
+		menuLoading = true
 		loadMenu().let {
 			menu.clear()
 			menu.addAll(it)
 			menuAdapter.notifyDataSetChanged()
 		}
-		messagesLoading = false
+		menuLoading = false
 		swiperefreshlayout_infocenter.isRefreshing = false
 	}
 
@@ -75,7 +102,7 @@ class MensaActivity : BaseActivity() {
 	private suspend fun loadMenu(): ArrayList<ListItem> {
 		val list = arrayListOf<ListItem>()
 		val date = SimpleDateFormat("yyyy-MM-dd", Locale.US).format(System.currentTimeMillis())
-		("$API_URL/canteen/v2/$HARDCODED_ID/$date").httpGet()
+		("$API_URL/canteen/v2/$currentID/$date").httpGet()
 			.awaitStringResult()
 			.fold({ data ->
 				val json = JSONObject(data)
