@@ -1,96 +1,117 @@
 package com.sapuseven.untis.activities
 
-import android.content.Context
 import android.os.Bundle
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import com.prof.rssparser.Article
-import com.prof.rssparser.Parser
+import com.github.kittinunf.fuel.coroutines.awaitStringResult
+import com.github.kittinunf.fuel.httpGet
 import com.sapuseven.untis.R
-import com.sapuseven.untis.adapters.infocenter.*
-import com.sapuseven.untis.data.databases.LinkDatabase
+import com.sapuseven.untis.adapters.MensaMenuAdapter
+import com.sapuseven.untis.data.mensa.ListItem
 import kotlinx.android.synthetic.main.activity_infocenter.*
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
-import java.nio.charset.StandardCharsets
+import org.json.JSONArray
+import org.json.JSONObject
+import java.text.DecimalFormat
+import java.text.DecimalFormatSymbols
 import java.text.SimpleDateFormat
 import java.util.*
+import kotlin.collections.ArrayList
 
+//TODO: add description for additives
+//TODO: add mensa selection
 class MensaActivity : BaseActivity() {
-	private val messageList = arrayListOf<Article>()
+	private val menu = arrayListOf<ListItem>()
 
-	private val messageAdapter = MessageAdapter(messageList)
+	private val menuAdapter = MensaMenuAdapter(menu)
 
 	private var messagesLoading = true
 
-	private lateinit var linkDatabase: LinkDatabase
-	private var link: LinkDatabase.Link? = null
 
 	companion object {
-		const val EXTRA_LONG_PROFILE_ID = "com.sapuseven.untis.activities.profileid"
+		const val API_URL: String = "https://www.iwi.hs-karlsruhe.de/iwii/REST"
 
-		suspend fun loadMessages(context: Context, link: LinkDatabase.Link): List<Article>? {
-			val parser = Parser.Builder()
-				.context(context)
-				.charset(StandardCharsets.UTF_8)
-				.cacheExpirationMillis(24L * 60L * 60L * 100L) // one day
-				.build()
-
-			return try {
-				parser.getChannel(link.rssUrl).articles
-			} catch (e: Exception) {
-				null
-			}
-		}
+		const val HARDCODED_ID: String = "2"
 	}
 
 	override fun onCreate(savedInstanceState: Bundle?) {
 		super.onCreate(savedInstanceState)
 		setContentView(R.layout.activity_infocenter)
 
-		linkDatabase = LinkDatabase.createInstance(this)
-		link = linkDatabase.getLink(intent.getLongExtra(EXTRA_LONG_PROFILE_ID, -1))
-		link?.let {
-			refreshMessages(it)
-		}
-
 		recyclerview_infocenter.layoutManager = LinearLayoutManager(this)
 
+		refreshMenu()
+
 		showList(
-			messageAdapter,
+			menuAdapter,
 			messagesLoading,
-		) { user ->
-			refreshMessages(user)
-		}
+		) { refreshMenu() }
 	}
 
 	private fun showList(
 		adapter: RecyclerView.Adapter<*>,
 		refreshing: Boolean,
-		refreshFunction: (link: LinkDatabase.Link) -> Unit
+		refreshFunction: () -> Unit
 	) {
 		recyclerview_infocenter.adapter = adapter
 		swiperefreshlayout_infocenter.isRefreshing = refreshing
-		swiperefreshlayout_infocenter.setOnRefreshListener { link?.let { refreshFunction(it) } }
+		swiperefreshlayout_infocenter.setOnRefreshListener { refreshFunction() }
 	}
 
-	private fun refreshMessages(link: LinkDatabase.Link) = GlobalScope.launch(Dispatchers.Main) {
+	private fun refreshMenu() = GlobalScope.launch(Dispatchers.Main) {
 		messagesLoading = true
-		loadMessages(this@MensaActivity, link)?.let {
-			messageList.clear()
-			messageList.addAll(it)
-			messageAdapter.notifyDataSetChanged()
-
-			preferences.defaultPrefs.edit()
-				.putInt("preference_last_messages_count", it.size)
-				.putString(
-					"preference_last_messages_date",
-					SimpleDateFormat("dd-MM-yyyy", Locale.US).format(Calendar.getInstance().time)
-				)
-				.apply()
+		loadMenu().let {
+			menu.clear()
+			menu.addAll(it)
+			menuAdapter.notifyDataSetChanged()
 		}
 		messagesLoading = false
 		swiperefreshlayout_infocenter.isRefreshing = false
+	}
+
+	//TODO: cache
+	private suspend fun loadMenu(): ArrayList<ListItem> {
+		val list = arrayListOf<ListItem>()
+		val date = SimpleDateFormat("yyyy-MM-dd", Locale.US).format(System.currentTimeMillis())
+		("$API_URL/canteen/v2/$HARDCODED_ID/$date").httpGet()
+			.awaitStringResult()
+			.fold({ data ->
+				val json = JSONObject(data)
+				val mealGroups = json.optJSONArray("mealGroups") ?: JSONArray()
+				var meals: JSONArray
+				var currentGroup: JSONObject
+				var currentMeal: JSONObject
+				for (i in 0 until mealGroups.length()) {
+					currentGroup = mealGroups.getJSONObject(i)
+					list.add(ListItem("", currentGroup.optString("title")))
+					meals = currentGroup.optJSONArray("meals") ?: JSONArray()
+					for (j in 0 until meals.length()) {
+						currentMeal = meals.getJSONObject(j)
+						list.add(
+							ListItem(
+								currentMeal.optString("name"),
+								generateSummary(currentMeal)
+							)
+						)
+					}
+				}
+			}, {
+				//TODO: handle error
+			})
+		return list
+	}
+
+	private fun generateSummary(meal: JSONObject): String {
+		val df = DecimalFormat("0.00", DecimalFormatSymbols.getInstance(Locale.getDefault()))
+		return resources.getString(
+			R.string.mensa_meal_summary,
+			(meal.optJSONArray("foodAdditiveNumbers") ?: JSONArray()).join(", ").replace("\"", ""),
+			df.format(meal.optDouble("priceStudent")),
+			df.format(meal.optDouble("priceGuest")),
+			df.format(meal.optDouble("priceEmployee")),
+			df.format(meal.optDouble("pricePupil"))
+		)
 	}
 }

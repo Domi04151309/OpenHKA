@@ -70,6 +70,8 @@
 	<string name="errormessagedictionary_too_many_results">Too many results</string>
 	<string name="errormessagedictionary_user_locked">User locked!</string>
 
+	<string name="mensa_meal_summary">Additives: %1$s\nStudent: %2$s €\nGuest: %3$s €\nEmployee: %4$s €\nPupil: %5$s €</string>
+
 	<string name="preference_automute_cancelled_lessons">Also mute in cancelled lessons</string>
 	<string name="preference_automute_enable">Enable auto-mute</string>
 	<string name="preference_automute_enable_summary">Automatically turns on Do Not Disturb during lessons</string>
