@@ -25,19 +25,17 @@ class StringLoader(
 	}
 
 	private val cacheName = link.filter { it.isLetterOrDigit() }
-	private var request: Int = 0
 
 	fun load(flags: Int = 0) =
 		GlobalScope.launch(Dispatchers.Main) {
-			request++
 
 			if (flags and FLAG_LOAD_CACHE > 0)
-				loadFromCache(request - 1)
+				loadFromCache()
 			if (flags and FLAG_LOAD_SERVER > 0)
-				loadFromServer(request - 1)
+				loadFromServer()
 		}
 
-	private fun loadFromCache(requestId: Int) {
+	private fun loadFromCache() {
 		val cache = StringCache(context, cacheName)
 
 		if (cache.exists()) {
@@ -46,19 +44,17 @@ class StringLoader(
 			} ?: run {
 				cache.delete()
 				stringDisplay.onStringLoadingError(
-					requestId,
 					CODE_CACHE_MISSING
 				)
 			}
 		} else {
 			stringDisplay.onStringLoadingError(
-				requestId,
 				CODE_CACHE_MISSING
 			)
 		}
 	}
 
-	private suspend fun loadFromServer(requestId: Int) {
+	private suspend fun loadFromServer() {
 		val cache = StringCache(context, cacheName)
 
 		link.httpGet()
@@ -69,13 +65,12 @@ class StringLoader(
 				cache.save(StringCache.CacheObject(timestamp, data))
 			}, {
 				stringDisplay.onStringLoadingError(
-					requestId,
 					CODE_REQUEST_FAILED
 				)
 			})
 	}
 
-	fun repeat(requestId: Int, flags: Int = 0) {
+	fun repeat(flags: Int = 0) {
 		load(flags)
 	}
 }

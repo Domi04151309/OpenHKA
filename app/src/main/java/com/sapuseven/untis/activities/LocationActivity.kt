@@ -95,10 +95,9 @@ class LocationActivity : BaseActivity(), StringDisplay {
 		swiperefreshlayout_infocenter.isRefreshing = false
 	}
 
-	override fun onStringLoadingError(requestId: Int, code: Int) {
+	override fun onStringLoadingError(code: Int) {
 		when (code) {
 			StringLoader.CODE_CACHE_MISSING -> stringLoader.repeat(
-				requestId,
 				StringLoader.FLAG_LOAD_SERVER
 			)
 			else -> {

@@ -73,7 +73,6 @@ class MainActivity :
 		private const val HOUR_MILLIS: Int = 60 * MINUTE_MILLIS
 		private const val DAY_MILLIS: Int = 24 * HOUR_MILLIS
 
-		private const val REQUEST_CODE_ROOM_FINDER = 1
 		private const val REQUEST_CODE_SETTINGS = 2
 		private const val REQUEST_CODE_LOGINDATAINPUT_ADD = 3
 		private const val REQUEST_CODE_LOGINDATAINPUT_EDIT = 4
