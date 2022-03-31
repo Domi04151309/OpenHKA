@@ -1,4 +1,4 @@
-package com.sapuseven.untis.helpers.timetable
+package com.sapuseven.untis.helpers.strings
 
 import android.content.Context
 import kotlinx.serialization.Serializable
@@ -9,7 +9,7 @@ import java.io.File
 import java.lang.ref.WeakReference
 
 
-class TimetableCache(val context: WeakReference<Context>) {
+class StringCache(private val context: WeakReference<Context>, private val name: String) {
 
 	fun exists(): Boolean {
 		return targetCacheFile().exists()
@@ -30,11 +30,11 @@ class TimetableCache(val context: WeakReference<Context>) {
 	}
 
 	private fun targetCacheFile(): File {
-		return File(context.get()?.cacheDir, "default")
+		return File(context.get()?.cacheDir, name)
 	}
 
 	override fun toString(): String {
-		return "default"
+		return name
 	}
 
 	fun delete() {

@@ -1,4 +1,4 @@
-package com.sapuseven.untis.data.mensa
+package com.sapuseven.untis.data.lists
 
 data class ListItem(
 	val title: String,

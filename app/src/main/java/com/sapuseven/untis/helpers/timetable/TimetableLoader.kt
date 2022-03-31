@@ -6,6 +6,7 @@ import com.github.kittinunf.fuel.coroutines.awaitStringResult
 import com.github.kittinunf.fuel.httpGet
 import com.sapuseven.untis.data.databases.LinkDatabase
 import com.sapuseven.untis.data.timetable.TimegridItem
+import com.sapuseven.untis.helpers.strings.StringCache
 import com.sapuseven.untis.interfaces.TimetableDisplay
 import com.sapuseven.untis.models.untis.timetable.Period
 import kotlinx.coroutines.Dispatchers
@@ -19,7 +20,6 @@ import org.joda.time.DateTimeZone
 import org.joda.time.Instant
 import java.io.StringReader
 import java.lang.ref.WeakReference
-import kotlin.collections.ArrayList
 
 
 class TimetableLoader(
@@ -33,23 +33,24 @@ class TimetableLoader(
 
 		const val CODE_CACHE_MISSING = 1
 		const val CODE_REQUEST_FAILED = 2
-		const val CODE_REQUEST_PARSING_EXCEPTION = 3
+
+		private const val CACHE_NAME = "timetable"
 	}
 
-	private val requestList = ArrayList<Int>()
+	private var request: Int = 0
 
 	fun load(flags: Int = 0) =
 		GlobalScope.launch(Dispatchers.Main) {
-			requestList.add(0)
+			request++
 
 			if (flags and FLAG_LOAD_CACHE > 0)
-				loadFromCache(requestList.size - 1)
+				loadFromCache(request - 1)
 			if (flags and FLAG_LOAD_SERVER > 0)
-				loadFromServer(requestList.size - 1)
+				loadFromServer(request - 1)
 		}
 
 	private fun loadFromCache(requestId: Int) {
-		val cache = TimetableCache(context)
+		val cache = StringCache(context, CACHE_NAME)
 
 		if (cache.exists()) {
 			Log.d(
@@ -91,7 +92,7 @@ class TimetableLoader(
 	}
 
 	private suspend fun loadFromServer(requestId: Int) {
-		val cache = TimetableCache(context)
+		val cache = StringCache(context, CACHE_NAME)
 
 		link.iCalUrl
 			.httpGet()
@@ -102,7 +103,6 @@ class TimetableLoader(
 					DateTimeZone.forID(calendar.getProperty("X-WR-TIMEZONE").value)
 				val timestamp = Instant.now().millis
 				timetableDisplay.addTimetableItems(calendar.components.map {
-
 					TimegridItem(
 						Period(it as Component, timeZone)
 					)
@@ -111,9 +111,13 @@ class TimetableLoader(
 					"TimetableLoaderDebug",
 					"requestId $requestId: saving to cache: $cache"
 				)
-				cache.save(TimetableCache.CacheObject(timestamp, data))
+				cache.save(StringCache.CacheObject(timestamp, data))
 			}, {
-				//TODO: handle error
+				timetableDisplay.onTimetableLoadingError(
+					requestId,
+					CODE_REQUEST_FAILED,
+					"request failed"
+				)
 			})
 	}
 

@@ -13,6 +13,7 @@ import android.view.ViewGroup
 import android.view.WindowManager
 import android.widget.ImageView
 import android.widget.LinearLayout
+import android.widget.Toast
 import androidx.appcompat.app.ActionBarDrawerToggle
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.graphics.ColorUtils
@@ -29,10 +30,8 @@ import com.sapuseven.untis.adapters.ProfileListAdapter
 import com.sapuseven.untis.data.databases.LinkDatabase
 import com.sapuseven.untis.data.timetable.TimegridItem
 import com.sapuseven.untis.dialogs.DatePickerDialog
-import com.sapuseven.untis.dialogs.ErrorReportingDialog
 import com.sapuseven.untis.fragments.TimetableItemDetailsFragment
 import com.sapuseven.untis.helpers.ConversionUtils
-import com.sapuseven.untis.helpers.ErrorMessageDictionary
 import com.sapuseven.untis.helpers.config.PreferenceUtils
 import com.sapuseven.untis.helpers.timetable.TimetableLoader
 import com.sapuseven.untis.interfaces.TimetableDisplay
@@ -715,23 +714,11 @@ class MainActivity :
 			)
 			else -> {
 				showLoading(false)
-				Snackbar.make(
-					content_main,
-					if (code != null) ErrorMessageDictionary.getErrorMessage(
-						resources,
-						code
-					) else message
-						?: getString(R.string.all_error),
-					Snackbar.LENGTH_INDEFINITE
-				)
-					.setAction("Show") {
-						ErrorReportingDialog(this).showRequestErrorDialog(
-							requestId,
-							code,
-							message
-						)
-					}
-					.show()
+				Toast.makeText(
+					this,
+					R.string.errors_failed_loading_from_server_message,
+					Toast.LENGTH_LONG
+				).show()
 			}
 		}
 	}

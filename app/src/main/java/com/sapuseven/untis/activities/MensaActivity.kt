@@ -10,7 +10,7 @@ import com.github.kittinunf.fuel.httpGet
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.sapuseven.untis.R
 import com.sapuseven.untis.adapters.MensaMenuAdapter
-import com.sapuseven.untis.data.mensa.ListItem
+import com.sapuseven.untis.data.lists.ListItem
 import kotlinx.android.synthetic.main.activity_infocenter.recyclerview_infocenter
 import kotlinx.android.synthetic.main.activity_infocenter.swiperefreshlayout_infocenter
 import kotlinx.android.synthetic.main.activity_mensa.*

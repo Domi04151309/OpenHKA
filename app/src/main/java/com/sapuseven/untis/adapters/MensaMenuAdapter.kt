@@ -7,7 +7,7 @@ import android.view.ViewGroup
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.sapuseven.untis.R
-import com.sapuseven.untis.data.mensa.ListItem
+import com.sapuseven.untis.data.lists.ListItem
 
 class MensaMenuAdapter(
 	private val items: ArrayList<ListItem>
