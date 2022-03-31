@@ -38,9 +38,9 @@ class LocationActivity : BaseActivity(), StringDisplay {
 		recyclerview_infocenter.layoutManager = LinearLayoutManager(this)
 		recyclerview_infocenter.adapter = locationAdapter
 		swiperefreshlayout_infocenter.isRefreshing = locationsLoading
-		swiperefreshlayout_infocenter.setOnRefreshListener { refreshMessages(StringLoader.FLAG_LOAD_SERVER) }
+		swiperefreshlayout_infocenter.setOnRefreshListener { refreshLocations(StringLoader.FLAG_LOAD_SERVER) }
 
-		refreshMessages(StringLoader.FLAG_LOAD_CACHE)
+		refreshLocations(StringLoader.FLAG_LOAD_CACHE)
 
 		locationAdapter.onClickListener = View.OnClickListener {
 			val key = it.findViewById<TextView>(R.id.textview_itemmessage_subject).text.toString()
@@ -56,7 +56,7 @@ class LocationActivity : BaseActivity(), StringDisplay {
 		}
 	}
 
-	private fun refreshMessages(flags: Int) {
+	private fun refreshLocations(flags: Int) {
 		locationsLoading = true
 		stringLoader.load(flags)
 	}

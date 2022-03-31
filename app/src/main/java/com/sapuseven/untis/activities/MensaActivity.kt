@@ -5,35 +5,32 @@ import android.view.Menu
 import android.view.MenuItem
 import android.widget.ArrayAdapter
 import android.widget.AutoCompleteTextView
+import android.widget.Toast
 import androidx.core.widget.addTextChangedListener
 import androidx.recyclerview.widget.LinearLayoutManager
-import androidx.recyclerview.widget.RecyclerView
-import com.github.kittinunf.fuel.coroutines.awaitStringResult
-import com.github.kittinunf.fuel.httpGet
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.sapuseven.untis.R
 import com.sapuseven.untis.adapters.MensaMenuAdapter
 import com.sapuseven.untis.data.lists.ListItem
+import com.sapuseven.untis.helpers.strings.StringLoader
+import com.sapuseven.untis.interfaces.StringDisplay
 import kotlinx.android.synthetic.main.activity_infocenter.recyclerview_infocenter
 import kotlinx.android.synthetic.main.activity_infocenter.swiperefreshlayout_infocenter
 import kotlinx.android.synthetic.main.activity_mensa.*
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.GlobalScope
-import kotlinx.coroutines.launch
 import org.json.JSONArray
 import org.json.JSONObject
+import java.lang.ref.WeakReference
 import java.text.DecimalFormat
 import java.text.DecimalFormatSymbols
 import java.text.SimpleDateFormat
 import java.util.*
-import kotlin.collections.ArrayList
 
-class MensaActivity : BaseActivity() {
+class MensaActivity : BaseActivity(), StringDisplay {
 	private val menu = arrayListOf<ListItem>()
 	private val menuAdapter = MensaMenuAdapter(menu)
 	private var menuLoading = true
 	private val idMap: MutableMap<String, Int> = mutableMapOf()
-	private var currentID = DEFAULT_ID
+	private lateinit var stringLoader: StringLoader
 
 	companion object {
 		private const val API_URL: String = "https://www.iwi.hs-karlsruhe.de/iwii/REST"
@@ -44,19 +41,23 @@ class MensaActivity : BaseActivity() {
 		super.onCreate(savedInstanceState)
 		setContentView(R.layout.activity_mensa)
 
-		recyclerview_infocenter.layoutManager = LinearLayoutManager(this)
-
 		loadCanteens()
 
 		(dropdown.editText as AutoCompleteTextView).addTextChangedListener {
-			currentID = idMap[it.toString()] ?: DEFAULT_ID
-			refreshMenu()
+			val currentID = idMap[it.toString()] ?: DEFAULT_ID
+			val date = SimpleDateFormat("yyyy-MM-dd", Locale.US).format(System.currentTimeMillis())
+			stringLoader = StringLoader(
+				WeakReference(this),
+				this,
+				"$API_URL/canteen/v2/$currentID/$date"
+			)
+			refreshMenu(StringLoader.FLAG_LOAD_CACHE)
 		}
 
-		showList(
-			menuAdapter,
-			menuLoading,
-		) { refreshMenu() }
+		recyclerview_infocenter.layoutManager = LinearLayoutManager(this)
+		recyclerview_infocenter.adapter = menuAdapter
+		swiperefreshlayout_infocenter.isRefreshing = menuLoading
+		swiperefreshlayout_infocenter.setOnRefreshListener { refreshMenu(StringLoader.FLAG_LOAD_SERVER) }
 	}
 
 	override fun onCreateOptionsMenu(menu: Menu): Boolean {
@@ -71,11 +72,11 @@ class MensaActivity : BaseActivity() {
 		} else false
 	}
 
-	private fun loadAdditives() = GlobalScope.launch(Dispatchers.Main) {
-		"$API_URL/canteen/v2/foodadditives".httpGet()
-			.awaitStringResult()
-			.fold({ data ->
-				val json = JSONArray(data)
+	private fun loadAdditives() {
+		lateinit var loader: StringLoader
+		val callback = object : StringDisplay {
+			override fun onStringLoaded(string: String) {
+				val json = JSONArray(string)
 				val items = Array<CharSequence>(json.length()) { "" }
 				var currentItem: JSONObject
 				for (i in 0 until json.length()) {
@@ -87,26 +88,32 @@ class MensaActivity : BaseActivity() {
 					.setItems(items) { _, _ -> }
 					.setPositiveButton(R.string.all_ok) { _, _ -> }
 					.show()
-			}, {
-				//TODO: handle error
-			})
+			}
+
+			override fun onStringLoadingError(code: Int) {
+				when (code) {
+					StringLoader.CODE_CACHE_MISSING -> loader.repeat(
+						StringLoader.FLAG_LOAD_SERVER
+					)
+					else -> {
+						MaterialAlertDialogBuilder(this@MensaActivity)
+							.setTitle(R.string.mensa_meal_additives)
+							.setMessage(R.string.errors_failed_loading_from_server_message)
+							.setPositiveButton(R.string.all_ok) { _, _ -> }
+							.show()
+					}
+				}
+			}
+		}
+		loader = StringLoader(WeakReference(this), callback, "$API_URL/canteen/v2/foodadditives")
+		loader.load(StringLoader.FLAG_LOAD_CACHE)
 	}
 
-	private fun showList(
-		adapter: RecyclerView.Adapter<*>,
-		refreshing: Boolean,
-		refreshFunction: () -> Unit
-	) {
-		recyclerview_infocenter.adapter = adapter
-		swiperefreshlayout_infocenter.isRefreshing = refreshing
-		swiperefreshlayout_infocenter.setOnRefreshListener { refreshFunction() }
-	}
-
-	private fun loadCanteens() = GlobalScope.launch(Dispatchers.Main) {
-		"$API_URL/canteen/names".httpGet()
-			.awaitStringResult()
-			.fold({ data ->
-				val json = JSONArray(data)
+	private fun loadCanteens() {
+		lateinit var loader: StringLoader
+		val callback = object : StringDisplay {
+			override fun onStringLoaded(string: String) {
+				val json = JSONArray(string)
 				val canteens = MutableList(json.length()) { "" }
 				var currentItem: JSONObject
 				var currentTitle: String
@@ -126,52 +133,75 @@ class MensaActivity : BaseActivity() {
 					)
 					it.setText(canteens[0], false)
 				}
-			}, {
-				//TODO: handle error
-			})
+			}
+
+			override fun onStringLoadingError(code: Int) {
+				when (code) {
+					StringLoader.CODE_CACHE_MISSING -> loader.repeat(
+						StringLoader.FLAG_LOAD_SERVER
+					)
+					else -> {
+						MaterialAlertDialogBuilder(this@MensaActivity)
+							.setTitle(R.string.activity_title_mensa)
+							.setMessage(R.string.errors_failed_loading_from_server_message)
+							.setPositiveButton(R.string.all_ok) { _, _ -> }
+							.show()
+					}
+				}
+			}
+		}
+		loader = StringLoader(WeakReference(this), callback, "$API_URL/canteen/names")
+		loader.load(StringLoader.FLAG_LOAD_CACHE)
 	}
 
-	private fun refreshMenu() = GlobalScope.launch(Dispatchers.Main) {
+	private fun refreshMenu(flags: Int) {
 		menuLoading = true
-		loadMenu().let {
-			menu.clear()
-			menu.addAll(it)
-			menuAdapter.notifyDataSetChanged()
+		stringLoader.load(flags)
+	}
+
+	override fun onStringLoaded(string: String) {
+		menu.clear()
+		val json = JSONObject(string)
+		val mealGroups = json.optJSONArray("mealGroups") ?: JSONArray()
+		var meals: JSONArray
+		var currentGroup: JSONObject
+		var currentMeal: JSONObject
+		for (i in 0 until mealGroups.length()) {
+			currentGroup = mealGroups.getJSONObject(i)
+			menu.add(ListItem("", currentGroup.optString("title")))
+			meals = currentGroup.optJSONArray("meals") ?: JSONArray()
+			for (j in 0 until meals.length()) {
+				currentMeal = meals.getJSONObject(j)
+				menu.add(
+					ListItem(
+						currentMeal.optString("name"),
+						generateSummary(currentMeal)
+					)
+				)
+			}
 		}
+		menuAdapter.notifyDataSetChanged()
 		menuLoading = false
 		swiperefreshlayout_infocenter.isRefreshing = false
 	}
 
-	//TODO: cache
-	private suspend fun loadMenu(): ArrayList<ListItem> {
-		val list = arrayListOf<ListItem>()
-		val date = SimpleDateFormat("yyyy-MM-dd", Locale.US).format(System.currentTimeMillis())
-		"$API_URL/canteen/v2/$currentID/$date".httpGet()
-			.awaitStringResult()
-			.fold({ data ->
-				val json = JSONObject(data)
-				val mealGroups = json.optJSONArray("mealGroups") ?: JSONArray()
-				var meals: JSONArray
-				var currentGroup: JSONObject
-				var currentMeal: JSONObject
-				for (i in 0 until mealGroups.length()) {
-					currentGroup = mealGroups.getJSONObject(i)
-					list.add(ListItem("", currentGroup.optString("title")))
-					meals = currentGroup.optJSONArray("meals") ?: JSONArray()
-					for (j in 0 until meals.length()) {
-						currentMeal = meals.getJSONObject(j)
-						list.add(
-							ListItem(
-								currentMeal.optString("name"),
-								generateSummary(currentMeal)
-							)
-						)
-					}
-				}
-			}, {
-				//TODO: handle error
-			})
-		return list
+	override fun onStringLoadingError(code: Int) {
+		when (code) {
+			StringLoader.CODE_CACHE_MISSING -> stringLoader.repeat(
+				StringLoader.FLAG_LOAD_SERVER
+			)
+			else -> {
+				Toast.makeText(
+					this,
+					R.string.errors_failed_loading_from_server_message,
+					Toast.LENGTH_LONG
+				).show()
+				menu.clear()
+				menuAdapter.notifyDataSetChanged()
+				menuLoading = false
+				swiperefreshlayout_infocenter.isRefreshing = false
+			}
+		}
 	}
 
 	private fun generateSummary(meal: JSONObject): String {
