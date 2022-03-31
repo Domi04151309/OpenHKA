@@ -3,13 +3,14 @@
 	xmlns:android="http://schemas.android.com/apk/res/android"
 	xmlns:app="http://schemas.android.com/apk/res-auto"
 	android:layout_width="match_parent"
-	android:layout_height="match_parent">
+	android:layout_height="match_parent"
+	android:clipToPadding="false">
 
 	<androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 		android:id="@+id/swiperefreshlayout_infocenter"
 		android:layout_width="match_parent"
 		android:layout_height="0dp"
-		app:layout_constraintBottom_toTopOf="@id/bottomnavigationview_mensa"
+		app:layout_constraintBottom_toTopOf="@id/framelayout_bottom"
 		app:layout_constraintTop_toTopOf="parent">
 
 		<androidx.recyclerview.widget.RecyclerView
@@ -18,12 +19,32 @@
 			android:layout_height="match_parent" />
 	</androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
 
-	<com.google.android.material.bottomnavigation.BottomNavigationView
-		android:id="@+id/bottomnavigationview_mensa"
-		style="@style/Widget.MaterialComponents.BottomNavigationView.Colored"
-		android:layout_width="0dp"
+	<FrameLayout
+		android:id="@+id/framelayout_bottom"
+		android:layout_width="match_parent"
 		android:layout_height="wrap_content"
+		android:paddingVertical="@dimen/margin_listitem_text_vertical"
+		android:paddingHorizontal="@dimen/margin_listitem_text"
+		android:background="?android:attr/windowBackground"
+		android:elevation="8dp"
 		app:layout_constraintBottom_toBottomOf="parent"
 		app:layout_constraintEnd_toEndOf="parent"
-		app:layout_constraintStart_toStartOf="parent" />
+		app:layout_constraintStart_toStartOf="parent">
+
+		<com.google.android.material.textfield.TextInputLayout
+			android:id="@+id/dropdown"
+			style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.ExposedDropdownMenu"
+			android:layout_width="match_parent"
+			android:layout_height="wrap_content"
+			android:hint="@string/activity_title_mensa">
+
+			<AutoCompleteTextView
+				android:layout_width="match_parent"
+				android:layout_height="wrap_content"
+				android:hint="@null"
+				android:focusable="false"
+				android:inputType="none|textNoSuggestions" />
+		</com.google.android.material.textfield.TextInputLayout>
+
+	</FrameLayout>
 </androidx.constraintlayout.widget.ConstraintLayout>

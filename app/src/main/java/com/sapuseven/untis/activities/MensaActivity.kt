@@ -3,6 +3,9 @@ package com.sapuseven.untis.activities
 import android.os.Bundle
 import android.view.Menu
 import android.view.MenuItem
+import android.widget.ArrayAdapter
+import android.widget.AutoCompleteTextView
+import androidx.core.widget.addTextChangedListener
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.github.kittinunf.fuel.coroutines.awaitStringResult
@@ -24,7 +27,6 @@ import java.text.DecimalFormatSymbols
 import java.text.SimpleDateFormat
 import java.util.*
 import kotlin.collections.ArrayList
-import kotlin.math.min
 
 class MensaActivity : BaseActivity() {
 	private val menu = arrayListOf<ListItem>()
@@ -46,10 +48,9 @@ class MensaActivity : BaseActivity() {
 
 		loadCanteens()
 
-		bottomnavigationview_mensa.setOnNavigationItemSelectedListener {
-			currentID = idMap[it.title] ?: DEFAULT_ID
+		(dropdown.editText as AutoCompleteTextView).addTextChangedListener {
+			currentID = idMap[it.toString()] ?: DEFAULT_ID
 			refreshMenu()
-			true
 		}
 
 		showList(
@@ -106,16 +107,25 @@ class MensaActivity : BaseActivity() {
 			.awaitStringResult()
 			.fold({ data ->
 				val json = JSONArray(data)
+				val canteens = MutableList(json.length()) { "" }
 				var currentItem: JSONObject
 				var currentTitle: String
-				for (i in 0 until min(json.length(), 5)) {
+				for (i in 0 until json.length()) {
 					currentItem = json.getJSONObject(i)
 					currentTitle = currentItem.optString("name").replace("Mensa ", "")
 					idMap[currentTitle] = currentItem.optInt("id")
-					bottomnavigationview_mensa.menu.add(currentTitle)
-						.setIcon(R.drawable.all_mensa)
+					canteens[i] = currentTitle
 				}
-				refreshMenu()
+				(dropdown.editText as AutoCompleteTextView).let {
+					it.setAdapter(
+						ArrayAdapter(
+							this@MensaActivity,
+							android.R.layout.simple_list_item_1,
+							canteens
+						)
+					)
+					it.setText(canteens[0], false)
+				}
 			}, {
 				//TODO: handle error
 			})
