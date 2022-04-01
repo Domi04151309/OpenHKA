@@ -582,6 +582,9 @@ class MainActivity :
 				i.putExtra(InfoCenterActivity.EXTRA_LONG_PROFILE_ID, profileId)
 				startActivity(i)
 			}
+			R.id.nav_events -> {
+				startActivity(Intent(this, EventActivity::class.java))
+			}
 			R.id.nav_locations -> {
 				startActivity(Intent(this, LocationActivity::class.java))
 			}
