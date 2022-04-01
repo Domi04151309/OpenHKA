@@ -10,7 +10,7 @@ import androidx.core.widget.addTextChangedListener
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.sapuseven.untis.R
-import com.sapuseven.untis.adapters.MensaMenuAdapter
+import com.sapuseven.untis.adapters.MessageAdapter
 import com.sapuseven.untis.data.lists.ListItem
 import com.sapuseven.untis.helpers.strings.StringLoader
 import com.sapuseven.untis.interfaces.StringDisplay
@@ -27,7 +27,7 @@ import java.util.*
 
 class MensaActivity : BaseActivity(), StringDisplay {
 	private val menu = arrayListOf<ListItem>()
-	private val menuAdapter = MensaMenuAdapter(menu)
+	private val menuAdapter = MessageAdapter(menu)
 	private var menuLoading = true
 	private val idMap: MutableMap<String, Int> = mutableMapOf()
 	private lateinit var stringLoader: StringLoader

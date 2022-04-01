@@ -9,7 +9,7 @@ import android.widget.TextView
 import android.widget.Toast
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.sapuseven.untis.R
-import com.sapuseven.untis.adapters.MensaMenuAdapter
+import com.sapuseven.untis.adapters.MessageAdapter
 import com.sapuseven.untis.data.lists.ListItem
 import com.sapuseven.untis.helpers.strings.StringLoader
 import com.sapuseven.untis.interfaces.StringDisplay
@@ -23,7 +23,7 @@ import java.util.*
 
 class EventActivity : BaseActivity(), StringDisplay {
 	private val eventList = arrayListOf<ListItem>()
-	private val eventAdapter = MensaMenuAdapter(eventList)
+	private val eventAdapter = MessageAdapter(eventList)
 	private var eventsLoading = true
 	private val keyMap: MutableMap<String, Pair<Long, Long>> = mutableMapOf()
 	private lateinit var stringLoader: StringLoader

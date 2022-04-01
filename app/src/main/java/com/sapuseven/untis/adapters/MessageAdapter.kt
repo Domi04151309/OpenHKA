@@ -9,9 +9,9 @@ import androidx.recyclerview.widget.RecyclerView
 import com.sapuseven.untis.R
 import com.sapuseven.untis.data.lists.ListItem
 
-class MensaMenuAdapter(
+class MessageAdapter(
 	private val items: ArrayList<ListItem>
-) : RecyclerView.Adapter<MensaMenuAdapter.ViewHolder>() {
+) : RecyclerView.Adapter<MessageAdapter.ViewHolder>() {
 
 	var onClickListener: View.OnClickListener? = null
 

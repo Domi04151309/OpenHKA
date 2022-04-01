@@ -8,7 +8,7 @@ import android.widget.TextView
 import android.widget.Toast
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.sapuseven.untis.R
-import com.sapuseven.untis.adapters.MensaMenuAdapter
+import com.sapuseven.untis.adapters.MessageAdapter
 import com.sapuseven.untis.data.lists.ListItem
 import com.sapuseven.untis.helpers.strings.StringLoader
 import com.sapuseven.untis.interfaces.StringDisplay
@@ -20,7 +20,7 @@ import java.lang.ref.WeakReference
 
 class LocationActivity : BaseActivity(), StringDisplay {
 	private val locationList = arrayListOf<ListItem>()
-	private val locationAdapter = MensaMenuAdapter(locationList)
+	private val locationAdapter = MessageAdapter(locationList)
 	private var locationsLoading = true
 	private val keyMap: MutableMap<String, Pair<Double, Double>> = mutableMapOf()
 	private lateinit var stringLoader: StringLoader
