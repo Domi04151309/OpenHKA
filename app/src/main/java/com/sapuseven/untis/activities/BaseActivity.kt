@@ -18,7 +18,7 @@ import java.io.File
 
 @SuppressLint("Registered") // This activity is not intended to be used directly
 open class BaseActivity : AppCompatActivity() {
-	protected var currentTheme: String = ""
+	internal var currentTheme: String = ""
 	private var currentDarkTheme: String = ""
 	internal lateinit var preferences: PreferenceManager
 	protected var hasOwnToolbar: Boolean = false
@@ -127,7 +127,7 @@ open class BaseActivity : AppCompatActivity() {
 		}
 	}
 
-	protected fun getAttr(@AttrRes attr: Int): Int {
+	internal fun getAttr(@AttrRes attr: Int): Int {
 		val typedValue = TypedValue()
 		theme.resolveAttribute(attr, typedValue, true)
 		return typedValue.data
