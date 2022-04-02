@@ -58,16 +58,6 @@
 	<string name="link_input_error_invalid_url">Must be a valid URL!</string>
 	<string name="logindatainput_title_add">Add profile</string>
 	<string name="logindatainput_title_edit">Edit profile</string>
-	<string name="errormessagedictionary_generic">Unknown error</string>
-	<string name="errormessagedictionary_invalid_credentials">Wrong username or key!</string>
-	<string name="errormessagedictionary_invalid_school">The specified school doesn\'t exist!</string>
-	<string name="errormessagedictionary_invalid_server_url">Invalid server URL!</string>
-	<string name="errormessagedictionary_invalid_time_settings">Invalid date and/or time settings!</string>
-	<string name="errormessagedictionary_no_public_access">Anonymous access is disabled.</string>
-	<string name="errormessagedictionary_no_right">No right for timetable</string>
-	<string name="errormessagedictionary_server_webuntis_not_installed">The specified Server doesn\'t have WebUntis installed!</string>
-	<string name="errormessagedictionary_too_many_results">Too many results</string>
-	<string name="errormessagedictionary_user_locked">User locked!</string>
 
 	<string name="mensa_meal_summary">Additives: %1$s\nStudent: %2$s €\nGuest: %3$s €\nEmployee: %4$s €\nPupil: %5$s €</string>
 	<string name="mensa_meal_additives">Additives</string>
@@ -193,24 +183,29 @@
 	<string name="loading_failed">Loading failed</string>
 
 	<string name="library_appcompat" translatable="false">Android AppCompat Library V7</string>
-	<string name="library_code_scanner" translatable="false">CodeScanner</string>
+	<string name="library_backport_util_concurrent" translatable="false">Backport of JSR 166</string>
 	<string name="library_colorpicker_compat" translatable="false">ColorPicker Compat</string>
+	<string name="library_commons_codec" translatable="false">Apache Commons Codec</string>
+	<string name="library_commons_lang" translatable="false">Commons Lang</string>
 	<string name="library_constraintlayout" translatable="false">Android ConstraintLayout</string>
+	<string name="library_fragment_ktx" translatable="false">Fragment Kotlin Extensions</string>
 	<string name="library_fuel" translatable="false">Fuel</string>
 	<string name="library_fuel_coroutines" translatable="false">Fuel Coroutines</string>
+	<string name="library_ical4j" translatable="false">Ical4j</string>
 	<string name="library_joda_time" translatable="false">Joda Time</string>
-	<string name="library_junit" translatable="false">JUnit</string>
 	<string name="library_kotlin_reflect" translatable="false">Kotlin Reflection</string>
 	<string name="library_kotlin_stdlib" translatable="false">Kotlin Standard Library</string>
-	<string name="library_kotlin_test_junit" translatable="false">Kotlin Test JUnit</string>
 	<string name="library_kotlinx_coroutines_android" translatable="false">Kotlinx Coroutines Android</string>
-	<string name="library_kotlinx_serialization_runtime" translatable="false">Kotlinx Serialization Runtime</string>
+	<string name="library_kotlinx_serialization_cbor" translatable="false">Kotlinx Serialization CBOR</string>
+	<string name="library_kotlinx_serialization_json" translatable="false">Kotlinx Serialization JSON</string>
+	<string name="library_lifecycle_livedata_ktx" translatable="false">LiveData Kotlin Extensions</string>
+	<string name="library_localbroadcastmanager" translatable="false">Android Support Library Local Broadcast Manager</string>
 	<string name="library_material" translatable="false">Material Components For Android</string>
-	<string name="library_materialcomponent_banner" translatable="false">MaterialComponent.Banner</string>
 	<string name="library_materialdaypicker" translatable="false">Materialdaypicker</string>
-	<string name="library_mockito_core" translatable="false">Mockito Core</string>
+	<string name="library_play_services_wearable" translatable="false">Play Services Wearable</string>
 	<string name="library_preference_ktx" translatable="false">Android Preferences KTX</string>
 	<string name="library_recyclerview" translatable="false">Android Support RecyclerView V7</string>
+	<string name="library_rssparser" translatable="false">Rssparser</string>
 	<string name="library_swiperefreshlayout" translatable="false">Android Support Library Custom View</string>
 	<string name="library_weekview" translatable="false">WeekView</string>
 

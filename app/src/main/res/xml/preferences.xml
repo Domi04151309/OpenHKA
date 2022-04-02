@@ -409,13 +409,25 @@
 					android:title="@string/library_swiperefreshlayout" />
 				<Preference
 					android:icon="@drawable/settings_about_library"
+					android:title="@string/library_localbroadcastmanager" />
+				<Preference
+					android:icon="@drawable/settings_about_library"
 					android:title="@string/library_recyclerview" />
 				<Preference
 					android:icon="@drawable/settings_about_library"
-					android:title="@string/library_code_scanner" />
+					android:title="@string/library_commons_codec" />
+				<Preference
+					android:icon="@drawable/settings_about_library"
+					android:title="@string/library_backport_util_concurrent" />
 				<Preference
 					android:icon="@drawable/settings_about_library"
 					android:title="@string/library_colorpicker_compat" />
+				<Preference
+					android:icon="@drawable/settings_about_library"
+					android:title="@string/library_commons_lang" />
+				<Preference
+					android:icon="@drawable/settings_about_library"
+					android:title="@string/library_fragment_ktx" />
 				<Preference
 					android:icon="@drawable/settings_about_library"
 					android:title="@string/library_fuel" />
@@ -424,10 +436,10 @@
 					android:title="@string/library_fuel_coroutines" />
 				<Preference
 					android:icon="@drawable/settings_about_library"
-					android:title="@string/library_joda_time" />
+					android:title="@string/library_ical4j" />
 				<Preference
 					android:icon="@drawable/settings_about_library"
-					android:title="@string/library_junit" />
+					android:title="@string/library_joda_time" />
 				<Preference
 					android:icon="@drawable/settings_about_library"
 					android:title="@string/library_kotlin_reflect" />
@@ -436,25 +448,28 @@
 					android:title="@string/library_kotlin_stdlib" />
 				<Preference
 					android:icon="@drawable/settings_about_library"
-					android:title="@string/library_kotlin_test_junit" />
-				<Preference
-					android:icon="@drawable/settings_about_library"
 					android:title="@string/library_kotlinx_coroutines_android" />
 				<Preference
 					android:icon="@drawable/settings_about_library"
-					android:title="@string/library_kotlinx_serialization_runtime" />
+					android:title="@string/library_kotlinx_serialization_cbor" />
+				<Preference
+					android:icon="@drawable/settings_about_library"
+					android:title="@string/library_kotlinx_serialization_json" />
+				<Preference
+					android:icon="@drawable/settings_about_library"
+					android:title="@string/library_lifecycle_livedata_ktx" />
 				<Preference
 					android:icon="@drawable/settings_about_library"
 					android:title="@string/library_materialdaypicker" />
 				<Preference
 					android:icon="@drawable/settings_about_library"
-					android:title="@string/library_materialcomponent_banner" />
-				<Preference
-					android:icon="@drawable/settings_about_library"
 					android:title="@string/library_material" />
 				<Preference
 					android:icon="@drawable/settings_about_library"
-					android:title="@string/library_mockito_core" />
+					android:title="@string/library_play_services_wearable" />
+				<Preference
+					android:icon="@drawable/settings_about_library"
+					android:title="@string/library_rssparser" />
 				<Preference
 					android:icon="@drawable/settings_about_library"
 					android:title="@string/library_weekview" />
