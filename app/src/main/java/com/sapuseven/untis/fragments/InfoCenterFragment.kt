@@ -1,15 +1,21 @@
-package com.sapuseven.untis.activities
+package com.sapuseven.untis.fragments
 
 import android.content.Context
 import android.os.Bundle
+import android.view.LayoutInflater
+import android.view.View
+import android.view.ViewGroup
+import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 import com.prof.rssparser.Article
 import com.prof.rssparser.Parser
 import com.sapuseven.untis.R
+import com.sapuseven.untis.activities.BaseActivity
+import com.sapuseven.untis.activities.MainActivity
 import com.sapuseven.untis.adapters.infocenter.*
 import com.sapuseven.untis.data.databases.LinkDatabase
-import kotlinx.android.synthetic.main.activity_infocenter.*
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
@@ -17,19 +23,15 @@ import java.nio.charset.StandardCharsets
 import java.text.SimpleDateFormat
 import java.util.*
 
-class InfoCenterActivity : BaseActivity() {
+class InfoCenterFragment : Fragment() {
 	private val messageList = arrayListOf<Article>()
-
 	private val messageAdapter = MessageAdapter(messageList)
-
 	private var messagesLoading = true
-
-	private lateinit var linkDatabase: LinkDatabase
 	private var link: LinkDatabase.Link? = null
+	private lateinit var recyclerview: RecyclerView
+	private lateinit var swiperefreshlayout: SwipeRefreshLayout
 
 	companion object {
-		const val EXTRA_LONG_PROFILE_ID = "com.sapuseven.untis.activities.profileid"
-
 		suspend fun loadMessages(context: Context, link: LinkDatabase.Link): List<Article>? {
 			val parser = Parser.Builder()
 				.context(context)
@@ -45,44 +47,40 @@ class InfoCenterActivity : BaseActivity() {
 		}
 	}
 
-	override fun onCreate(savedInstanceState: Bundle?) {
-		super.onCreate(savedInstanceState)
-		setContentView(R.layout.activity_infocenter)
+	override fun onCreateView(
+		inflater: LayoutInflater,
+		container: ViewGroup?,
+		savedInstanceState: Bundle?
+	): View? {
+		val root = inflater.inflate(
+			R.layout.fragment_infocenter,
+			container,
+			false
+		)
 
-		linkDatabase = LinkDatabase.createInstance(this)
-		link = linkDatabase.getLink(intent.getLongExtra(EXTRA_LONG_PROFILE_ID, -1))
+		link = (activity as MainActivity).profileLink
 		link?.let {
 			refreshMessages(it)
 		}
+		recyclerview = root.findViewById(R.id.recyclerview_infocenter)
+		swiperefreshlayout = root.findViewById(R.id.swiperefreshlayout_infocenter)
 
-		recyclerview_infocenter.layoutManager = LinearLayoutManager(this)
+		recyclerview.layoutManager = LinearLayoutManager(context)
+		recyclerview.adapter = messageAdapter
+		swiperefreshlayout.isRefreshing = messagesLoading
+		swiperefreshlayout.setOnRefreshListener { link?.let { refreshMessages(it) } }
 
-		showList(
-			messageAdapter,
-			messagesLoading,
-		) { user ->
-			refreshMessages(user)
-		}
-	}
-
-	private fun showList(
-		adapter: RecyclerView.Adapter<*>,
-		refreshing: Boolean,
-		refreshFunction: (link: LinkDatabase.Link) -> Unit
-	) {
-		recyclerview_infocenter.adapter = adapter
-		swiperefreshlayout_infocenter.isRefreshing = refreshing
-		swiperefreshlayout_infocenter.setOnRefreshListener { link?.let { refreshFunction(it) } }
+		return root
 	}
 
 	private fun refreshMessages(link: LinkDatabase.Link) = GlobalScope.launch(Dispatchers.Main) {
 		messagesLoading = true
-		loadMessages(this@InfoCenterActivity, link)?.let {
+		loadMessages(requireContext(), link)?.let {
 			messageList.clear()
 			messageList.addAll(it)
 			messageAdapter.notifyDataSetChanged()
 
-			preferences.defaultPrefs.edit()
+			(activity as BaseActivity).preferences.defaultPrefs.edit()
 				.putInt("preference_last_messages_count", it.size)
 				.putString(
 					"preference_last_messages_date",
@@ -91,6 +89,6 @@ class InfoCenterActivity : BaseActivity() {
 				.apply()
 		}
 		messagesLoading = false
-		swiperefreshlayout_infocenter.isRefreshing = false
+		swiperefreshlayout.isRefreshing = false
 	}
 }

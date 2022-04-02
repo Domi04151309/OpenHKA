@@ -19,6 +19,7 @@ import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.graphics.ColorUtils
 import androidx.core.view.GravityCompat
 import androidx.drawerlayout.widget.DrawerLayout
+import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentTransaction
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -30,7 +31,7 @@ import com.sapuseven.untis.adapters.ProfileListAdapter
 import com.sapuseven.untis.data.databases.LinkDatabase
 import com.sapuseven.untis.data.timetable.TimegridItem
 import com.sapuseven.untis.dialogs.DatePickerDialog
-import com.sapuseven.untis.fragments.TimetableItemDetailsFragment
+import com.sapuseven.untis.fragments.*
 import com.sapuseven.untis.helpers.ConversionUtils
 import com.sapuseven.untis.helpers.config.PreferenceUtils
 import com.sapuseven.untis.helpers.timetable.TimetableLoader
@@ -90,7 +91,7 @@ class MainActivity :
 	private var lastPickedDate: DateTime? = null
 	private val weekViewRefreshHandler = Handler(Looper.getMainLooper())
 	private var timetableLoader: TimetableLoader? = null
-	private lateinit var profileLink: LinkDatabase.Link
+	internal lateinit var profileLink: LinkDatabase.Link
 	private lateinit var profileListAdapter: ProfileListAdapter
 	private lateinit var weekView: WeekView<TimegridItem>
 
@@ -262,7 +263,7 @@ class MainActivity :
 
 	private fun refreshMessages(link: LinkDatabase.Link, navigationView: NavigationView) =
 		GlobalScope.launch(Dispatchers.Main) {
-			InfoCenterActivity.loadMessages(this@MainActivity, link)?.let {
+			InfoCenterFragment.loadMessages(this@MainActivity, link)?.let {
 				navigationView.menu.findItem(R.id.nav_infocenter).icon = if (
 					it.size > preferences.defaultPrefs.getInt(
 						"preference_last_messages_count",
@@ -572,24 +573,33 @@ class MainActivity :
 
 	override fun onNavigationItemSelected(item: MenuItem): Boolean {
 		when (item.itemId) {
+			R.id.nav_show_personal -> {
+				setDefaultActionBar()
+
+				for (fragment in supportFragmentManager.fragments) {
+					supportFragmentManager.beginTransaction().remove(fragment!!).commit()
+				}
+			}
 			R.id.nav_settings -> {
 				val i = Intent(this, SettingsActivity::class.java)
 				i.putExtra(SettingsActivity.EXTRA_LONG_PROFILE_ID, profileId)
 				startActivityForResult(i, REQUEST_CODE_SETTINGS)
 			}
 			R.id.nav_infocenter -> {
-				val i = Intent(this, InfoCenterActivity::class.java)
-				i.putExtra(InfoCenterActivity.EXTRA_LONG_PROFILE_ID, profileId)
-				startActivity(i)
+				supportActionBar?.setTitle(R.string.activity_title_info_center)
+				setFragment(InfoCenterFragment())
 			}
 			R.id.nav_events -> {
-				startActivity(Intent(this, EventActivity::class.java))
+				supportActionBar?.setTitle(R.string.activity_title_events)
+				setFragment(EventFragment())
 			}
 			R.id.nav_locations -> {
-				startActivity(Intent(this, LocationActivity::class.java))
+				supportActionBar?.setTitle(R.string.activity_title_locations)
+				setFragment(LocationFragment())
 			}
 			R.id.nav_mensa -> {
-				startActivity(Intent(this, MensaActivity::class.java))
+				supportActionBar?.setTitle(R.string.activity_title_mensa)
+				setFragment(MensaFragment())
 			}
 		}
 
@@ -657,6 +667,14 @@ class MainActivity :
 			setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN)
 			add(R.id.content_main, fragment, FRAGMENT_TAG_LESSON_INFO)
 			addToBackStack(fragment.tag)
+			commit()
+		}
+	}
+
+	private fun setFragment(fragment: Fragment) {
+		supportFragmentManager.beginTransaction().run {
+			setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE)
+			replace(R.id.content_main, fragment, fragment::class.simpleName)
 			commit()
 		}
 	}

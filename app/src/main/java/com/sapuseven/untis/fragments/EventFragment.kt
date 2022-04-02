@@ -1,19 +1,25 @@
-package com.sapuseven.untis.activities
+package com.sapuseven.untis.fragments
 
 import android.content.Intent
 import android.os.Bundle
 import android.provider.CalendarContract
 import android.text.format.DateFormat
+import android.view.LayoutInflater
 import android.view.View
+import android.view.ViewGroup
 import android.widget.TextView
 import android.widget.Toast
+import androidx.appcompat.app.AppCompatActivity
+import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 import com.sapuseven.untis.R
+import com.sapuseven.untis.activities.MainActivity
 import com.sapuseven.untis.adapters.MessageAdapter
 import com.sapuseven.untis.data.lists.ListItem
 import com.sapuseven.untis.helpers.strings.StringLoader
 import com.sapuseven.untis.interfaces.StringDisplay
-import kotlinx.android.synthetic.main.activity_infocenter.*
 import org.json.JSONArray
 import org.json.JSONObject
 import java.lang.ref.WeakReference
@@ -21,28 +27,39 @@ import java.text.SimpleDateFormat
 import java.util.*
 
 
-class EventActivity : BaseActivity(), StringDisplay {
+class EventFragment : Fragment(), StringDisplay {
 	private val eventList = arrayListOf<ListItem>()
 	private val eventAdapter = MessageAdapter(eventList)
 	private var eventsLoading = true
 	private val keyMap: MutableMap<String, Pair<Long, Long>> = mutableMapOf()
 	private lateinit var stringLoader: StringLoader
+	private lateinit var recyclerview: RecyclerView
+	private lateinit var swiperefreshlayout: SwipeRefreshLayout
 
 	companion object {
 		private const val API_URL: String = "https://www.iwi.hs-karlsruhe.de/iwii/REST"
 	}
 
-	override fun onCreate(savedInstanceState: Bundle?) {
-		super.onCreate(savedInstanceState)
-		setContentView(R.layout.activity_infocenter)
+	override fun onCreateView(
+		inflater: LayoutInflater,
+		container: ViewGroup?,
+		savedInstanceState: Bundle?
+	): View? {
+		val root = inflater.inflate(
+			R.layout.fragment_infocenter,
+			container,
+			false
+		)
 
 		stringLoader =
-			StringLoader(WeakReference(this), this, "${API_URL}/officialcalendar/v2/current")
+			StringLoader(WeakReference(context), this, "${API_URL}/officialcalendar/v2/current")
+		recyclerview = root.findViewById(R.id.recyclerview_infocenter)
+		swiperefreshlayout = root.findViewById(R.id.swiperefreshlayout_infocenter)
 
-		recyclerview_infocenter.layoutManager = LinearLayoutManager(this)
-		recyclerview_infocenter.adapter = eventAdapter
-		swiperefreshlayout_infocenter.isRefreshing = eventsLoading
-		swiperefreshlayout_infocenter.setOnRefreshListener { refreshEvents(StringLoader.FLAG_LOAD_SERVER) }
+		recyclerview.layoutManager = LinearLayoutManager(context)
+		recyclerview.adapter = eventAdapter
+		swiperefreshlayout.isRefreshing = eventsLoading
+		swiperefreshlayout.setOnRefreshListener { refreshEvents(StringLoader.FLAG_LOAD_SERVER) }
 
 		refreshEvents(StringLoader.FLAG_LOAD_CACHE)
 
@@ -55,6 +72,8 @@ class EventActivity : BaseActivity(), StringDisplay {
 				.putExtra(CalendarContract.Events.TITLE, key)
 			startActivity(intent)
 		}
+
+		return root
 	}
 
 	private fun refreshEvents(flags: Int) {
@@ -88,7 +107,7 @@ class EventActivity : BaseActivity(), StringDisplay {
 		}
 		eventAdapter.notifyDataSetChanged()
 		eventsLoading = false
-		swiperefreshlayout_infocenter.isRefreshing = false
+		swiperefreshlayout.isRefreshing = false
 	}
 
 	override fun onStringLoadingError(code: Int) {
@@ -98,18 +117,18 @@ class EventActivity : BaseActivity(), StringDisplay {
 			)
 			else -> {
 				Toast.makeText(
-					this,
+					context,
 					R.string.errors_failed_loading_from_server_message,
 					Toast.LENGTH_LONG
 				).show()
 				eventsLoading = false
-				swiperefreshlayout_infocenter.isRefreshing = false
+				swiperefreshlayout.isRefreshing = false
 			}
 		}
 	}
 
 	private fun parseDate(json: JSONObject, key: String): String {
-		return DateFormat.getMediumDateFormat(this)
+		return DateFormat.getMediumDateFormat(context)
 			.format(SimpleDateFormat("yyyy-MM-dd", Locale.US).parse(json.optString(key)) ?: Date())
 			?: ""
 	}
