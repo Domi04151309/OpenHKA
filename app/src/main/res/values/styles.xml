@@ -158,7 +158,7 @@
 	<style name="FabStyle">
 		<item name="android:layout_margin">16dp</item>
 		<item name="android:backgroundTint">?attr/colorPrimary</item>
-		<item name="android:textColor">?android:attr/textColorPrimaryInverse</item>
+		<item name="android:textColor">@android:color/white</item>
 		<item name="android:gravity">center</item>
 	</style>
 </resources>

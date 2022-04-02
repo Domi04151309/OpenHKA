@@ -6,6 +6,7 @@
 	<string name="all_enabled">Enabled</string>
 	<string name="all_disabled">Disabled</string>
 	<string name="all_help">Help</string>
+	<string name="all_privacy_policy">Privacy Policy</string>
 	<string name="all_success">success</string>
 	<string name="all_failed">failed</string>
 	<string name="all_subjects">Subjects</string>
@@ -51,6 +52,7 @@
 	<string name="link_input_rss_link">RSS Link</string>
 	<string name="link_input_ical_link">iCal Link</string>
 
+	<string name="link_input_intro">Welcome to SimpleHKA! Please enter two valid links below to get started!</string>
 	<string name="logindatainput_connecting">Connecting…</string>
 	<string name="logindatainput_data_loaded">Data loaded.</string>
 	<string name="logindatainput_delete">Delete profile</string>

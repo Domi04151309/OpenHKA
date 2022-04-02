@@ -38,8 +38,7 @@
 				android:layout_marginStart="16dp"
 				android:layout_marginTop="8dp"
 				android:text="@string/app_name"
-				android:textAppearance="@style/TextAppearance.AppCompat.Body1"
-				android:textSize="@dimen/textsize_header_line1"
+				android:textAppearance="@style/TextAppearance.MaterialComponents.Body1"
 				app:layout_constraintStart_toStartOf="parent"
 				app:layout_constraintTop_toTopOf="parent" />
 
@@ -49,8 +48,7 @@
 				android:layout_marginStart="16dp"
 				android:layout_marginBottom="8dp"
 				android:text="@string/app_desc"
-				android:textAppearance="@style/TextAppearance.AppCompat.Body2"
-				android:textSize="@dimen/textsize_header_line2"
+				android:textAppearance="@style/TextAppearance.MaterialComponents.Caption"
 				app:layout_constraintBottom_toBottomOf="parent"
 				app:layout_constraintStart_toStartOf="parent"
 				app:layout_constraintTop_toBottomOf="@+id/textview_mainactivtydrawer_line1" />

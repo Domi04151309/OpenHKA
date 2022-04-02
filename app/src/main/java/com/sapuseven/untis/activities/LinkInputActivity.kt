@@ -18,10 +18,9 @@ import kotlinx.android.synthetic.main.activity_link_input.*
 class LinkInputActivity : BaseActivity() {
 
 	companion object {
-		private const val BACKUP_PREF_NAME = "linkDataInputBackup"
+		private const val BACKUP_PREF_NAME = "linkInputBackup"
 		private const val HELP_URL = "https://github.com/Domi04151309/SimpleHKA/wiki/Help"
-
-		private const val FRAGMENT_TAG_PROFILE_UPDATE = "profileUpdate"
+		private const val PRIVACY_POLICY_URL = "https://github.com/Domi04151309/SimpleHKA/wiki/Privacy-Policy"
 
 		const val EXTRA_LONG_PROFILE_ID = "com.sapuseven.untis.activities.profileId"
 	}
@@ -57,6 +56,10 @@ class LinkInputActivity : BaseActivity() {
 
 		button_link_input_done?.setOnClickListener {
 			validate()?.requestFocus() ?: run { loadData() }
+		}
+
+		button_link_input_privacy_policy?.setOnClickListener {
+			startActivity(Intent(Intent.ACTION_VIEW).setData(Uri.parse(PRIVACY_POLICY_URL)))
 		}
 
 		button_link_input_help?.setOnClickListener {
@@ -107,9 +110,16 @@ class LinkInputActivity : BaseActivity() {
 		}.requestFocus()
 	}
 
-	public override fun onPause() {
+	public override fun onStop() {
 		backupInput(this.getSharedPreferences(BACKUP_PREF_NAME, Context.MODE_PRIVATE))
-		super.onPause()
+		super.onStop()
+	}
+
+	private fun clearInput(prefs: SharedPreferences) {
+		val editor = prefs.edit()
+		editor.remove("edittext_link_input_rss")
+		editor.remove("edittext_link_input_ical")
+		editor.apply()
 	}
 
 	private fun backupInput(prefs: SharedPreferences) {
@@ -146,11 +156,6 @@ class LinkInputActivity : BaseActivity() {
 	}
 
 	private fun loadData() {
-		imageview_link_input_loadingstatusfailed?.visibility = View.GONE
-		imageview_link_input_loadingstatussuccess?.visibility = View.GONE
-		progressbar_link_input_loadingstatus?.visibility = View.VISIBLE
-		textview_link_input_loadingstatus?.visibility = View.VISIBLE
-
 		setElementsEnabled(false)
 		sendRequest()
 	}
@@ -168,12 +173,8 @@ class LinkInputActivity : BaseActivity() {
 			)
 
 		linkId?.let {
-			progressbar_link_input_loadingstatus?.visibility = View.GONE
-			imageview_link_input_loadingstatussuccess?.visibility = View.VISIBLE
-			textview_link_input_loadingstatus?.text =
-				getString(R.string.logindatainput_data_loaded)
-
 			preferences.saveProfileId(linkId.toLong())
+			clearInput(this.getSharedPreferences(BACKUP_PREF_NAME, Context.MODE_PRIVATE))
 
 			setResult(Activity.RESULT_OK)
 			finish()
@@ -197,25 +198,6 @@ class LinkInputActivity : BaseActivity() {
 				finish()
 			}
 			.show()
-	}
-
-	private fun updateLoadingStatus(msg: String) {
-		textview_link_input_loadingstatus?.text = msg
-	}
-
-	private fun stopLoadingAndShowError(msg: String) {
-		updateLoadingStatus(msg)
-		progressbar_link_input_loadingstatus?.visibility = View.GONE
-		imageview_link_input_loadingstatusfailed?.visibility = View.VISIBLE
-		setElementsEnabled(true)
-
-		supportFragmentManager.findFragmentByTag(FRAGMENT_TAG_PROFILE_UPDATE)
-			?.let {
-				supportFragmentManager
-					.beginTransaction()
-					.remove(it)
-					.commit()
-			}
 	}
 
 	override fun onBackPressed() {

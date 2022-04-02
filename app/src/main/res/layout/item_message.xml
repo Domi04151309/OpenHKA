@@ -1,22 +1,24 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout
+<LinearLayout
 	xmlns:android="http://schemas.android.com/apk/res/android"
 	android:layout_width="match_parent"
 	android:layout_height="wrap_content"
+	android:orientation="vertical"
 	style="@style/DefaultItemStyle">
 
 	<TextView
 		android:id="@+id/textview_itemmessage_subject"
 		android:layout_width="match_parent"
 		android:layout_height="wrap_content"
+		android:textAppearance="@style/TextAppearance.MaterialComponents.Body2"
 		android:textColor="?android:attr/textColorPrimary"
-		android:textSize="@dimen/textsize_listitem_line1"/>
+		android:textIsSelectable="false" />
 
 	<TextView
 		android:id="@+id/textview_itemmessage_body"
 		android:layout_width="match_parent"
 		android:layout_height="wrap_content"
+		android:textAppearance="@style/TextAppearance.MaterialComponents.Body2"
 		android:textColor="?android:attr/textColorSecondary"
-		android:textSize="@dimen/textsize_listitem_line2"
-		android:layout_below="@id/textview_itemmessage_subject"/>
-</RelativeLayout>
+		android:textIsSelectable="false" />
+</LinearLayout>
