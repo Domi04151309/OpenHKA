@@ -10,7 +10,6 @@
 	<string name="all_failed">failed</string>
 	<string name="all_subjects">Subjects</string>
 	<string name="all_rooms">Rooms</string>
-	<string name="all_info">Info</string>
 	<string name="all_personal_timetable">Personal Timetable</string>
 	<string name="all_ok">OK</string>
 	<string name="all_cancel">Cancel</string>
@@ -23,7 +22,6 @@
 	<string name="all_lesson_irregular">%1$s (irregular)</string>
 	<string name="all_dialog_datepicker_button_today">Today</string>
 	<string name="all_dialog_error_title">Error information</string>
-	<string name="all_dialog_error_message">Request ID: %1$d\nError code: %2$d\nError message: %3$s</string>
 
 	<string name="activity_title_errors">Errors</string>
 	<string name="activity_title_info_center">Info Center</string>
@@ -34,8 +32,6 @@
 
 	<string name="errors_github_attach_file_message">Please attach the compressed log files to this issue.\nThey have been saved to `%1$s`</string>
 	<string name="errors_failed_loading_from_server_message">Failed getting information from the server</string>
-
-	<string name="menu_nav_timetables">Timetables</string>
 
 	<string name="mainactivitydrawer_dropdown_show">Show profile list</string>
 	<string name="mainactivitydrawer_profile_add">Add a profile</string>
