@@ -155,6 +155,13 @@
 		<item name="android:paddingEnd">@dimen/margin_listitem_text</item>
 	</style>
 
+	<style name="DefaultCardStyle">
+		<item name="android:paddingTop">@dimen/margin_card_vertical</item>
+		<item name="android:paddingStart">@dimen/margin_card</item>
+		<item name="android:paddingBottom">@dimen/margin_card_vertical</item>
+		<item name="android:paddingEnd">@dimen/margin_card</item>
+	</style>
+
 	<style name="FabStyle">
 		<item name="android:layout_margin">16dp</item>
 		<item name="android:backgroundTint">?attr/colorPrimary</item>

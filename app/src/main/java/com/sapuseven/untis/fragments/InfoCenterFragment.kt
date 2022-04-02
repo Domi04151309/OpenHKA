@@ -23,7 +23,7 @@ import java.nio.charset.StandardCharsets
 
 class InfoCenterFragment : Fragment() {
 	private val messageList = arrayListOf<Article>()
-	private val messageAdapter = MessageAdapter(messageList)
+	private val messageAdapter = RSSAdapter(messageList)
 	private var messagesLoading = true
 	private var link: LinkDatabase.Link? = null
 	private lateinit var recyclerview: RecyclerView
