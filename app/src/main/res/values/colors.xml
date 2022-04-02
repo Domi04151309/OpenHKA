@@ -27,7 +27,7 @@
 	<color name="colorPrimaryDarkThemeCyan">#0097a7</color>
 	<color name="colorAccentThemeCyan">#ff4081</color>
 
-	<color name="colorPrimaryThemePixel">#4285F4</color>
+	<color name="colorPrimaryThemePixel">#3D5AFE</color>
 	<color name="appBarColorThemePixel">#fff</color>
 	<color name="colorAccentThemePixel">@color/colorPrimaryThemePixel</color>
 </resources>
