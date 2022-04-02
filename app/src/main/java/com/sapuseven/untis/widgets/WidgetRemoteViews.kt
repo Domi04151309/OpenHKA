@@ -11,9 +11,9 @@ import androidx.core.text.HtmlCompat
 import com.github.kittinunf.fuel.coroutines.awaitStringResult
 import com.github.kittinunf.fuel.httpGet
 import com.sapuseven.untis.R
-import com.sapuseven.untis.activities.InfoCenterActivity
 import com.sapuseven.untis.data.databases.LinkDatabase
 import com.sapuseven.untis.data.timetable.TimegridItem
+import com.sapuseven.untis.fragments.InfoCenterFragment
 import com.sapuseven.untis.models.untis.timetable.Period
 import com.sapuseven.untis.widgets.BaseWidget.Companion.EXTRA_INT_RELOAD
 import kotlinx.coroutines.runBlocking
@@ -73,7 +73,7 @@ class WidgetRemoteViewsFactory(private val applicationContext: Context, intent: 
 		var success = false
 		runBlocking {
 			items =
-				InfoCenterActivity.loadMessages(applicationContext, link ?: return@runBlocking)
+				InfoCenterFragment.loadMessages(applicationContext, link ?: return@runBlocking)
 					?.map { it ->
 						WidgetListItem(0, it.title ?: "", it.pubDate ?: "")
 					}

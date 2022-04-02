@@ -1,22 +1,17 @@
 <?xml version="1.0" encoding="utf-8"?>
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
-	<item android:title="@string/menu_nav_timetables">
-		<menu>
-			<group android:checkableBehavior="single">
-				<item
-					android:id="@+id/nav_show_personal"
-					android:icon="@drawable/all_prefs_personal"
-					android:title="@string/all_personal_timetable"/>
-			</group>
-		</menu>
-	</item>
+	<group android:checkableBehavior="single">
 
-	<group
-		android:checkableBehavior="none">
+		<item
+			android:id="@+id/nav_show_personal"
+			android:icon="@drawable/all_prefs_personal"
+			android:title="@string/all_personal_timetable"/>
+
 		<item
 			android:id="@+id/nav_infocenter"
 			android:icon="@drawable/all_infocenter"
 			android:title="@string/activity_title_info_center" />
+
 		<item
 			android:id="@+id/nav_events"
 			android:icon="@drawable/all_calendar"
@@ -31,6 +26,9 @@
 			android:id="@+id/nav_mensa"
 			android:icon="@drawable/all_mensa"
 			android:title="@string/activity_title_mensa" />
+	</group>
+
+	<group android:checkableBehavior="none">
 
 		<item
 			android:id="@+id/nav_settings"

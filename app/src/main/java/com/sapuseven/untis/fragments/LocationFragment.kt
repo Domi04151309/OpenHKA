@@ -1,44 +1,59 @@
-package com.sapuseven.untis.activities
+package com.sapuseven.untis.fragments
 
 import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
+import android.view.LayoutInflater
 import android.view.View
+import android.view.ViewGroup
 import android.widget.TextView
 import android.widget.Toast
+import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 import com.sapuseven.untis.R
 import com.sapuseven.untis.adapters.MessageAdapter
 import com.sapuseven.untis.data.lists.ListItem
 import com.sapuseven.untis.helpers.strings.StringLoader
 import com.sapuseven.untis.interfaces.StringDisplay
-import kotlinx.android.synthetic.main.activity_infocenter.*
 import org.json.JSONArray
 import org.json.JSONObject
 import java.lang.ref.WeakReference
 
 
-class LocationActivity : BaseActivity(), StringDisplay {
+class LocationFragment : Fragment(), StringDisplay {
 	private val locationList = arrayListOf<ListItem>()
 	private val locationAdapter = MessageAdapter(locationList)
 	private var locationsLoading = true
 	private val keyMap: MutableMap<String, Pair<Double, Double>> = mutableMapOf()
 	private lateinit var stringLoader: StringLoader
+	private lateinit var recyclerview: RecyclerView
+	private lateinit var swiperefreshlayout: SwipeRefreshLayout
 
 	companion object {
 		private const val API_URL: String = "https://www.iwi.hs-karlsruhe.de/iwii/REST"
 	}
 
-	override fun onCreate(savedInstanceState: Bundle?) {
-		super.onCreate(savedInstanceState)
-		setContentView(R.layout.activity_infocenter)
+	override fun onCreateView(
+		inflater: LayoutInflater,
+		container: ViewGroup?,
+		savedInstanceState: Bundle?
+	): View? {
+		val root = inflater.inflate(
+			R.layout.fragment_infocenter,
+			container,
+			false
+		)
 
-		stringLoader = StringLoader(WeakReference(this), this, "${API_URL}/buildings/v2/all")
+		stringLoader = StringLoader(WeakReference(context), this, "${API_URL}/buildings/v2/all")
+		recyclerview = root.findViewById(R.id.recyclerview_infocenter)
+		swiperefreshlayout = root.findViewById(R.id.swiperefreshlayout_infocenter)
 
-		recyclerview_infocenter.layoutManager = LinearLayoutManager(this)
-		recyclerview_infocenter.adapter = locationAdapter
-		swiperefreshlayout_infocenter.isRefreshing = locationsLoading
-		swiperefreshlayout_infocenter.setOnRefreshListener { refreshLocations(StringLoader.FLAG_LOAD_SERVER) }
+		recyclerview.layoutManager = LinearLayoutManager(context)
+		recyclerview.adapter = locationAdapter
+		swiperefreshlayout.isRefreshing = locationsLoading
+		swiperefreshlayout.setOnRefreshListener { refreshLocations(StringLoader.FLAG_LOAD_SERVER) }
 
 		refreshLocations(StringLoader.FLAG_LOAD_CACHE)
 
@@ -54,6 +69,8 @@ class LocationActivity : BaseActivity(), StringDisplay {
 				startActivity(mapIntent)
 			}
 		}
+
+		return root
 	}
 
 	private fun refreshLocations(flags: Int) {
@@ -92,7 +109,7 @@ class LocationActivity : BaseActivity(), StringDisplay {
 		}
 		locationAdapter.notifyDataSetChanged()
 		locationsLoading = false
-		swiperefreshlayout_infocenter.isRefreshing = false
+		swiperefreshlayout.isRefreshing = false
 	}
 
 	override fun onStringLoadingError(code: Int) {
@@ -102,12 +119,12 @@ class LocationActivity : BaseActivity(), StringDisplay {
 			)
 			else -> {
 				Toast.makeText(
-					this,
+					context,
 					R.string.errors_failed_loading_from_server_message,
 					Toast.LENGTH_LONG
 				).show()
 				locationsLoading = false
-				swiperefreshlayout_infocenter.isRefreshing = false
+				swiperefreshlayout.isRefreshing = false
 			}
 		}
 	}

@@ -20,7 +20,7 @@ import java.io.File
 open class BaseActivity : AppCompatActivity() {
 	protected var currentTheme: String = ""
 	private var currentDarkTheme: String = ""
-	protected lateinit var preferences: PreferenceManager
+	internal lateinit var preferences: PreferenceManager
 	protected var hasOwnToolbar: Boolean = false
 
 	private var themeId = -1

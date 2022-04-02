@@ -46,46 +46,6 @@
 		</activity>
 
 		<activity
-			android:name=".activities.InfoCenterActivity"
-			android:label="@string/activity_title_info_center"
-			android:parentActivityName=".activities.MainActivity">
-
-			<meta-data
-				android:name="android.support.PARENT_ACTIVITY"
-				android:value=".activities.MainActivity" />
-		</activity>
-
-		<activity
-			android:name=".activities.EventActivity"
-			android:label="@string/activity_title_events"
-			android:parentActivityName=".activities.MainActivity">
-
-			<meta-data
-				android:name="android.support.PARENT_ACTIVITY"
-				android:value=".activities.MainActivity" />
-		</activity>
-
-		<activity
-			android:name=".activities.LocationActivity"
-			android:label="@string/activity_title_locations"
-			android:parentActivityName=".activities.MainActivity">
-
-			<meta-data
-				android:name="android.support.PARENT_ACTIVITY"
-				android:value=".activities.MainActivity" />
-		</activity>
-
-		<activity
-			android:name=".activities.MensaActivity"
-			android:label="@string/activity_title_mensa"
-			android:parentActivityName=".activities.MainActivity">
-
-			<meta-data
-				android:name="android.support.PARENT_ACTIVITY"
-				android:value=".activities.MainActivity" />
-		</activity>
-
-		<activity
 			android:name=".activities.SettingsActivity"
 			android:label="@string/activity_title_settings"
 			android:launchMode="singleTop"
