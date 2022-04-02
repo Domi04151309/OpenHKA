@@ -16,12 +16,10 @@
     <string name="all_lesson_irregular">%1$s (irregulär)</string>
     <string name="all_dialog_datepicker_button_today">Heute</string>
     <string name="all_dialog_error_title">Fehlerinformation</string>
-    <string name="all_dialog_error_message">Anfragen-ID: %1$d\nFehlercode: %2$d\nFehlermeldung: %3$s</string>
     <string name="activity_title_errors">Fehler</string>
     <string name="activity_title_info_center">Info-Center</string>
     <string name="activity_title_settings">Einstellungen</string>
     <string name="errors_github_attach_file_message">Bitte füge die komprimierten Log-Dateien als Anhang hinzu.\nDiese wurden hier gespeichert: `%1$s`</string>
-    <string name="menu_nav_timetables">Stundenpläne</string>
     <string name="mainactivitydrawer_dropdown_show">Alle Profile anzeigen</string>
     <string name="mainactivitydrawer_profile_add">Profil hinzufügen</string>
     <string name="mainactivitydrawer_profile_delete_hint">Lange auf ein Profil tippen, um zu bearbeiten</string>
