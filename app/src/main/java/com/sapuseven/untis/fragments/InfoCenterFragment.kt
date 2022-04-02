@@ -20,8 +20,6 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
 import java.nio.charset.StandardCharsets
-import java.text.SimpleDateFormat
-import java.util.*
 
 class InfoCenterFragment : Fragment() {
 	private val messageList = arrayListOf<Article>()
@@ -80,13 +78,13 @@ class InfoCenterFragment : Fragment() {
 			messageList.addAll(it)
 			messageAdapter.notifyDataSetChanged()
 
-			(activity as BaseActivity).preferences.defaultPrefs.edit()
-				.putInt("preference_last_messages_count", it.size)
-				.putString(
-					"preference_last_messages_date",
-					SimpleDateFormat("dd-MM-yyyy", Locale.US).format(Calendar.getInstance().time)
-				)
-				.apply()
+			(activity as MainActivity).setInfoCenterDot(false)
+
+			if (it.isNotEmpty()) {
+				(activity as BaseActivity).preferences.defaultPrefs.edit()
+					.putString("preference_last_title", it[0].title)
+					.apply()
+			}
 		}
 		messagesLoading = false
 		swiperefreshlayout.isRefreshing = false

@@ -31,8 +31,6 @@ import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
-import java.text.SimpleDateFormat
-import java.util.*
 
 
 class MainActivity :
@@ -183,26 +181,21 @@ class MainActivity :
 	private fun refreshMessages(link: LinkDatabase.Link, navigationView: NavigationView) =
 		GlobalScope.launch(Dispatchers.Main) {
 			InfoCenterFragment.loadMessages(this@MainActivity, link)?.let {
-				navigationView.menu.findItem(R.id.nav_infocenter).icon = if (
-					it.size > preferences.defaultPrefs.getInt(
-						"preference_last_messages_count",
-						0
-					) ||
-					(SimpleDateFormat(
-						"dd-MM-yyyy",
-						Locale.US
-					).format(Calendar.getInstance().time) != preferences.defaultPrefs.getString(
-						"preference_last_messages_date",
+				setInfoCenterDot(
+					it.isNotEmpty()
+							&& it[0].title != preferences.defaultPrefs.getString(
+						"preference_last_title",
 						""
 					)
-							&& it.isNotEmpty())
-				) {
-					getDrawable(R.drawable.all_infocenter_dot)
-				} else {
-					getDrawable(R.drawable.all_infocenter)
-				}
+				)
 			}
 		}
+
+	internal fun setInfoCenterDot(hasDot: Boolean) {
+		navigationview_main.menu.findItem(R.id.nav_infocenter).setIcon(
+			if (hasDot) R.drawable.all_infocenter_dot else R.drawable.all_infocenter
+		)
+	}
 
 	private fun loadProfile(): Boolean {
 		if (linkDatabase.getLinkCount() < 1) {
