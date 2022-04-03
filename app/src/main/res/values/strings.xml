@@ -28,8 +28,11 @@
 	<string name="activity_title_info_center">Info Center</string>
 	<string name="activity_title_events">Events</string>
 	<string name="activity_title_locations">Locations</string>
+	<string name="activity_title_study_places">Study Places</string>
 	<string name="activity_title_mensa">Mensa</string>
 	<string name="activity_title_settings">Settings</string>
+
+	<string name="study_places_occupation">%1$d / %2$d occupied</string>
 
 	<string name="errors_github_attach_file_message">Please attach the compressed log files to this issue.\nThey have been saved to `%1$s`</string>
 	<string name="errors_failed_loading_from_server_message">Failed getting information from the server</string>

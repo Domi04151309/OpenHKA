@@ -87,11 +87,6 @@ class MensaFragment : Fragment(), StringDisplay {
 		inflater.inflate(R.menu.activity_mensa_menu, menu)
 	}
 
-	/*override fun onCreateOptionsMenu(menu: Menu): Boolean {
-		menuInflater.inflate(R.menu.activity_mensa_menu, menu)
-		return true
-	}*/
-
 	override fun onOptionsItemSelected(item: MenuItem): Boolean {
 		return if (item.title == resources.getString(R.string.mensa_meal_additives)) {
 			loadAdditives()

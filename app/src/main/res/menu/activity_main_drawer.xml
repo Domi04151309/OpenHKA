@@ -23,6 +23,11 @@
 			android:title="@string/activity_title_locations" />
 
 		<item
+			android:id="@+id/nav_study_places"
+			android:icon="@drawable/all_study_place"
+			android:title="@string/activity_title_study_places" />
+
+		<item
 			android:id="@+id/nav_mensa"
 			android:icon="@drawable/all_mensa"
 			android:title="@string/activity_title_mensa" />

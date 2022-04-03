@@ -271,6 +271,10 @@ class MainActivity :
 				supportActionBar?.setTitle(R.string.activity_title_locations)
 				setFragment(LocationFragment())
 			}
+			R.id.nav_study_places -> {
+				supportActionBar?.setTitle(R.string.activity_title_study_places)
+				setFragment(StudyPlaceFragment())
+			}
 			R.id.nav_mensa -> {
 				supportActionBar?.setTitle(R.string.activity_title_mensa)
 				setFragment(MensaFragment())
