@@ -92,7 +92,7 @@ class StudyPlaceFragment : Fragment(), StringDisplay {
 			array[currentItem.optInt("id") - 1] = StudyPlaceListItem(
 				5,
 				currentItem.optInt("availableSeats"),
-				"0 / 100",
+				resources.getString(R.string.study_places_occupation_unknown),
 				currentTitle,
 				currentItem.optString("openingHours")
 			)
@@ -123,23 +123,16 @@ class StudyPlaceFragment : Fragment(), StringDisplay {
 			}
 
 			override fun onStringLoadingError(code: Int) {
-				when (code) {
-					StringLoader.CODE_CACHE_MISSING -> loader.repeat(
-						StringLoader.FLAG_LOAD_SERVER
-					)
-					else -> {
-						MaterialAlertDialogBuilder(context)
-							.setTitle(R.string.activity_title_mensa)
-							.setMessage(R.string.errors_failed_loading_from_server_message)
-							.setPositiveButton(R.string.all_ok) { _, _ -> }
-							.show()
-					}
-				}
+				Toast.makeText(
+					context,
+					R.string.errors_failed_loading_from_server_message,
+					Toast.LENGTH_LONG
+				).show()
 			}
 		}
 		loader =
 			StringLoader(WeakReference(context), callback, "${API_URL}/learningPlaceOccupations")
-		loader.load(StringLoader.FLAG_LOAD_CACHE)
+		loader.load(StringLoader.FLAG_LOAD_SERVER)
 	}
 
 	override fun onStringLoadingError(code: Int) {
@@ -148,11 +141,11 @@ class StudyPlaceFragment : Fragment(), StringDisplay {
 				StringLoader.FLAG_LOAD_SERVER
 			)
 			else -> {
-				Toast.makeText(
-					context,
-					R.string.errors_failed_loading_from_server_message,
-					Toast.LENGTH_LONG
-				).show()
+				MaterialAlertDialogBuilder(context)
+					.setTitle(R.string.activity_title_study_places)
+					.setMessage(R.string.errors_failed_loading_from_server_message)
+					.setPositiveButton(R.string.all_ok) { _, _ -> }
+					.show()
 				locationsLoading = false
 				swiperefreshlayout.isRefreshing = false
 			}
