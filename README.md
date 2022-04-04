@@ -14,6 +14,10 @@ A mobile client for the IWI HKA system
 ## Development notes
 This app is based on [BetterUntis](https://github.com/SapuSeven/BetterUntis) by [SapuSeven](https://github.com/SapuSeven). Make sure to check out his project as well.
 
+## Translating the app
+Before starting with the translation process, check out the [BetterUntis](https://github.com/SapuSeven/BetterUntis) source code to avoid redoing work that has already been done.
+Translations into other languages may already be available there.
+
 ## Legal Notice
 Copyright (C) SapuSeven  
 Copyright (C) Domi04151309
