@@ -4,6 +4,7 @@ import android.os.Bundle
 import android.view.*
 import android.widget.ArrayAdapter
 import android.widget.AutoCompleteTextView
+import android.widget.TextView
 import android.widget.Toast
 import androidx.core.widget.addTextChangedListener
 import androidx.fragment.app.Fragment
@@ -29,11 +30,13 @@ class MensaFragment : Fragment(), StringDisplay {
 	private val menu = arrayListOf<MensaListItem>()
 	private val menuAdapter = MensaListAdapter(menu)
 	private var menuLoading = true
+	private var dateOffset = 0
 	private val idMap: MutableMap<String, Int> = mutableMapOf()
 	private val pricingMap: MutableMap<String, MensaPricing> = mutableMapOf()
 	private lateinit var stringLoader: StringLoader
 	private lateinit var recyclerview: RecyclerView
 	private lateinit var swiperefreshlayout: SwipeRefreshLayout
+	private lateinit var textViewDate: TextView
 	private lateinit var dropdownMensa: AutoCompleteTextView
 	private lateinit var dropdownPricing: AutoCompleteTextView
 
@@ -82,7 +85,7 @@ class MensaFragment : Fragment(), StringDisplay {
 		dropdownPricing.addTextChangedListener {
 			(activity as BaseActivity).preferences.defaultPrefs.edit().putString(
 				PREFERENCE_MENSA_PRICING_LEVEL, it.toString()
-			).commit()
+			).apply()
 			menu.forEach { item ->
 				if (item.title.isNotEmpty()) {
 					item.price =
@@ -95,14 +98,19 @@ class MensaFragment : Fragment(), StringDisplay {
 		loadCanteens()
 
 		dropdownMensa.addTextChangedListener {
-			val currentID = idMap[it.toString()] ?: DEFAULT_ID
-			val date = SimpleDateFormat("yyyy-MM-dd", Locale.US).format(System.currentTimeMillis())
-			stringLoader = StringLoader(
-				WeakReference(context),
-				this,
-				"$API_URL/canteen/v2/$currentID/$date"
-			)
-			refreshMenu(StringLoader.FLAG_LOAD_CACHE)
+			refreshParameters(it.toString())
+		}
+
+		textViewDate = root.findViewById(R.id.textview_date)
+		textViewDate.setOnClickListener {
+			if (dateOffset == 0) {
+				dateOffset++
+				textViewDate.text = resources.getString(R.string.all_tomorrow)
+			} else if (dateOffset == 1) {
+				dateOffset--
+				textViewDate.text = resources.getString(R.string.all_today)
+			}
+			refreshParameters(dropdownMensa.text.toString())
 		}
 
 		recyclerview.layoutManager = LinearLayoutManager(context)
@@ -208,6 +216,18 @@ class MensaFragment : Fragment(), StringDisplay {
 	private fun refreshMenu(flags: Int) {
 		menuLoading = true
 		stringLoader.load(flags)
+	}
+
+	private fun refreshParameters(canteen: String) {
+		val currentID = idMap[canteen] ?: DEFAULT_ID
+		val date = SimpleDateFormat("yyyy-MM-dd", Locale.US)
+			.format(System.currentTimeMillis() + dateOffset * 86400000)
+		stringLoader = StringLoader(
+			WeakReference(context),
+			this,
+			"$API_URL/canteen/v2/$currentID/$date"
+		)
+		refreshMenu(StringLoader.FLAG_LOAD_CACHE)
 	}
 
 	override fun onStringLoaded(string: String) {
