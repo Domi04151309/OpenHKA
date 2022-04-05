@@ -60,7 +60,7 @@ class NotificationReceiver : BroadcastReceiver() {
 				intent.getStringExtra(EXTRA_STRING_BREAK_END_TIME)
 			)
 			val message = buildMessage(
-				null,
+				context,
 				intent,
 				preferenceManager,
 				context.getString(R.string.notifications_text_message_separator)
