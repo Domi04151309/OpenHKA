@@ -60,7 +60,14 @@
     <string name="main_press_back_double">Drücke erneut auf die ZURÜCK-Taste, um die App zu beenden</string>
     <string name="main_time_diff_just_now">gerade eben</string>
     <string name="mensa_meal_additives">Zusatzstoffe</string>
-    <string name="mensa_meal_summary">Zusatzstoffe: %1$s\nStudent: %2$s €\nGast: %3$s €\nMitarbeiter: %4$s €\nSchüler: %5$s €</string>
+    <string name="mensa_meal_price">%1$s €</string>
+    <string-array name="mensa_pricing_values">
+        <item>Student</item>
+        <item>Gast</item>
+        <item>Mitarbeiter</item>
+        <item>Schüler</item>
+    </string-array>
+    <string name="mensa_meal_summary">Zusatzstoffe: %1$s</string>
     <string name="notifications_channel_backgrounderrors">Fehler im Hintergrund</string>
     <string name="notifications_channel_backgrounderrors_desc">Zeigt Fehlermeldungen von Hintergrundprozessen an</string>
     <string name="notifications_channel_breakinfo">Pauseninfo</string>

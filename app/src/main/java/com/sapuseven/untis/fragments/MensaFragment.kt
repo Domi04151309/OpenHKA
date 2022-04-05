@@ -13,27 +13,28 @@ import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.google.android.material.textfield.TextInputLayout
 import com.sapuseven.untis.R
-import com.sapuseven.untis.adapters.MessageAdapter
-import com.sapuseven.untis.data.lists.ListItem
+import com.sapuseven.untis.adapters.MensaListAdapter
+import com.sapuseven.untis.data.lists.MensaListItem
+import com.sapuseven.untis.data.lists.MensaPricing
 import com.sapuseven.untis.helpers.strings.StringLoader
 import com.sapuseven.untis.interfaces.StringDisplay
 import org.json.JSONArray
 import org.json.JSONObject
 import java.lang.ref.WeakReference
-import java.text.DecimalFormat
-import java.text.DecimalFormatSymbols
 import java.text.SimpleDateFormat
 import java.util.*
 
 class MensaFragment : Fragment(), StringDisplay {
-	private val menu = arrayListOf<ListItem>()
-	private val menuAdapter = MessageAdapter(menu)
+	private val menu = arrayListOf<MensaListItem>()
+	private val menuAdapter = MensaListAdapter(menu)
 	private var menuLoading = true
 	private val idMap: MutableMap<String, Int> = mutableMapOf()
+	private val pricingMap: MutableMap<String, MensaPricing> = mutableMapOf()
 	private lateinit var stringLoader: StringLoader
 	private lateinit var recyclerview: RecyclerView
 	private lateinit var swiperefreshlayout: SwipeRefreshLayout
-	private lateinit var dropdown: AutoCompleteTextView
+	private lateinit var dropdownMensa: AutoCompleteTextView
+	private lateinit var dropdownPricing: AutoCompleteTextView
 
 	companion object {
 		private const val API_URL: String = "https://www.iwi.hs-karlsruhe.de/iwii/REST"
@@ -45,6 +46,7 @@ class MensaFragment : Fragment(), StringDisplay {
 		setHasOptionsMenu(true)
 	}
 
+	//TODO: save and recover pricing selection
 	override fun onCreateView(
 		inflater: LayoutInflater,
 		container: ViewGroup?,
@@ -58,12 +60,32 @@ class MensaFragment : Fragment(), StringDisplay {
 
 		recyclerview = root.findViewById(R.id.recyclerview_infocenter)
 		swiperefreshlayout = root.findViewById(R.id.swiperefreshlayout_infocenter)
-		dropdown =
-			((root.findViewById(R.id.dropdown) as TextInputLayout).editText as AutoCompleteTextView)
+		dropdownMensa =
+			((root.findViewById(R.id.dropdown_mensa) as TextInputLayout).editText as AutoCompleteTextView)
+		dropdownPricing =
+			((root.findViewById(R.id.dropdown_pricing) as TextInputLayout).editText as AutoCompleteTextView)
+
+		val pricingOptions = resources.getStringArray(R.array.mensa_pricing_values)
+		dropdownPricing.setAdapter(
+			ArrayAdapter(
+				requireContext(),
+				android.R.layout.simple_list_item_1,
+				resources.getStringArray(R.array.mensa_pricing_values)
+			)
+		)
+		dropdownPricing.setText(pricingOptions[0], false)
+		dropdownPricing.addTextChangedListener {
+			menu.forEach { item ->
+				if (item.title.isNotEmpty()) {
+					item.price = pricingMap[item.title]?.getPriceFromLevel(requireContext(), it.toString())
+				}
+			}
+			menuAdapter.notifyDataSetChanged()
+		}
 
 		loadCanteens()
 
-		dropdown.addTextChangedListener {
+		dropdownMensa.addTextChangedListener {
 			val currentID = idMap[it.toString()] ?: DEFAULT_ID
 			val date = SimpleDateFormat("yyyy-MM-dd", Locale.US).format(System.currentTimeMillis())
 			stringLoader = StringLoader(
@@ -145,16 +167,14 @@ class MensaFragment : Fragment(), StringDisplay {
 					idMap[currentTitle] = currentItem.optInt("id")
 					canteens[i] = currentTitle
 				}
-				dropdown.let {
-					it.setAdapter(
-						ArrayAdapter(
-							requireContext(),
-							android.R.layout.simple_list_item_1,
-							canteens
-						)
+				dropdownMensa.setAdapter(
+					ArrayAdapter(
+						requireContext(),
+						android.R.layout.simple_list_item_1,
+						canteens
 					)
-					it.setText(canteens[0], false)
-				}
+				)
+				dropdownMensa.setText(canteens[0], false)
 			}
 
 			override fun onStringLoadingError(code: Int) {
@@ -183,6 +203,7 @@ class MensaFragment : Fragment(), StringDisplay {
 
 	override fun onStringLoaded(string: String) {
 		menu.clear()
+		pricingMap.clear()
 		val json = JSONObject(string)
 		val mealGroups = json.optJSONArray("mealGroups") ?: JSONArray()
 		var meals: JSONArray
@@ -190,16 +211,34 @@ class MensaFragment : Fragment(), StringDisplay {
 		var currentMeal: JSONObject
 		for (i in 0 until mealGroups.length()) {
 			currentGroup = mealGroups.getJSONObject(i)
-			menu.add(ListItem("", currentGroup.optString("title")))
+			menu.add(MensaListItem("", currentGroup.optString("title"), null))
 			meals = currentGroup.optJSONArray("meals") ?: JSONArray()
 			for (j in 0 until meals.length()) {
 				currentMeal = meals.getJSONObject(j)
-				menu.add(
-					ListItem(
-						currentMeal.optString("name"),
-						generateSummary(currentMeal)
-					)
+				pricingMap[currentMeal.optString("name")] = MensaPricing(
+					currentMeal.optDouble("priceStudent"),
+					currentMeal.optDouble("priceGuest"),
+					currentMeal.optDouble("priceEmployee"),
+					currentMeal.optDouble("pricePupil")
 				)
+				(currentMeal.optJSONArray("foodAdditiveNumbers") ?: JSONArray()).let {
+					menu.add(
+						MensaListItem(
+							currentMeal.optString("name"),
+							if (it.length() == 0) ""
+							else resources.getString(
+								R.string.mensa_meal_summary,
+								it.join(", ").replace("\"", "")
+							),
+							null
+						).apply {
+							price = pricingMap[title]?.getPriceFromLevel(
+								requireContext(),
+								dropdownPricing.text.toString()
+							)
+						}
+					)
+				}
 			}
 		}
 		menuAdapter.notifyDataSetChanged()
@@ -224,17 +263,5 @@ class MensaFragment : Fragment(), StringDisplay {
 				swiperefreshlayout.isRefreshing = false
 			}
 		}
-	}
-
-	private fun generateSummary(meal: JSONObject): String {
-		val df = DecimalFormat("0.00", DecimalFormatSymbols.getInstance(Locale.getDefault()))
-		return resources.getString(
-			R.string.mensa_meal_summary,
-			(meal.optJSONArray("foodAdditiveNumbers") ?: JSONArray()).join(", ").replace("\"", ""),
-			df.format(meal.optDouble("priceStudent")),
-			df.format(meal.optDouble("priceGuest")),
-			df.format(meal.optDouble("priceEmployee")),
-			df.format(meal.optDouble("pricePupil"))
-		)
 	}
 }
