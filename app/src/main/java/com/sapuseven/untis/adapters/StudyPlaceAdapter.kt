@@ -16,26 +16,21 @@ class StudyPlaceAdapter(
 
 	var onClickListener: View.OnClickListener? = null
 
-	override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
-		val v = LayoutInflater.from(parent.context).inflate(R.layout.item_study_place, parent, false)
-		return ViewHolder(v)
-	}
+	override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder = ViewHolder(
+		LayoutInflater.from(parent.context).inflate(R.layout.item_study_place, parent, false)
+	)
 
 	override fun getItemCount(): Int = items.size
 
 	override fun onBindViewHolder(holder: ViewHolder, position: Int) {
-		val message = items[position]
-
 		holder.itemView.setOnClickListener(onClickListener)
 
-		holder.progressBar.progress = message.value
-		holder.progressBar.max = message.max
-		holder.tvOverline.text = message.overline
-		holder.tvSubject.text = message.title
-		holder.tvBody.text = message.summary
+		holder.progressBar.progress = items[position].value
+		holder.progressBar.max = items[position].max
+		holder.tvOverline.text = items[position].overline
+		holder.tvSubject.text = items[position].title
+		holder.tvBody.text = items[position].summary
 		holder.tvBody.movementMethod = LinkMovementMethod.getInstance()
-
-		holder.tvBody.visibility = if (message.summary.isEmpty()) View.GONE else View.VISIBLE
 	}
 
 	class ViewHolder(rootView: View) : RecyclerView.ViewHolder(rootView) {

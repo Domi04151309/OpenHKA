@@ -15,23 +15,20 @@ class MessageAdapter(
 
 	var onClickListener: View.OnClickListener? = null
 
-	override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
-		val v = LayoutInflater.from(parent.context).inflate(R.layout.item_message, parent, false)
-		return ViewHolder(v)
-	}
+	override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder = ViewHolder(
+		LayoutInflater.from(parent.context).inflate(R.layout.item_message, parent, false)
+	)
 
 	override fun getItemCount(): Int = items.size
 
 	override fun onBindViewHolder(holder: ViewHolder, position: Int) {
-		val message = items[position]
-
 		holder.itemView.setOnClickListener(onClickListener)
 
-		holder.tvSubject.text = message.title
-		holder.tvBody.text = message.summary
+		holder.tvSubject.text = items[position].title
+		holder.tvBody.text = items[position].summary
 		holder.tvBody.movementMethod = LinkMovementMethod.getInstance()
 
-		holder.tvBody.visibility = if (message.summary.isEmpty()) View.GONE else View.VISIBLE
+		holder.tvBody.visibility = if (items[position].summary.isEmpty()) View.GONE else View.VISIBLE
 	}
 
 	class ViewHolder(rootView: View) : RecyclerView.ViewHolder(rootView) {
