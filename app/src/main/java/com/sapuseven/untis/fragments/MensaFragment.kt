@@ -13,6 +13,7 @@ import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.google.android.material.textfield.TextInputLayout
 import com.sapuseven.untis.R
+import com.sapuseven.untis.activities.BaseActivity
 import com.sapuseven.untis.adapters.MensaListAdapter
 import com.sapuseven.untis.data.lists.MensaListItem
 import com.sapuseven.untis.data.lists.MensaPricing
@@ -38,7 +39,9 @@ class MensaFragment : Fragment(), StringDisplay {
 
 	companion object {
 		private const val API_URL: String = "https://www.iwi.hs-karlsruhe.de/iwii/REST"
+		private const val PREFERENCE_MENSA_PRICING_LEVEL: String = "preference_mensa_pricing_level"
 		private const val DEFAULT_ID: Int = 1
+		private const val DEFAULT_PRICING_LEVEL: String = "Student"
 	}
 
 	override fun onCreate(savedInstanceState: Bundle?) {
@@ -46,7 +49,6 @@ class MensaFragment : Fragment(), StringDisplay {
 		setHasOptionsMenu(true)
 	}
 
-	//TODO: save and recover pricing selection
 	override fun onCreateView(
 		inflater: LayoutInflater,
 		container: ViewGroup?,
@@ -65,7 +67,6 @@ class MensaFragment : Fragment(), StringDisplay {
 		dropdownPricing =
 			((root.findViewById(R.id.dropdown_pricing) as TextInputLayout).editText as AutoCompleteTextView)
 
-		val pricingOptions = resources.getStringArray(R.array.mensa_pricing_values)
 		dropdownPricing.setAdapter(
 			ArrayAdapter(
 				requireContext(),
@@ -73,11 +74,19 @@ class MensaFragment : Fragment(), StringDisplay {
 				resources.getStringArray(R.array.mensa_pricing_values)
 			)
 		)
-		dropdownPricing.setText(pricingOptions[0], false)
+		dropdownPricing.setText(
+			(activity as BaseActivity).preferences.defaultPrefs
+				.getString(PREFERENCE_MENSA_PRICING_LEVEL, DEFAULT_PRICING_LEVEL),
+			false
+		)
 		dropdownPricing.addTextChangedListener {
+			(activity as BaseActivity).preferences.defaultPrefs.edit().putString(
+				PREFERENCE_MENSA_PRICING_LEVEL, it.toString()
+			).commit()
 			menu.forEach { item ->
 				if (item.title.isNotEmpty()) {
-					item.price = pricingMap[item.title]?.getPriceFromLevel(requireContext(), it.toString())
+					item.price =
+						pricingMap[item.title]?.getPriceFromLevel(requireContext(), it.toString())
 				}
 			}
 			menuAdapter.notifyDataSetChanged()
