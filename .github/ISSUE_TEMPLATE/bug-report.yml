@@ -10,7 +10,6 @@ body:
       label: Steps to Reproduce
       description: |-
         Add steps to reproduce the behavior.
-        If your school supports anonymous login, you may also provide the school id for easier debugging.
     validations:
       required: true
   - type: textarea

@@ -127,7 +127,7 @@
 	<string name="preference_notifications_enable">Enable notification</string>
 	<string name="preference_notifications_enable_desc">Displays a notification with information about the next lesson while you have break.</string>
 	<string name="preference_notifications_first_lesson">Notification before first lesson</string>
-	<string name="preference_notifications_first_lesson_desc">Show a notification right before school starts</string>
+	<string name="preference_notifications_first_lesson_desc">Show a notification right before lessons start</string>
 	<string name="preference_notifications_first_lesson_time">Notification time</string>
 	<string name="preference_notifications_first_lesson_time_unit">min before first lesson</string>
 	<string name="preference_theme">Select a theme</string>
@@ -185,7 +185,7 @@
 	<string name="notifications_text_error_title">Failed to load timetable</string>
 	<string name="notifications_text_error_message">You won\'t get any notifications today.</string>
 	<string name="notifications_text_title">Break until %1$s</string>
-	<string name="notifications_text_first_title">School starts at %1$s</string>
+	<string name="notifications_text_first_title">Lessons start at %1$s</string>
 	<string name="notifications_text_message_subjects">Next lesson: %1$s</string>
 	<string name="notifications_text_message_rooms">Room: %1$s</string>
 	<string name="notifications_text_message_separator"> / </string>
