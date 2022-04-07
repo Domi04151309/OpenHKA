@@ -15,12 +15,16 @@ import com.sapuseven.untis.data.databases.LinkDatabase
 import com.sapuseven.untis.helpers.config.PreferenceManager
 import kotlinx.android.synthetic.main.activity_link_input.*
 
+
 class LinkInputActivity : BaseActivity() {
 
 	companion object {
+		private const val REQUEST_CODE_RSS_LIST = 1
+		private const val REQUEST_CODE_ICAL_LIST = 2
 		private const val BACKUP_PREF_NAME = "linkInputBackup"
 		private const val HELP_URL = "https://github.com/Domi04151309/SimpleHKA/wiki/Help"
-		private const val PRIVACY_POLICY_URL = "https://github.com/Domi04151309/SimpleHKA/wiki/Privacy-Policy"
+		private const val PRIVACY_POLICY_URL =
+			"https://github.com/Domi04151309/SimpleHKA/wiki/Privacy-Policy"
 
 		const val EXTRA_LONG_PROFILE_ID = "com.sapuseven.untis.activities.profileId"
 	}
@@ -64,6 +68,20 @@ class LinkInputActivity : BaseActivity() {
 
 		button_link_input_help?.setOnClickListener {
 			startActivity(Intent(Intent.ACTION_VIEW).setData(Uri.parse(HELP_URL)))
+		}
+
+		textinputlayout_link_input_rss.setEndIconOnClickListener {
+			startActivityForResult(
+				Intent(this, RSSLinkChooserActivity::class.java),
+				REQUEST_CODE_RSS_LIST
+			)
+		}
+
+		textinputlayout_link_input_ical.setEndIconOnClickListener {
+			startActivityForResult(
+				Intent(this, ICalLinkChooserActivity::class.java),
+				REQUEST_CODE_ICAL_LIST
+			)
 		}
 
 		existingLink?.let { link ->
@@ -183,7 +201,6 @@ class LinkInputActivity : BaseActivity() {
 		setElementsEnabled(true)
 	}
 
-	//TODO: hardcoded string
 	private fun deleteProfile(link: LinkDatabase.Link) {
 		MaterialAlertDialogBuilder(this)
 			.setTitle(getString(R.string.main_dialog_delete_profile_title))
@@ -198,6 +215,16 @@ class LinkInputActivity : BaseActivity() {
 				finish()
 			}
 			.show()
+	}
+
+	@Deprecated("")
+	override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+		super.onActivityResult(requestCode, resultCode, data)
+		if (requestCode == REQUEST_CODE_RSS_LIST && resultCode == RESULT_OK) {
+			edittext_link_input_rss.setText(data?.getStringExtra("link"))
+		} else if (requestCode == REQUEST_CODE_ICAL_LIST && resultCode == RESULT_OK) {
+			edittext_link_input_ical.setText(data?.getStringExtra("link"))
+		}
 	}
 
 	override fun onBackPressed() {

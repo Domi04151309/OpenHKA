@@ -36,6 +36,28 @@
 			android:launchMode="singleTop" />
 
 		<activity
+			android:name=".activities.RSSLinkChooserActivity"
+			android:label="@string/link_input_select"
+			android:launchMode="singleTop"
+			android:parentActivityName=".activities.LinkInputActivity">
+
+			<meta-data
+				android:name="android.support.PARENT_ACTIVITY"
+				android:value=".activities.LinkInputActivity" />
+		</activity>
+
+		<activity
+			android:name=".activities.ICalLinkChooserActivity"
+			android:label="@string/link_input_select"
+			android:launchMode="singleTop"
+			android:parentActivityName=".activities.LinkInputActivity">
+
+			<meta-data
+				android:name="android.support.PARENT_ACTIVITY"
+				android:value=".activities.LinkInputActivity" />
+		</activity>
+
+		<activity
 			android:name=".activities.BaseWidgetConfigureActivity"
 			android:label="@string/widget_configuration"
 			android:exported="true">

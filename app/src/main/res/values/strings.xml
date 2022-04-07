@@ -57,6 +57,7 @@
 
 	<string name="link_input_rss_link">RSS Link</string>
 	<string name="link_input_ical_link">iCal Link</string>
+	<string name="link_input_select">Select Link</string>
 
 	<string name="link_input_intro">Welcome to SimpleHKA! Please enter two valid links below to get started!</string>
 	<string name="logindatainput_connecting">Connecting…</string>

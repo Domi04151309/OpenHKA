@@ -42,6 +42,7 @@
     <string name="link_input_ical_link">iCal Link</string>
     <string name="link_input_intro">Willkommen bei SimpleHKA! Bitte geben Sie unten zwei gültige Links ein, um loszulegen!</string>
     <string name="link_input_rss_link">RSS Link</string>
+    <string name="link_input_select">Link auswählen</string>
     <string name="loading">Wird geladen</string>
     <string name="loading_failed">Ladevorgang fehlgeschlagen</string>
     <string name="logindatainput_connecting">Verbindung wird hergestellt…</string>

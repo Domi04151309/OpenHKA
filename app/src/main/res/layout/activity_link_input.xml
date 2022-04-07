@@ -37,6 +37,9 @@
 				android:layout_marginStart="16dp"
 				android:layout_marginTop="16dp"
 				android:layout_marginEnd="16dp"
+				app:endIconMode="custom"
+				app:endIconDrawable="@drawable/all_list"
+				app:endIconContentDescription="@string/link_input_select"
 				android:hint="@string/link_input_rss_link">
 
 				<com.google.android.material.textfield.TextInputEditText
@@ -55,6 +58,9 @@
 				android:layout_marginStart="16dp"
 				android:layout_marginTop="16dp"
 				android:layout_marginEnd="16dp"
+				app:endIconMode="custom"
+				app:endIconDrawable="@drawable/all_list"
+				app:endIconContentDescription="@string/link_input_select"
 				android:hint="@string/link_input_ical_link">
 
 				<com.google.android.material.textfield.TextInputEditText
