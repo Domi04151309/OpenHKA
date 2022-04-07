@@ -214,7 +214,6 @@
 	<string name="library_kotlinx_coroutines_android" translatable="false">Kotlinx Coroutines Android</string>
 	<string name="library_kotlinx_serialization_cbor" translatable="false">Kotlinx Serialization CBOR</string>
 	<string name="library_kotlinx_serialization_json" translatable="false">Kotlinx Serialization JSON</string>
-	<string name="library_lifecycle_livedata_ktx" translatable="false">LiveData Kotlin Extensions</string>
 	<string name="library_localbroadcastmanager" translatable="false">Android Support Library Local Broadcast Manager</string>
 	<string name="library_material" translatable="false">Material Components For Android</string>
 	<string name="library_materialdaypicker" translatable="false">Materialdaypicker</string>

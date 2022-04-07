@@ -410,9 +410,7 @@ class TimetableFragment : Fragment(),
 	}
 
 	override fun onEventClick(data: TimegridItem, eventRect: RectF) {
-		viewModelStore.clear() // TODO: Doesn't seem like the best solution. This could potentially interfere with other ViewModels scoped to this activity.
 		val fragment = TimetableItemDetailsFragment(data)
-
 		(activity as AppCompatActivity).supportFragmentManager.beginTransaction().run {
 			setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN)
 			add(R.id.content_main, fragment, FRAGMENT_TAG_LESSON_INFO)

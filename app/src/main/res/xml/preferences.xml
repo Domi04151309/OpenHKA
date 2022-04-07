@@ -457,9 +457,6 @@
 					android:title="@string/library_kotlinx_serialization_json" />
 				<Preference
 					android:icon="@drawable/settings_about_library"
-					android:title="@string/library_lifecycle_livedata_ktx" />
-				<Preference
-					android:icon="@drawable/settings_about_library"
 					android:title="@string/library_materialdaypicker" />
 				<Preference
 					android:icon="@drawable/settings_about_library"

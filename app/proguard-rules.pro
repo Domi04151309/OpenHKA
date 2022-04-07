@@ -35,5 +35,3 @@
 -keepclassmembernames class kotlinx.** {
     volatile <fields>;
 }
-
--keep public class * extends androidx.lifecycle.ViewModel {*;}
