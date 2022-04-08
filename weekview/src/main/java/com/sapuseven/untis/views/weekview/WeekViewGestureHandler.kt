@@ -188,8 +188,6 @@ internal class WeekViewGestureHandler<T>(
 			val data = eventChip.event.data
 			if (data != null) {
 				eventClickListener!!.onEventClick(data, eventChip.rect!!)
-			} else {
-				throw WeekViewException("No data to show. Did you pass the original object into the constructor of WeekViewEvent?")
 			}
 
 			return super.onSingleTapUp(e)

@@ -97,7 +97,7 @@
 					android:textAllCaps="false"
 					android:text="@string/all_help"/>
 			</LinearLayout>
-			
+
 			<Button
 				android:id="@+id/button_link_input_skip"
 				style="@style/Widget.MaterialComponents.Button.TextButton"

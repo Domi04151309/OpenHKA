@@ -32,7 +32,6 @@ class ICalLinkChooserActivity : BaseActivity(), StringDisplay {
 		private const val API_URL: String = "https://www.iwi.hs-karlsruhe.de/hskampus-broker/api"
 	}
 
-
 	override fun onCreate(savedInstanceState: Bundle?) {
 		super.onCreate(savedInstanceState)
 		setContentView(R.layout.fragment_infocenter)
@@ -86,7 +85,9 @@ class ICalLinkChooserActivity : BaseActivity(), StringDisplay {
 							" (" + currentSemester.optString("id") + ")"
 					linkList.add(ListItem(mapKey, ""))
 					keyMap[mapKey] =
-						currentSemester.optString("iCalFileHttpLink")
+						"https://www.iwi.hs-karlsruhe.de/hskampus-broker/api/semesters/" +
+								currentSemester.optString("id") + "/ical"
+					//currentSemester.optString("iCalFileHttpLink")
 				}
 			}
 		}

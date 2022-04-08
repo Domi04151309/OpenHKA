@@ -32,7 +32,6 @@ class RSSLinkChooserActivity : BaseActivity(), StringDisplay {
 		private const val API_URL: String = "https://www.iwi.hs-karlsruhe.de/hskampus-broker/api"
 	}
 
-
 	override fun onCreate(savedInstanceState: Bundle?) {
 		super.onCreate(savedInstanceState)
 		setContentView(R.layout.fragment_infocenter)

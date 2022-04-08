@@ -34,11 +34,10 @@ class TimetableLoader(
 		const val CODE_CACHE_MISSING = 1
 		const val CODE_REQUEST_FAILED = 2
 		const val CODE_REQUEST_PARSING_EXCEPTION = 3
-
-		private const val CACHE_NAME = "timetable"
 	}
 
 	private var request: Int = 0
+	private val cacheName = link.iCalUrl.filter { it.isLetterOrDigit() }
 
 	fun load(flags: Int = 0) =
 		GlobalScope.launch(Dispatchers.Main) {
@@ -51,7 +50,7 @@ class TimetableLoader(
 		}
 
 	private fun loadFromCache(requestId: Int) {
-		val cache = StringCache(context, CACHE_NAME)
+		val cache = StringCache(context, cacheName)
 
 		if (cache.exists()) {
 			Log.d(
@@ -61,7 +60,7 @@ class TimetableLoader(
 			cache.load()?.let { (timestamp, data) ->
 				val calendar = parseICal(data) ?: return parsingException(requestId)
 				val timeZone: DateTimeZone =
-					DateTimeZone.forID(calendar.getProperty("X-WR-TIMEZONE").value)
+					DateTimeZone.forID(calendar.getProperty("X-WR-TIMEZONE")?.value ?: "Etc/UTC")
 				timetableDisplay.addTimetableItems(calendar.components.map {
 					TimegridItem(
 						Period(it as Component, timeZone)
@@ -93,7 +92,7 @@ class TimetableLoader(
 	}
 
 	private suspend fun loadFromServer(requestId: Int) {
-		val cache = StringCache(context, CACHE_NAME)
+		val cache = StringCache(context, cacheName)
 
 		link.iCalUrl
 			.httpGet()
@@ -101,7 +100,7 @@ class TimetableLoader(
 			.fold({ data ->
 				val calendar = parseICal(data) ?: return parsingException(requestId)
 				val timeZone: DateTimeZone =
-					DateTimeZone.forID(calendar.getProperty("X-WR-TIMEZONE").value)
+					DateTimeZone.forID(calendar.getProperty("X-WR-TIMEZONE")?.value ?: "Etc/UTC")
 				val timestamp = Instant.now().millis
 				timetableDisplay.addTimetableItems(calendar.components.map {
 					TimegridItem(
