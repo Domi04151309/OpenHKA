@@ -18,10 +18,12 @@ import com.sapuseven.untis.adapters.MessageAdapter
 import com.sapuseven.untis.data.lists.ListItem
 import com.sapuseven.untis.helpers.strings.StringLoader
 import com.sapuseven.untis.interfaces.StringDisplay
-import org.json.JSONArray
-import org.json.JSONObject
+import net.fortuna.ical4j.data.CalendarBuilder
+import net.fortuna.ical4j.model.Component
+import org.joda.time.DateTime
+import org.joda.time.DateTimeZone
+import java.io.StringReader
 import java.lang.ref.WeakReference
-import java.text.SimpleDateFormat
 import java.util.*
 
 
@@ -35,7 +37,7 @@ class EventFragment : Fragment(), StringDisplay {
 	private lateinit var swiperefreshlayout: SwipeRefreshLayout
 
 	companion object {
-		private const val API_URL: String = "https://www.iwi.hs-karlsruhe.de/iwii/REST"
+		private const val API_URL: String = "https://www.iwi.hs-karlsruhe.de/hskampus-broker/api"
 	}
 
 	override fun onCreateView(
@@ -50,7 +52,7 @@ class EventFragment : Fragment(), StringDisplay {
 		)
 
 		stringLoader =
-			StringLoader(WeakReference(context), this, "${API_URL}/officialcalendar/v2/current")
+			StringLoader(WeakReference(context), this, "${API_URL}/calendar/schedule/current")
 		recyclerview = root.findViewById(R.id.recyclerview_infocenter)
 		swiperefreshlayout = root.findViewById(R.id.swiperefreshlayout_infocenter)
 
@@ -62,12 +64,14 @@ class EventFragment : Fragment(), StringDisplay {
 		refreshEvents(StringLoader.FLAG_LOAD_CACHE)
 
 		eventAdapter.onClickListener = View.OnClickListener {
-			val key = it.findViewById<TextView>(R.id.textview_itemmessage_subject).text.toString()
+			val title = it.findViewById<TextView>(R.id.textview_itemmessage_subject).text.toString()
+			val key = title + it.findViewById<TextView>(R.id.textview_itemmessage_body)
+				.text.toString()
 			val intent = Intent(Intent.ACTION_INSERT)
 				.setData(CalendarContract.Events.CONTENT_URI)
 				.putExtra(CalendarContract.EXTRA_EVENT_BEGIN_TIME, keyMap[key]?.first)
 				.putExtra(CalendarContract.EXTRA_EVENT_END_TIME, keyMap[key]?.second)
-				.putExtra(CalendarContract.Events.TITLE, key)
+				.putExtra(CalendarContract.Events.TITLE, title)
 			startActivity(intent)
 		}
 
@@ -81,28 +85,25 @@ class EventFragment : Fragment(), StringDisplay {
 
 	override fun onStringLoaded(string: String) {
 		eventList.clear()
-		val json = JSONObject(string).optJSONArray("entries") ?: JSONArray()
-		var currentEvent: JSONObject
-		var currentTitle: String
-		var currentDates: JSONObject
-		for (i in 0 until json.length()) {
-			currentEvent = json.getJSONObject(i)
-			currentTitle = currentEvent.optString("description")
-			currentDates = (currentEvent.optJSONArray("dates") ?: JSONArray()).optJSONObject(0)
-				?: JSONObject()
-			eventList.add(
-				ListItem(
-					currentTitle,
-					parseDate(currentDates, "firstDate") +
-							" - " +
-							parseDate(currentDates, "lastDate")
-				)
-			)
-			keyMap[currentTitle] = Pair(
-				getMillis(currentDates, "firstDate"),
-				getMillis(currentDates, "lastDate")
-			)
+		val treeMap = TreeMap<Long, ListItem>()
+		val calendar = CalendarBuilder().build(StringReader(string)) ?: return
+		val timeZone: DateTimeZone =
+			DateTimeZone.forID(calendar.getProperty("X-WR-TIMEZONE").value)
+		var component: Component
+		var title: String
+		var start: Long
+		var end: Long
+		var summary: String
+		for (i in calendar.components) {
+			component = i as Component
+			title = component.getProperty("SUMMARY").value
+			start = getMillis(component.getProperty("DTSTART").value, timeZone)
+			end = getMillis(component.getProperty("DTEND").value, timeZone)
+			summary = millisToReadableDate(start, end)
+			treeMap[start] = ListItem(title, summary)
+			keyMap[title + summary] = Pair(start, end)
 		}
+		eventList.addAll(treeMap.values)
 		eventAdapter.notifyDataSetChanged()
 		eventsLoading = false
 		swiperefreshlayout.isRefreshing = false
@@ -125,13 +126,36 @@ class EventFragment : Fragment(), StringDisplay {
 		}
 	}
 
-	private fun parseDate(json: JSONObject, key: String): String {
-		return DateFormat.getMediumDateFormat(context)
-			.format(SimpleDateFormat("yyyy-MM-dd", Locale.US).parse(json.optString(key)) ?: Date())
-			?: ""
+	private fun getMillis(string: String, timeZone: DateTimeZone): Long {
+		val dateTime = if (string.contains('T')) {
+			DateTime(
+				string.substring(0, 4).toInt(),
+				string.substring(4, 6).toInt(),
+				string.substring(6, 8).toInt(),
+				string.substring(9, 11).toInt(),
+				string.substring(11, 13).toInt(),
+				string.substring(13, 15).toInt(),
+				timeZone
+			)
+		} else {
+			DateTime(
+				string.substring(0, 4).toInt(),
+				string.substring(4, 6).toInt(),
+				string.substring(6, 8).toInt(),
+				0,
+				0,
+				timeZone
+			)
+		}
+		return dateTime.plusMillis(timeZone.getOffset(dateTime.toInstant())).millis
 	}
 
-	private fun getMillis(json: JSONObject, key: String): Long {
-		return SimpleDateFormat("yyyy-MM-dd", Locale.US).parse(json.optString(key))?.time ?: 0
+	private fun millisToReadableDate(start: Long, end: Long): String {
+		val dateFormatter = DateFormat.getMediumDateFormat(context)
+		val timeFormatter = DateFormat.getTimeFormat(context)
+		return dateFormatter.format(start) + ", " +
+				timeFormatter.format(start) + " - " +
+				dateFormatter.format(end) + ", " +
+				timeFormatter.format(end)
 	}
 }
