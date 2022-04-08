@@ -33,6 +33,7 @@ class TimetableLoader(
 
 		const val CODE_CACHE_MISSING = 1
 		const val CODE_REQUEST_FAILED = 2
+		const val CODE_REQUEST_PARSING_EXCEPTION = 3
 
 		private const val CACHE_NAME = "timetable"
 	}
@@ -57,15 +58,15 @@ class TimetableLoader(
 				"TimetableLoaderDebug",
 				"requestId $requestId: cached file found"
 			)
-			cache.load()?.let { cacheObject ->
-				val calendar = parseICal(cacheObject.data) ?: return
+			cache.load()?.let { (timestamp, data) ->
+				val calendar = parseICal(data) ?: return parsingException(requestId)
 				val timeZone: DateTimeZone =
 					DateTimeZone.forID(calendar.getProperty("X-WR-TIMEZONE").value)
 				timetableDisplay.addTimetableItems(calendar.components.map {
 					TimegridItem(
 						Period(it as Component, timeZone)
 					)
-				}, cacheObject.timestamp)
+				}, timestamp)
 			} ?: run {
 				cache.delete()
 				Log.d(
@@ -98,7 +99,7 @@ class TimetableLoader(
 			.httpGet()
 			.awaitStringResult()
 			.fold({ data ->
-				val calendar = parseICal(data) ?: return
+				val calendar = parseICal(data) ?: return parsingException(requestId)
 				val timeZone: DateTimeZone =
 					DateTimeZone.forID(calendar.getProperty("X-WR-TIMEZONE").value)
 				val timestamp = Instant.now().millis
@@ -127,6 +128,14 @@ class TimetableLoader(
 		} catch (e: ParserException) {
 			null
 		}
+	}
+
+	private fun parsingException(requestId: Int) {
+		timetableDisplay.onTimetableLoadingError(
+			requestId,
+			CODE_REQUEST_PARSING_EXCEPTION,
+			"parsing failed"
+		)
 	}
 
 	fun repeat(requestId: Int, flags: Int = 0) {
