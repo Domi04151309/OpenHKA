@@ -25,6 +25,9 @@ class LinkInputActivity : BaseActivity() {
         private const val HELP_URL = "https://github.com/Domi04151309/SimpleHKA/wiki/Help"
         private const val PRIVACY_POLICY_URL =
             "https://github.com/Domi04151309/SimpleHKA/wiki/Privacy-Policy"
+        private const val NO_LINK_RSS = "https://www.h-ka.de/feed.rss"
+        private const val NO_LINK_ICAL =
+            "https://www.iwi.hs-karlsruhe.de/hskampus-broker/api/calendar/schedule/current"
 
         const val EXTRA_LONG_PROFILE_ID = "com.sapuseven.untis.activities.profileId"
     }
@@ -68,6 +71,12 @@ class LinkInputActivity : BaseActivity() {
 
         button_link_input_help?.setOnClickListener {
             startActivity(Intent(Intent.ACTION_VIEW).setData(Uri.parse(HELP_URL)))
+        }
+
+        button_link_input_skip?.setOnClickListener {
+            edittext_link_input_rss?.setText(NO_LINK_RSS)
+            edittext_link_input_ical?.setText(NO_LINK_ICAL)
+            validate()?.requestFocus() ?: run { loadData() }
         }
 
         textinputlayout_link_input_rss.setEndIconOnClickListener {
