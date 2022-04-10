@@ -1,17 +1,23 @@
 package com.sapuseven.untis.fragments
 
+import android.content.res.Resources
+import android.graphics.BitmapFactory
+import android.graphics.drawable.BitmapDrawable
+import android.graphics.drawable.Drawable
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.ImageView
 import android.widget.TextView
 import androidx.fragment.app.Fragment
+import com.github.kittinunf.fuel.coroutines.awaitByteArrayResult
+import com.github.kittinunf.fuel.httpGet
 import com.sapuseven.untis.R
 import com.sapuseven.untis.activities.MainActivity
-import com.sapuseven.untis.data.timetable.TimegridItem
-import com.sapuseven.untis.models.untis.timetable.Period
-import org.joda.time.LocalDateTime
-import org.joda.time.format.DateTimeFormat
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.launch
 import org.json.JSONObject
 
 class PeopleDetailsFragment(private val item: JSONObject) : Fragment() {
@@ -26,6 +32,13 @@ class PeopleDetailsFragment(private val item: JSONObject) : Fragment() {
 			container,
 			false
 		)
+
+		GlobalScope.launch(Dispatchers.Main) {
+			val image = loadProfileImage(item.optString("imageUrl"), resources)
+			if (image != null) {
+				root.findViewById<ImageView>(R.id.profile).setImageDrawable(image)
+			}
+		}
 
 		item.optString("academicDegree").let {
 			if (it.isEmpty()) {
@@ -60,5 +73,14 @@ class PeopleDetailsFragment(private val item: JSONObject) : Fragment() {
 	private fun showInfoOrHide(key: String, view: TextView) {
 		if (item.isNull(key)) view.visibility = View.GONE
 		else view.text = item.optString(key)
+	}
+
+	private suspend fun loadProfileImage(avatarUrl: String, resources: Resources): Drawable? {
+		return avatarUrl
+			.httpGet()
+			.awaitByteArrayResult()
+			.fold({
+				BitmapDrawable(resources, BitmapFactory.decodeByteArray(it, 0, it.size))
+			}, { null })
 	}
 }
