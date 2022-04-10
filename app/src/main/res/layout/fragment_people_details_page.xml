@@ -8,17 +8,24 @@
 	<LinearLayout
 		android:layout_width="match_parent"
 		android:layout_height="wrap_content"
-		android:orientation="vertical">
+		android:orientation="vertical"
+		android:clipToPadding="false">
 
-		<ImageView
-			android:layout_width="@dimen/size_header_icon"
-			android:layout_height="@dimen/size_header_icon"
+		<androidx.cardview.widget.CardView
+			android:layout_width="@dimen/size_profile_icon"
+			android:layout_height="@dimen/size_profile_icon"
 			android:layout_gravity="center"
 			android:layout_marginTop="24dp"
 			android:layout_marginBottom="8dp"
-			android:contentDescription="@null"
-			android:tint="?attr/colorAccent"
-			app:srcCompat="@drawable/all_people" />
+			app:cardCornerRadius="8dp">
+
+			<ImageView
+				android:id="@+id/profile"
+				android:layout_width="match_parent"
+				android:layout_height="match_parent"
+				android:contentDescription="@null"
+				android:scaleType="centerCrop" />
+		</androidx.cardview.widget.CardView>
 
 		<TextView
 			android:id="@+id/title"
