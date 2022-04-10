@@ -70,6 +70,8 @@
 	<string name="logindatainput_title_add">Add profile</string>
 	<string name="logindatainput_title_edit">Edit profile</string>
 
+	<string name="people_details">Details</string>
+
 	<string name="mensa_meal_summary">Additives: %1$s</string>
 	<string name="mensa_meal_price">%1$s €</string>
 	<string name="mensa_meal_additives">Additives</string>

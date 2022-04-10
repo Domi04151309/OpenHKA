@@ -337,13 +337,13 @@ class MainActivity :
 		}
 	}
 
-	internal fun setFullscreenDialogActionBar() {
+	internal fun setFullscreenDialogActionBar(res: Int) {
 		supportActionBar?.setHomeAsUpIndicator(R.drawable.all_close)
-		supportActionBar?.setTitle(R.string.all_lesson_details)
+		supportActionBar?.setTitle(res)
 	}
 
-	internal fun setDefaultActionBar() {
-		supportActionBar?.title = resources.getString(R.string.app_name)
+	internal fun setDefaultActionBar(res: Int = R.string.app_name) {
+		supportActionBar?.setTitle(res)
 	}
 
 	private fun setFragment(fragment: Fragment) {
