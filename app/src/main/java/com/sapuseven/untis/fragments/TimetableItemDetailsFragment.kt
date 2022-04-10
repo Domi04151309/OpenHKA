@@ -52,7 +52,7 @@ class TimetableItemDetailsFragment(private val item: TimegridItem) : Fragment() 
 
 	override fun onStart() {
 		super.onStart()
-		if (activity is MainActivity) (activity as MainActivity).setFullscreenDialogActionBar()
+		if (activity is MainActivity) (activity as MainActivity).setFullscreenDialogActionBar(R.string.all_lesson_details)
 	}
 
 	override fun onStop() {

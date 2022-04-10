@@ -4,14 +4,17 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.TextView
 import android.widget.Toast
+import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.FragmentTransaction
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 import com.sapuseven.untis.R
-import com.sapuseven.untis.adapters.MessageAdapter
-import com.sapuseven.untis.data.lists.ListItem
+import com.sapuseven.untis.adapters.PeopleAdapter
+import com.sapuseven.untis.data.lists.PeopleListItem
 import com.sapuseven.untis.helpers.strings.StringLoader
 import com.sapuseven.untis.interfaces.StringDisplay
 import org.json.JSONArray
@@ -21,16 +24,17 @@ import java.util.*
 
 
 class PeopleFragment : Fragment(), StringDisplay {
-	private val list = arrayListOf<ListItem>()
-	private val adapter = MessageAdapter(list)
+	private val list = arrayListOf<PeopleListItem>()
+	private val adapter = PeopleAdapter(list)
 	private var loading = true
-	private val keyMap: MutableMap<String, Pair<Long, Long>> = mutableMapOf()
+	private val keyMap: MutableMap<String, JSONObject> = mutableMapOf()
 	private lateinit var stringLoader: StringLoader
 	private lateinit var recyclerview: RecyclerView
 	private lateinit var swiperefreshlayout: SwipeRefreshLayout
 
 	companion object {
 		private const val API_URL: String = "https://www.iwi.hs-karlsruhe.de/hskampus-broker/api"
+		private const val FRAGMENT_TAG_PEOPLE: String = "com.sapuseven.untis.fragments.people"
 	}
 
 	override fun onCreateView(
@@ -57,6 +61,16 @@ class PeopleFragment : Fragment(), StringDisplay {
 
 		//TODO: add onClick
 		adapter.onClickListener = View.OnClickListener {
+			val fragment = PeopleDetailsFragment(
+				keyMap[it.findViewById<TextView>(R.id.textview_itemmessage_subject).text]
+					?: return@OnClickListener
+			)
+			(activity as AppCompatActivity).supportFragmentManager.beginTransaction().run {
+				setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN)
+				add(R.id.content_main, fragment, FRAGMENT_TAG_PEOPLE)
+				addToBackStack(fragment.tag)
+				commit()
+			}
 		}
 
 		return root
@@ -70,7 +84,7 @@ class PeopleFragment : Fragment(), StringDisplay {
 	//TODO: doesn't work if two people have the same name; use ids
 	override fun onStringLoaded(string: String) {
 		list.clear()
-		val treeMap = TreeMap<String, ListItem>()
+		val treeMap = TreeMap<String, PeopleListItem>()
 		val json = JSONArray(string)
 		var currentObject: JSONObject
 		var title: String
@@ -78,11 +92,13 @@ class PeopleFragment : Fragment(), StringDisplay {
 			currentObject = json.getJSONObject(i)
 			title = currentObject.optString("lastName") + ", " +
 					currentObject.optString("firstName")
-			treeMap[title] = ListItem(
+			treeMap[title] = PeopleListItem(
+				currentObject.optString("academicDegree"),
 				title,
 				currentObject.optString("email") + " | " +
 						currentObject.optString("faculty")
 			)
+			keyMap[title] = currentObject
 		}
 		list.addAll(treeMap.values)
 		adapter.notifyDataSetChanged()
