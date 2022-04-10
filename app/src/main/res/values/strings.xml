@@ -29,6 +29,7 @@
 	<string name="activity_title_errors">Errors</string>
 	<string name="activity_title_info_center">Info Center</string>
 	<string name="activity_title_events">Events</string>
+	<string name="activity_title_people">People</string>
 	<string name="activity_title_locations">Locations</string>
 	<string name="activity_title_study_places">Study Places</string>
 	<string name="activity_title_mensa">Mensa</string>

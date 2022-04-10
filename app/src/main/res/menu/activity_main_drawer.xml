@@ -18,6 +18,11 @@
 			android:title="@string/activity_title_events" />
 
 		<item
+			android:id="@+id/nav_people"
+			android:icon="@drawable/all_people"
+			android:title="@string/activity_title_people" />
+
+		<item
 			android:id="@+id/nav_locations"
 			android:icon="@drawable/all_location"
 			android:title="@string/activity_title_locations" />
