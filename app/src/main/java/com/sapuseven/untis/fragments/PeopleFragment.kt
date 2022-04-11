@@ -90,15 +90,18 @@ class PeopleFragment : Fragment(), StringDisplay {
 		var title: String
 		for (i in 0 until json.length()) {
 			currentObject = json.getJSONObject(i)
-			title = currentObject.optString("lastName") + ", " +
-					currentObject.optString("firstName")
-			treeMap[title] = PeopleListItem(
-				currentObject.optString("academicDegree"),
-				title,
-				currentObject.optString("email") + " | " +
-						currentObject.optString("faculty")
-			)
-			keyMap[title] = currentObject
+			if (!currentObject.optBoolean("deleted")) {
+				title = currentObject.optString("lastName") + ", " +
+						currentObject.optString("firstName")
+				treeMap[title] = PeopleListItem(
+					currentObject.optString("imageUrl"),
+					currentObject.optString("academicDegree"),
+					title,
+					currentObject.optString("email") + " | " +
+							currentObject.optString("faculty")
+				)
+				keyMap[title] = currentObject
+			}
 		}
 		list.addAll(treeMap.values)
 		adapter.notifyDataSetChanged()
