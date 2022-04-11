@@ -85,6 +85,7 @@
     <string name="notifications_text_message_subjects">Nächste Stunde: %1$s</string>
     <string name="notifications_text_title">Pause bis %1$s</string>
     <string name="people_details">Details</string>
+    <string name="people_search">Suchen</string>
     <string name="preferences_connectivity">Verbindungseinstellungen</string>
     <string name="preferences_general">Allgemein</string>
     <string name="preferences_infos">Informationen</string>
