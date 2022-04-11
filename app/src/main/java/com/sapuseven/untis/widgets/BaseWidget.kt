@@ -22,6 +22,7 @@ open class BaseWidget : AppWidgetProvider() {
 	private lateinit var appWidgetManager: AppWidgetManager
 
 	open fun getWidgetType(): Int = WIDGET_TYPE_UNKNOWN
+	open fun getTitleInt(): Int = R.string.app_name
 
 	companion object {
 		const val EXTRA_INT_RELOAD = "com.sapuseven.widgets.reload"
@@ -77,12 +78,16 @@ open class BaseWidget : AppWidgetProvider() {
 		val remoteViews = RemoteViews(context.packageName, R.layout.widget_base)
 		if (link == null) {
 			remoteViews.setTextViewText(
-				R.id.textview_base_widget_school,
+				R.id.textview_base_widget_date,
 				context.resources.getString(R.string.all_error)
 			)
 		} else {
 			remoteViews.setTextViewText(
-				R.id.textview_base_widget_school,
+				R.id.textview_base_widget_title,
+				context.resources.getString(getTitleInt())
+			)
+			remoteViews.setTextViewText(
+				R.id.textview_base_widget_date,
 				DateFormat.getMediumDateFormat(context).format(System.currentTimeMillis())
 			)
 
