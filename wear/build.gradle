@@ -48,15 +48,15 @@ dependencies {
     implementation "com.github.kittinunf.fuel:fuel:2.2.3"
     implementation "com.github.kittinunf.fuel:fuel-coroutines:2.2.3"
     implementation "joda-time:joda-time:2.10.6"
-    implementation 'androidx.wear:wear:1.0.0'
+    implementation 'androidx.wear:wear:1.2.0'
     implementation 'com.prof18.rssparser:rssparser:4.0.2'
     implementation 'org.mnode.ical4j:ical4j:1.0.5'
     implementation 'backport-util-concurrent:backport-util-concurrent:3.1'
     implementation 'commons-codec:commons-codec:1.10'
     implementation 'commons-lang:commons-lang:2.6'
-    implementation 'com.google.android.gms:play-services-wearable:17.0.0'
-    implementation 'com.google.android.support:wearable:2.5.0'
-    compileOnly 'com.google.android.wearable:wearable:2.5.0'
+    implementation 'com.google.android.gms:play-services-wearable:17.1.0'
+    implementation 'com.google.android.support:wearable:2.9.0'
+    compileOnly 'com.google.android.wearable:wearable:2.9.0'
 
     implementation project(':weekview')
 }

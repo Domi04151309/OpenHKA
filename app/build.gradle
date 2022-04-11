@@ -76,8 +76,8 @@ dependencies {
 	implementation 'commons-codec:commons-codec:1.10'
 	implementation 'commons-lang:commons-lang:2.6'
 
-	implementation 'androidx.localbroadcastmanager:localbroadcastmanager:1.0.0'
-	implementation 'com.google.android.gms:play-services-wearable:17.0.0'
+	implementation 'androidx.localbroadcastmanager:localbroadcastmanager:1.1.0'
+	implementation 'com.google.android.gms:play-services-wearable:17.1.0'
 
 	implementation project(':weekview')
 }
