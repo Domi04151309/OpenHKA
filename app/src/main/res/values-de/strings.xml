@@ -188,6 +188,7 @@
     <string name="study_places_occupation_unknown">Belegung unbekannt</string>
     <string name="widget_configuration">Widget-Konfiguration</string>
     <string name="widget_daily_messages">Tagesnachrichten</string>
+    <string name="widget_mensa">Mensa</string>
     <string name="widget_select_profile">Bitte wähle ein Profil für das Widget aus</string>
     <string name="widget_timetable">Stundenplan</string>
     <plurals name="main_time_diff_minutes">

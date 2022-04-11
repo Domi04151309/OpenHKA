@@ -233,6 +233,7 @@
 	<string name="widget_configuration">Widget Configuration</string>
 	<string name="widget_timetable">Timetable</string>
 	<string name="widget_daily_messages">Daily Messages</string>
+	<string name="widget_mensa">Mensa</string>
 	<string name="widget_select_profile">Please select a profile for the widget</string>
 
 	<plurals name="main_time_diff_minutes">

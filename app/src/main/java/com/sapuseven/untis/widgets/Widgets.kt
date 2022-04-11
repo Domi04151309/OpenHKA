@@ -7,3 +7,7 @@ class MessagesWidget : BaseWidget() {
 class TimetableWidget : BaseWidget() {
 	override fun getWidgetType(): Int = WidgetRemoteViewsFactory.WIDGET_TYPE_TIMETABLE
 }
+
+class MensaWidget : BaseWidget() {
+	override fun getWidgetType(): Int = WidgetRemoteViewsFactory.WIDGET_TYPE_MENSA
+}

@@ -6,6 +6,7 @@ import android.appwidget.AppWidgetProvider
 import android.content.Context
 import android.content.Intent
 import android.net.Uri
+import android.text.format.DateFormat
 import android.util.Log
 import android.widget.RemoteViews
 import androidx.core.content.ContextCompat
@@ -80,7 +81,10 @@ open class BaseWidget : AppWidgetProvider() {
 				context.resources.getString(R.string.all_error)
 			)
 		} else {
-			remoteViews.setTextViewText(R.id.textview_base_widget_school, link.id.toString())
+			remoteViews.setTextViewText(
+				R.id.textview_base_widget_school,
+				DateFormat.getMediumDateFormat(context).format(System.currentTimeMillis())
+			)
 
 			val primaryColor =
 				when (context.getSharedPreferences("preferences_${link.id}", Context.MODE_PRIVATE)

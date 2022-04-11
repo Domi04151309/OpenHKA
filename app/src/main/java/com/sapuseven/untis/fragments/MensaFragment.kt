@@ -26,6 +26,7 @@ import java.lang.ref.WeakReference
 import java.text.SimpleDateFormat
 import java.util.*
 
+
 class MensaFragment : Fragment(), StringDisplay {
 	private val menu = arrayListOf<MensaListItem>()
 	private val menuAdapter = MensaListAdapter(menu)
@@ -42,9 +43,10 @@ class MensaFragment : Fragment(), StringDisplay {
 
 	companion object {
 		private const val API_URL: String = "https://www.iwi.hs-karlsruhe.de/iwii/REST"
-		private const val PREFERENCE_MENSA_PRICING_LEVEL: String = "preference_mensa_pricing_level"
-		private const val DEFAULT_ID: Int = 1
-		private const val DEFAULT_PRICING_LEVEL: String = "Student"
+		const val PREFERENCE_MENSA_ID: String = "preference_mensa_id"
+		const val DEFAULT_ID: Int = 1
+		const val PREFERENCE_MENSA_PRICING_LEVEL: String = "preference_mensa_pricing_level"
+		const val DEFAULT_PRICING_LEVEL: String = "Student"
 	}
 
 	override fun onCreate(savedInstanceState: Bundle?) {
@@ -98,6 +100,9 @@ class MensaFragment : Fragment(), StringDisplay {
 		loadCanteens()
 
 		dropdownMensa.addTextChangedListener {
+			(activity as BaseActivity).preferences.defaultPrefs.edit().putInt(
+				PREFERENCE_MENSA_ID, idMap[it.toString()] ?: DEFAULT_ID
+			).apply()
 			refreshParameters(it.toString())
 		}
 
@@ -174,15 +179,20 @@ class MensaFragment : Fragment(), StringDisplay {
 		lateinit var loader: StringLoader
 		val callback = object : StringDisplay {
 			override fun onStringLoaded(string: String) {
+				val targetId = (activity as BaseActivity).preferences.defaultPrefs
+					.getInt(PREFERENCE_MENSA_ID, DEFAULT_ID)
 				val json = JSONArray(string)
 				val canteens = MutableList(json.length()) { "" }
 				var currentItem: JSONObject
 				var currentTitle: String
+				var currentId: Int
 				for (i in 0 until json.length()) {
 					currentItem = json.getJSONObject(i)
 					currentTitle = currentItem.optString("name").replace("Mensa ", "")
-					idMap[currentTitle] = currentItem.optInt("id")
+					currentId = currentItem.optInt("id")
+					idMap[currentTitle] = currentId
 					canteens[i] = currentTitle
+					if (currentId == targetId) dropdownMensa.setText(currentTitle, false)
 				}
 				dropdownMensa.setAdapter(
 					ArrayAdapter(
@@ -191,7 +201,6 @@ class MensaFragment : Fragment(), StringDisplay {
 						canteens
 					)
 				)
-				dropdownMensa.setText(canteens[0], false)
 			}
 
 			override fun onStringLoadingError(code: Int) {
