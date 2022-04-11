@@ -17,7 +17,7 @@ class MensaListAdapter(
 	private val items: ArrayList<MensaListItem>
 ) : RecyclerView.Adapter<MensaListAdapter.ViewHolder>() {
 
-	private val formatter: DecimalFormat = DecimalFormat(
+	private val formatter = DecimalFormat(
 		"0.00", DecimalFormatSymbols.getInstance(Locale.getDefault())
 	)
 

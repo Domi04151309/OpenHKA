@@ -12,8 +12,11 @@ import com.github.kittinunf.fuel.coroutines.awaitStringResult
 import com.github.kittinunf.fuel.httpGet
 import com.sapuseven.untis.R
 import com.sapuseven.untis.data.databases.LinkDatabase
+import com.sapuseven.untis.data.lists.MensaPricing
 import com.sapuseven.untis.data.timetable.TimegridItem
 import com.sapuseven.untis.fragments.InfoCenterFragment
+import com.sapuseven.untis.fragments.MensaFragment
+import com.sapuseven.untis.helpers.config.PreferenceManager
 import com.sapuseven.untis.models.untis.timetable.Period
 import com.sapuseven.untis.widgets.BaseWidget.Companion.EXTRA_INT_RELOAD
 import kotlinx.coroutines.runBlocking
@@ -24,18 +27,27 @@ import org.joda.time.DateTimeZone
 import org.joda.time.Instant
 import org.joda.time.format.DateTimeFormat
 import org.joda.time.format.DateTimeFormatter
+import org.json.JSONArray
+import org.json.JSONObject
 import java.io.StringReader
+import java.text.DecimalFormat
+import java.text.DecimalFormatSymbols
+import java.text.SimpleDateFormat
+import java.util.*
 
 
 class WidgetRemoteViewsFactory(private val applicationContext: Context, intent: Intent) :
 	RemoteViewsFactory {
 	companion object {
+		private const val API_URL: String = "https://www.iwi.hs-karlsruhe.de/iwii/REST"
+
 		const val EXTRA_INT_WIDGET_ID = "com.sapuseven.widgets.id"
 		const val EXTRA_INT_WIDGET_TYPE = "com.sapuseven.widgets.type"
 
 		const val WIDGET_TYPE_UNKNOWN = 0
 		const val WIDGET_TYPE_MESSAGES = 1
 		const val WIDGET_TYPE_TIMETABLE = 2
+		const val WIDGET_TYPE_MENSA = 3
 
 		const val STATUS_UNKNOWN = 0
 		const val STATUS_DONE = 1
@@ -61,6 +73,7 @@ class WidgetRemoteViewsFactory(private val applicationContext: Context, intent: 
 			items = when (type) {
 				WIDGET_TYPE_MESSAGES -> loadMessages()
 				WIDGET_TYPE_TIMETABLE -> loadTimetable()
+				WIDGET_TYPE_MENSA -> loadMeals()
 				else -> emptyList()
 			}
 		} catch (e: Exception) {
@@ -131,6 +144,66 @@ class WidgetRemoteViewsFactory(private val applicationContext: Context, intent: 
 				}, {
 					status = STATUS_ERROR
 					items = listOf(errorItem)
+				})
+		}
+		return items
+	}
+
+	private fun loadMeals(): List<WidgetListItem> {
+		val preferences = PreferenceManager(applicationContext, link?.id ?: -1)
+		val currentID = preferences.defaultPrefs.getInt(
+			MensaFragment.PREFERENCE_MENSA_ID,
+			MensaFragment.DEFAULT_ID
+		)
+		val date = SimpleDateFormat("yyyy-MM-dd", Locale.US).format(System.currentTimeMillis())
+		var items: MutableList<WidgetListItem> = mutableListOf()
+		runBlocking {
+			"$API_URL/canteen/v2/$currentID/$date"
+				.httpGet()
+				.awaitStringResult()
+				.fold({ data ->
+					val formatter = DecimalFormat(
+						"0.00", DecimalFormatSymbols.getInstance(Locale.getDefault())
+					)
+					val json = JSONObject(data)
+					val mealGroups = json.optJSONArray("mealGroups") ?: JSONArray()
+					var meals: JSONArray
+					var currentGroup: JSONObject
+					var currentMeal: JSONObject
+					for (i in 0 until mealGroups.length()) {
+						currentGroup = mealGroups.getJSONObject(i)
+						items.add(WidgetListItem(0, "", currentGroup.optString("title")))
+						meals = currentGroup.optJSONArray("meals") ?: JSONArray()
+						for (j in 0 until meals.length()) {
+							currentMeal = meals.getJSONObject(j)
+							items.add(
+								WidgetListItem(
+									0,
+									currentMeal.optString("name"),
+									applicationContext.resources.getString(
+										R.string.mensa_meal_price, formatter.format(
+											MensaPricing(
+												currentMeal.optDouble("priceStudent"),
+												currentMeal.optDouble("priceGuest"),
+												currentMeal.optDouble("priceEmployee"),
+												currentMeal.optDouble("pricePupil")
+											).getPriceFromLevel(
+												applicationContext, preferences.defaultPrefs
+													.getString(
+														MensaFragment.PREFERENCE_MENSA_PRICING_LEVEL,
+														MensaFragment.DEFAULT_PRICING_LEVEL
+													) ?: ""
+											)
+										)
+									)
+								)
+							)
+						}
+					}
+					status = STATUS_DONE
+				}, {
+					status = STATUS_ERROR
+					items = mutableListOf(errorItem)
 				})
 		}
 		return items
