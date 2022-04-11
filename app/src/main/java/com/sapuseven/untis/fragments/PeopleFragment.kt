@@ -1,12 +1,11 @@
 package com.sapuseven.untis.fragments
 
 import android.os.Bundle
-import android.view.LayoutInflater
-import android.view.View
-import android.view.ViewGroup
+import android.view.*
 import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
+import androidx.appcompat.widget.SearchView
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentTransaction
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -24,6 +23,7 @@ import java.util.*
 
 
 class PeopleFragment : Fragment(), StringDisplay {
+	private val wholeList = arrayListOf<PeopleListItem>()
 	private val list = arrayListOf<PeopleListItem>()
 	private val adapter = PeopleAdapter(list)
 	private var loading = true
@@ -35,6 +35,11 @@ class PeopleFragment : Fragment(), StringDisplay {
 	companion object {
 		private const val API_URL: String = "https://www.iwi.hs-karlsruhe.de/hskampus-broker/api"
 		private const val FRAGMENT_TAG_PEOPLE: String = "com.sapuseven.untis.fragments.people"
+	}
+
+	override fun onCreate(savedInstanceState: Bundle?) {
+		super.onCreate(savedInstanceState)
+		setHasOptionsMenu(true)
 	}
 
 	override fun onCreateView(
@@ -76,6 +81,28 @@ class PeopleFragment : Fragment(), StringDisplay {
 		return root
 	}
 
+	override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
+		super.onCreateOptionsMenu(menu, inflater)
+		inflater.inflate(R.menu.activity_people_menu, menu)
+
+		(menu.findItem(R.id.search).actionView as SearchView)
+			.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
+				override fun onQueryTextSubmit(query: String): Boolean {
+					return this.onQueryTextChange(query)
+				}
+
+				override fun onQueryTextChange(newText: String): Boolean {
+					list.clear()
+					list.addAll(wholeList.filter {
+						it.title.lowercase().contains(newText.lowercase())
+					})
+					adapter.notifyDataSetChanged()
+					return true
+				}
+			})
+	}
+
+
 	private fun refreshEvents(flags: Int) {
 		loading = true
 		stringLoader.load(flags)
@@ -83,6 +110,7 @@ class PeopleFragment : Fragment(), StringDisplay {
 
 	//TODO: doesn't work if two people have the same name; use ids
 	override fun onStringLoaded(string: String) {
+		wholeList.clear()
 		list.clear()
 		val treeMap = TreeMap<String, PeopleListItem>()
 		val json = JSONArray(string)
@@ -103,6 +131,7 @@ class PeopleFragment : Fragment(), StringDisplay {
 				keyMap[title] = currentObject
 			}
 		}
+		wholeList.addAll(treeMap.values)
 		list.addAll(treeMap.values)
 		adapter.notifyDataSetChanged()
 		loading = false

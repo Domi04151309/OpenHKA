@@ -2,6 +2,7 @@ package com.sapuseven.untis.fragments
 
 import android.os.Bundle
 import android.view.LayoutInflater
+import android.view.Menu
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
@@ -17,6 +18,16 @@ import org.json.JSONObject
 import java.lang.ref.WeakReference
 
 class PeopleDetailsFragment(private val item: JSONObject) : Fragment() {
+
+	override fun onCreate(savedInstanceState: Bundle?) {
+		super.onCreate(savedInstanceState)
+		setHasOptionsMenu(true)
+	}
+
+	override fun onPrepareOptionsMenu(menu: Menu) {
+		super.onPrepareOptionsMenu(menu)
+		menu.clear()
+	}
 
 	override fun onCreateView(
 		inflater: LayoutInflater,
