@@ -1,10 +1,10 @@
 <resources>
-    <string name="app_name">SimpleHKA</string>
+    <string name="app_name">Open HKA</string>
 
-    <string name="login_welcome">Welcome to SimpleHKA!</string>
+    <string name="login_welcome">Welcome to Open HKA!</string>
     <string name="login_connect">Connect</string>
 
-    <string name="connect_connecting">Open the SimpleHKA app on your phone and go to Settings > Wear OS Support</string>
+    <string name="connect_connecting">Open the Open HKA app on your phone and go to Settings > Wear OS Support</string>
 
     <string name="main_your_timetable_for_today">Your Timetable for Today</string>
     <string name="main_loading">Loading</string>

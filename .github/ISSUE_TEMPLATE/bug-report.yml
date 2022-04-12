@@ -41,8 +41,8 @@ body:
   - type: input
     id: app-version
     attributes:
-      label: SimpleHKA Version
-      description: SimpleHKA Settings -> About -> App version
+      label: Open HKA Version
+      description: Open HKA Settings -> About -> App version
       placeholder: ex. 1.0.0 (1)
     validations:
       required: true

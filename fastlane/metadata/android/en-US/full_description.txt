@@ -1,4 +1,4 @@
-SimpleHKA is an open-source mobile client for the IWI HKA timetable system
+Open HKA is an open-source mobile client for the IWI HKA timetable system
 which allows you to view your timetable on your smartphone.
 
 The app allows customization of almost any aspect of your timetable,
@@ -8,7 +8,7 @@ Easily add multiple profiles with separate settings and timetables.
 
 Use Notifications to show information about the next lesson.
 
-Enjoy a fast and smooth experience with SimpleHKA.
+Enjoy a fast and smooth experience with Open HKA.
 
 
 This app is specialized for the Hochschule Karlsruhe.

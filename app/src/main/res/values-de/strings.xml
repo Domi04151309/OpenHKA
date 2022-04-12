@@ -34,14 +34,14 @@
     <string name="errors_button_dismiss">Alle verwerfen</string>
     <string name="errors_button_report">Alle melden</string>
     <string name="errors_crash_message">Entschuldigung.</string>
-    <string name="errors_crash_title">Es sieht aus als wäre SimpleHKA abgestürzt.</string>
+    <string name="errors_crash_title">Es sieht aus als wäre Open HKA abgestürzt.</string>
     <string name="errors_failed_loading_from_server_message">Abrufen von Informationen vom Server fehlgeschlagen</string>
     <string name="errors_github_attach_file_message">Bitte füge die komprimierten Log-Dateien als Anhang hinzu.\nDiese wurden hier gespeichert: `%1$s`</string>
     <string name="errors_report">Bitte hilf, die App zu verbessern, indem du die Fehler unten meldest:</string>
     <string name="link_input_error_field_empty">Dieses Feld darf nicht leer sein!</string>
     <string name="link_input_error_invalid_url">Muss eine gültige URL sein!</string>
     <string name="link_input_ical_link">iCal Link</string>
-    <string name="link_input_intro">Willkommen bei SimpleHKA! Bitte geben Sie unten zwei gültige Links ein, um loszulegen!</string>
+    <string name="link_input_intro">Willkommen bei Open HKA! Bitte geben Sie unten zwei gültige Links ein, um loszulegen!</string>
     <string name="link_input_rss_link">RSS Link</string>
     <string name="link_input_select">Link auswählen</string>
     <string name="link_input_skip">Links überspringen</string>
@@ -58,7 +58,7 @@
     <string name="main_dialog_delete_profile_message">Bist du sicher, dass du das Profil möchtest?</string>
     <string name="main_dialog_delete_profile_title">Profil löschen?</string>
     <string name="main_drawer_close">Navigationsleiste schließen</string>
-    <string name="main_drawer_image_logo">SimpleHKA Logo</string>
+    <string name="main_drawer_image_logo">Open HKA Logo</string>
     <string name="main_drawer_open">Navigationsleiste öffnen</string>
     <string name="main_last_refreshed">Zuletzt aktualisiert: %1$s</string>
     <string name="main_last_refreshed_never">nie</string>

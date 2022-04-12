@@ -1,4 +1,4 @@
-SimpleHKA ist ein mobiler Open-Source-Client für das IWI HKA Stundenplansystem,
+Open HKA ist ein mobiler Open-Source-Client für das IWI HKA Stundenplansystem,
 womit Sie Ihren Stundenplan auf Ihrem Smartphone anzeigen können.
 
 Die App ermöglicht die Anpassung fast aller Aspekte Ihres Stundenplans,
@@ -8,7 +8,7 @@ Fügen Sie einfach mehrere Profile mit separaten Einstellungen und Stundenpläne
 
 Verwenden Sie Benachrichtigungen, um Informationen über die nächste Stunde anzuzeigen.
 
-Genießen Sie ein schnelles und reibungsloses Erlebnis mit SimpleHKA.
+Genießen Sie ein schnelles und reibungsloses Erlebnis mit Open HKA.
 
 
 Diese App ist spezialisiert auf die Hochschule Karlsruhe.

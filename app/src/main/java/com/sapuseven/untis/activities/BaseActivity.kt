@@ -135,7 +135,7 @@ open class BaseActivity : AppCompatActivity() {
 
 	private class CrashHandler(val context: Context, private val defaultUncaughtExceptionHandler: Thread.UncaughtExceptionHandler?) : Thread.UncaughtExceptionHandler {
 		override fun uncaughtException(t: Thread, e: Throwable) {
-			Log.e("SimpleHKA", "Application crashed!", e)
+			Log.e("Open HKA", "Application crashed!", e)
 			saveCrash(e)
 			defaultUncaughtExceptionHandler?.uncaughtException(t, e)
 		}

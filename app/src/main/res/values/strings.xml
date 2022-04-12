@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-	<string name="app_name" translatable="false">SimpleHKA</string>
+	<string name="app_name" translatable="false">Open HKA</string>
 	<string name="app_desc">A mobile client for the IWI HKA system</string>
 
 	<string name="all_enabled">Enabled</string>
@@ -52,7 +52,7 @@
 	<string name="main_last_refreshed_never">never</string>
 	<string name="main_drawer_open">Open navigation drawer</string>
 	<string name="main_drawer_close">Close navigation drawer</string>
-	<string name="main_drawer_image_logo">SimpleHKA Logo</string>
+	<string name="main_drawer_image_logo">Open HKA Logo</string>
 	<string name="main_press_back_double">Press BACK twice to exit</string>
 	<string name="main_time_diff_just_now">just now</string>
 
@@ -61,7 +61,7 @@
 	<string name="link_input_select">Select Link</string>
 	<string name="link_input_skip">Skip Links</string>
 
-	<string name="link_input_intro">Welcome to SimpleHKA! Please enter two valid links below to get started!</string>
+	<string name="link_input_intro">Welcome to Open HKA! Please enter two valid links below to get started!</string>
 	<string name="logindatainput_connecting">Connecting…</string>
 	<string name="logindatainput_data_loaded">Data loaded.</string>
 	<string name="logindatainput_delete">Delete profile</string>
@@ -195,7 +195,7 @@
 	<string name="notifications_text_message_subjects">Next lesson: %1$s</string>
 	<string name="notifications_text_message_rooms">Room: %1$s</string>
 	<string name="notifications_text_message_separator"> / </string>
-	<string name="errors_crash_title">It looks like SimpleHKA crashed.</string>
+	<string name="errors_crash_title">It looks like Open HKA crashed.</string>
 	<string name="errors_crash_message">Sorry for that.</string>
 	<string name="errors_report">Please help to fix the app by reporting the errors below:</string>
 	<string name="errors_button_dismiss">Dismiss all</string>

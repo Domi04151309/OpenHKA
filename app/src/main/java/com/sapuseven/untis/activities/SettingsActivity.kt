@@ -38,7 +38,7 @@ class SettingsActivity : BaseActivity(), PreferenceFragmentCompat.OnPreferenceSt
 
 	companion object {
 		const val EXTRA_LONG_PROFILE_ID = "com.sapuseven.untis.activities.profileId"
-		private const val REPOSITORY_URL_GITHUB = "https://github.com/Domi04151309/SimpleHKA"
+		private const val REPOSITORY_URL_GITHUB = "https://github.com/Domi04151309/OpenHKA"
 	}
 
 	override fun onCreate(savedInstanceState: Bundle?) {
@@ -249,7 +249,7 @@ class SettingsActivity : BaseActivity(), PreferenceFragmentCompat.OnPreferenceSt
 								.httpGet()
 								.awaitStringResult()
 								.fold({ original ->
-									"https://api.github.com/repos/domi04151309/simplehka/contributors"
+									"https://api.github.com/repos/domi04151309/openhka/contributors"
 										.httpGet()
 										.awaitStringResult()
 										.fold({ data ->
