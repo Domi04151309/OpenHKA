@@ -42,18 +42,18 @@ class WidgetRemoteViewsFactory(private val applicationContext: Context, intent: 
 	companion object {
 		private const val API_URL: String = "https://www.iwi.hs-karlsruhe.de/iwii/REST"
 
-		const val EXTRA_INT_WIDGET_ID = "com.sapuseven.widgets.id"
-		const val EXTRA_INT_WIDGET_TYPE = "com.sapuseven.widgets.type"
+		const val EXTRA_INT_WIDGET_ID: String = "com.sapuseven.widgets.id"
+		const val EXTRA_INT_WIDGET_TYPE: String = "com.sapuseven.widgets.type"
 
-		const val WIDGET_TYPE_UNKNOWN = 0
-		const val WIDGET_TYPE_MESSAGES = 1
-		const val WIDGET_TYPE_TIMETABLE = 2
-		const val WIDGET_TYPE_MENSA = 3
+		const val WIDGET_TYPE_UNKNOWN: Int = 0
+		const val WIDGET_TYPE_MESSAGES: Int = 1
+		const val WIDGET_TYPE_TIMETABLE: Int = 2
+		const val WIDGET_TYPE_MENSA: Int = 3
 
-		const val STATUS_UNKNOWN = 0
-		const val STATUS_DONE = 1
-		const val STATUS_LOADING = 2
-		const val STATUS_ERROR = 3
+		const val STATUS_UNKNOWN: Int = 0
+		const val STATUS_DONE: Int = 1
+		const val STATUS_LOADING: Int = 2
+		const val STATUS_ERROR: Int = 3
 	}
 
 	private val appWidgetId =
@@ -228,11 +228,11 @@ class WidgetRemoteViewsFactory(private val applicationContext: Context, intent: 
 
 	override fun getViewAt(position: Int): RemoteViews {
 		return RemoteViews(applicationContext.packageName, R.layout.widget_base_item).apply {
-			items?.get(position)?.let { item: WidgetListItem ->
-				setTextViewText(R.id.textview_listitem_line1, item.firstLine)
+			items?.get(position)?.let { (_, firstLine, secondLine) ->
+				setTextViewText(R.id.textview_listitem_line1, firstLine)
 				setTextViewText(
 					R.id.textview_listitem_line2,
-					HtmlCompat.fromHtml(item.secondLine, HtmlCompat.FROM_HTML_MODE_COMPACT)
+					HtmlCompat.fromHtml(secondLine, HtmlCompat.FROM_HTML_MODE_COMPACT)
 				)
 			}
 
