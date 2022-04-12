@@ -11,6 +11,7 @@ import androidx.core.text.HtmlCompat
 import com.github.kittinunf.fuel.coroutines.awaitStringResult
 import com.github.kittinunf.fuel.httpGet
 import com.sapuseven.untis.R
+import com.sapuseven.untis.adapters.infocenter.RSSAdapter
 import com.sapuseven.untis.data.databases.LinkDatabase
 import com.sapuseven.untis.data.lists.MensaPricing
 import com.sapuseven.untis.data.timetable.TimegridItem
@@ -88,7 +89,11 @@ class WidgetRemoteViewsFactory(private val applicationContext: Context, intent: 
 			items =
 				InfoCenterFragment.loadMessages(applicationContext, link ?: return@runBlocking)
 					?.map { it ->
-						WidgetListItem(0, it.title ?: "", it.pubDate ?: "")
+						WidgetListItem(
+							0,
+							it.title ?: "",
+							RSSAdapter.parseDate(applicationContext, it.pubDate ?: "")
+						)
 					}
 			success = true
 		}

@@ -18,12 +18,25 @@ import kotlin.collections.ArrayList
 class RSSAdapter(
 	private val messageList: List<Article> = ArrayList()
 ) : RecyclerView.Adapter<RSSAdapter.ViewHolder>() {
+
+	companion object {
+		fun parseDate(context: Context, date: String): String {
+			val millis = (
+					SimpleDateFormat("EEE, dd MMM yyyy HH:mm:ss Z", Locale.US).parse(date)
+						?: Date()
+					).time
+			return DateFormat.getMediumDateFormat(context).format(millis) +
+					", " +
+					DateFormat.getTimeFormat(context).format(millis)
+		}
+	}
+
 	override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
 		val v = LayoutInflater.from(parent.context).inflate(R.layout.item_rss, parent, false)
 		return ViewHolder(v)
 	}
 
-	override fun getItemCount() = messageList.size
+	override fun getItemCount(): Int = messageList.size
 
 	override fun onBindViewHolder(holder: ViewHolder, position: Int) {
 		val message = messageList[position]
@@ -33,16 +46,6 @@ class RSSAdapter(
 		holder.tvBody.text =
 			HtmlCompat.fromHtml(message.description ?: "", HtmlCompat.FROM_HTML_MODE_COMPACT)
 		holder.tvBody.movementMethod = LinkMovementMethod.getInstance()
-	}
-
-	private fun parseDate(context: Context, date: String): String {
-		val millis = (
-				SimpleDateFormat("EEE, dd MMM yyyy HH:mm:ss Z", Locale.US).parse(date)
-					?: Date()
-				).time
-		return DateFormat.getMediumDateFormat(context).format(millis) +
-				", " +
-				DateFormat.getTimeFormat(context).format(millis)
 	}
 
 	class ViewHolder(rootView: View) : RecyclerView.ViewHolder(rootView) {
