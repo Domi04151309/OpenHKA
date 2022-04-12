@@ -39,5 +39,6 @@
 		android:layout_width="match_parent"
 		android:layout_height="match_parent"
 		android:layout_below="@id/linearlayout_base_widget_top_bar"
+		android:divider="@null"
 		android:text="@string/loading" />
 </RelativeLayout>
