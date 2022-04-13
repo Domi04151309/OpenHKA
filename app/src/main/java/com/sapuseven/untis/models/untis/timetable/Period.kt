@@ -16,7 +16,7 @@ class Period(component: Component, timeZone: DateTimeZone) {
 	val title: String = formatTitle(unformattedTitle)
 	val location: String = properties.optProperty("LOCATION")
 	val type: Type = when (properties.optProperty("CATEGORIES")) {
-		"AUSFALL" -> Type.CANCELLED
+		"AUSFALL", "VERLEGT" -> Type.CANCELLED
 		"AKTUELL" -> Type.IRREGULAR
 		else -> Type.REGULAR
 	}
