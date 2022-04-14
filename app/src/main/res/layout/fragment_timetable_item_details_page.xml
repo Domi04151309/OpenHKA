@@ -17,7 +17,7 @@
 			android:layout_marginTop="24dp"
 			android:layout_marginBottom="8dp"
 			android:contentDescription="@null"
-			android:tint="?attr/colorAccent"
+			app:tint="?attr/colorAccent"
 			app:srcCompat="@drawable/all_subject" />
 
 		<TextView
@@ -45,26 +45,19 @@
 			android:background="?android:attr/listDivider" />
 
 		<TextView
+			style="@style/DetailsListItemStyle"
 			android:id="@+id/tvRooms"
 			android:layout_width="match_parent"
 			android:layout_height="wrap_content"
-			android:gravity="center_vertical"
-			android:drawablePadding="24dp"
-			android:paddingHorizontal="24dp"
-			android:paddingVertical="12dp"
 			app:drawableStartCompat="@drawable/all_rooms"
-			android:textColor="?android:attr/textColorPrimary"
 			android:textIsSelectable="false" />
 
 		<TextView
+			style="@style/DetailsListItemStyle"
 			android:id="@+id/tvInfo"
 			android:layout_width="match_parent"
 			android:layout_height="wrap_content"
-			android:drawablePadding="24dp"
-			android:paddingHorizontal="24dp"
-			android:paddingVertical="12dp"
 			app:drawableStartCompat="@drawable/all_info"
-			android:textColor="?android:attr/textColorPrimary"
 			android:textIsSelectable="true" />
 	</LinearLayout>
 </ScrollView>

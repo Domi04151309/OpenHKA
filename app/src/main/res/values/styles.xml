@@ -162,6 +162,16 @@
 		<item name="android:paddingEnd">@dimen/margin_card</item>
 	</style>
 
+	<style name="DetailsListItemStyle">
+		<item name="android:drawablePadding">24dp</item>
+		<item name="android:paddingTop">12dp</item>
+		<item name="android:paddingStart">24dp</item>
+		<item name="android:paddingBottom">12dp</item>
+		<item name="android:paddingEnd">24dp</item>
+		<item name="android:textColor">?android:attr/textColorPrimary</item>
+		<item name="android:gravity">center_vertical</item>
+	</style>
+
 	<style name="FabStyle">
 		<item name="android:layout_margin">16dp</item>
 		<item name="android:backgroundTint">?attr/colorPrimary</item>

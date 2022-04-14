@@ -33,7 +33,8 @@
 			android:layout_height="wrap_content"
 			android:paddingHorizontal="24dp"
 			android:textAppearance="@style/TextAppearance.MaterialComponents.Caption"
-			android:gravity="center"/>
+			android:gravity="center"
+			android:textIsSelectable="false" />
 
 		<TextView
 			android:id="@+id/name"
@@ -41,7 +42,8 @@
 			android:layout_height="wrap_content"
 			android:paddingHorizontal="24dp"
 			android:textAppearance="@style/TextAppearance.MaterialComponents.Subtitle1"
-			android:gravity="center"/>
+			android:gravity="center"
+			android:textIsSelectable="false" />
 
 		<View
 			android:layout_width="match_parent"
@@ -52,59 +54,52 @@
 			android:background="?android:attr/listDivider" />
 
 		<TextView
+			style="@style/DetailsListItemStyle"
 			android:id="@+id/tvMail"
 			android:layout_width="match_parent"
 			android:layout_height="wrap_content"
-			android:gravity="center_vertical"
-			android:drawablePadding="24dp"
-			android:paddingHorizontal="24dp"
-			android:paddingVertical="12dp"
 			app:drawableStartCompat="@drawable/all_mail"
-			android:textColor="?android:attr/textColorPrimary"
 			android:textIsSelectable="true" />
 
 		<TextView
+			style="@style/DetailsListItemStyle"
 			android:id="@+id/tvPhone"
 			android:layout_width="match_parent"
 			android:layout_height="wrap_content"
-			android:drawablePadding="24dp"
-			android:paddingHorizontal="24dp"
-			android:paddingVertical="12dp"
 			app:drawableStartCompat="@drawable/all_phone"
-			android:textColor="?android:attr/textColorPrimary"
 			android:textIsSelectable="true" />
 
 		<TextView
+			style="@style/DetailsListItemStyle"
 			android:id="@+id/tvConsultationHours"
 			android:layout_width="match_parent"
 			android:layout_height="wrap_content"
-			android:drawablePadding="24dp"
-			android:paddingHorizontal="24dp"
-			android:paddingVertical="12dp"
 			app:drawableStartCompat="@drawable/all_calendar"
-			android:textColor="?android:attr/textColorPrimary"
 			android:textIsSelectable="false" />
 
 		<TextView
+			style="@style/DetailsListItemStyle"
+			android:id="@+id/tvRoom"
+			android:layout_width="match_parent"
+			android:layout_height="wrap_content"
+			app:drawableStartCompat="@drawable/all_rooms"
+			android:textIsSelectable="false"
+			android:visibility="gone" />
+
+		<TextView
+			style="@style/DetailsListItemStyle"
 			android:id="@+id/tvRemark"
 			android:layout_width="match_parent"
 			android:layout_height="wrap_content"
-			android:drawablePadding="24dp"
-			android:paddingHorizontal="24dp"
-			android:paddingVertical="12dp"
 			app:drawableStartCompat="@drawable/all_info"
-			android:textColor="?android:attr/textColorPrimary"
 			android:textIsSelectable="false" />
 
 		<TextView
+			style="@style/DetailsListItemStyle"
 			android:id="@+id/tvFaculty"
 			android:layout_width="match_parent"
 			android:layout_height="wrap_content"
-			android:drawablePadding="24dp"
-			android:paddingHorizontal="24dp"
-			android:paddingVertical="12dp"
 			app:drawableStartCompat="@drawable/all_info"
-			android:textColor="?android:attr/textColorPrimary"
 			android:textIsSelectable="false" />
 	</LinearLayout>
 </ScrollView>

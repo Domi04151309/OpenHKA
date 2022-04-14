@@ -7,17 +7,25 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
+import android.widget.Toast
 import androidx.fragment.app.Fragment
 import com.sapuseven.untis.R
 import com.sapuseven.untis.activities.MainActivity
 import com.sapuseven.untis.helpers.drawables.DrawableLoader
+import com.sapuseven.untis.helpers.strings.StringLoader
+import com.sapuseven.untis.interfaces.StringDisplay
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
+import org.json.JSONArray
 import org.json.JSONObject
 import java.lang.ref.WeakReference
 
 class PeopleDetailsFragment(private val item: JSONObject) : Fragment() {
+
+	companion object {
+		private const val API_URL: String = "https://www.iwi.hs-karlsruhe.de/hskampus-broker/api"
+	}
 
 	override fun onCreate(savedInstanceState: Bundle?) {
 		super.onCreate(savedInstanceState)
@@ -68,6 +76,60 @@ class PeopleDetailsFragment(private val item: JSONObject) : Fragment() {
 		showInfoOrHide("remark", root.findViewById(R.id.tvRemark))
 		showInfoOrHide("faculty", root.findViewById(R.id.tvFaculty))
 
+		if (!item.isNull("room")) {
+			lateinit var loader: StringLoader
+			val callback = object : StringDisplay {
+				override fun onStringLoaded(string: String) {
+					val json = JSONArray(string)
+					var currentItem: JSONObject
+					for (i in 0 until json.length()) {
+						currentItem = json.getJSONObject(i)
+						if (
+							currentItem.optInt("id") == (item.optJSONObject("room")
+								?: JSONObject()).optInt("id")
+						) {
+							lateinit var innerLoader: StringLoader
+							val innerCallback = object : StringDisplay {
+								override fun onStringLoaded(string: String) {
+									val innerJson = JSONArray(string)
+									var innerCurrentItem: JSONObject
+									for (j in 0 until innerJson.length()) {
+										innerCurrentItem = innerJson.getJSONObject(j)
+										if (
+											innerCurrentItem.optInt("id") == (currentItem.optJSONObject(
+												"building"
+											) ?: JSONObject()).optInt("id")
+										) {
+											root.findViewById<TextView>(R.id.tvRoom).apply {
+												visibility = View.VISIBLE
+												text = innerCurrentItem.optString("name") +
+														" " + currentItem.optString("name")
+											}
+											return
+										}
+									}
+								}
+
+								override fun onStringLoadingError(code: Int) =
+									defaultOnError(innerLoader, code)
+							}
+							innerLoader = StringLoader(
+								WeakReference(context),
+								innerCallback,
+								"${API_URL}/buildings"
+							)
+							innerLoader.load(StringLoader.FLAG_LOAD_CACHE)
+							return
+						}
+					}
+				}
+
+				override fun onStringLoadingError(code: Int) = defaultOnError(loader, code)
+			}
+			loader = StringLoader(WeakReference(context), callback, "${API_URL}/rooms")
+			loader.load(StringLoader.FLAG_LOAD_CACHE)
+		}
+
 		return root
 	}
 
@@ -84,5 +146,20 @@ class PeopleDetailsFragment(private val item: JSONObject) : Fragment() {
 	private fun showInfoOrHide(key: String, view: TextView) {
 		if (item.isNull(key)) view.visibility = View.GONE
 		else view.text = item.optString(key)
+	}
+
+	internal fun defaultOnError(loader: StringLoader, code: Int) {
+		when (code) {
+			StringLoader.CODE_CACHE_MISSING -> loader.repeat(
+				StringLoader.FLAG_LOAD_SERVER
+			)
+			else -> {
+				Toast.makeText(
+					context,
+					R.string.errors_failed_loading_from_server_message,
+					Toast.LENGTH_LONG
+				).show()
+			}
+		}
 	}
 }
