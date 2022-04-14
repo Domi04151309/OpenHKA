@@ -62,7 +62,7 @@ class LocationFragment : Fragment(), StringDisplay {
 			if (key.isNotEmpty()) {
 				val mapIntent = Intent(
 					Intent.ACTION_VIEW, Uri.parse(
-						"google.navigation:q=${keyMap[key]?.first},${keyMap[key]?.second}&mode=w"
+						"geo:0,0?q=${keyMap[key]?.first},${keyMap[key]?.second}"
 					)
 				)
 				mapIntent.setPackage("com.google.android.apps.maps")
