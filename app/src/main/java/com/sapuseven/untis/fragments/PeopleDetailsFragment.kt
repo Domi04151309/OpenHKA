@@ -1,14 +1,14 @@
 package com.sapuseven.untis.fragments
 
+import android.content.Intent
+import android.net.Uri
 import android.os.Bundle
-import android.view.LayoutInflater
-import android.view.Menu
-import android.view.View
-import android.view.ViewGroup
+import android.view.*
 import android.widget.ImageView
 import android.widget.TextView
 import android.widget.Toast
 import androidx.fragment.app.Fragment
+import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.sapuseven.untis.R
 import com.sapuseven.untis.activities.MainActivity
 import com.sapuseven.untis.helpers.drawables.DrawableLoader
@@ -27,14 +27,38 @@ class PeopleDetailsFragment(private val item: JSONObject) : Fragment() {
 		private const val API_URL: String = "https://www.iwi.hs-karlsruhe.de/hskampus-broker/api"
 	}
 
+	private var coordinates: String = ""
+
 	override fun onCreate(savedInstanceState: Bundle?) {
 		super.onCreate(savedInstanceState)
 		setHasOptionsMenu(true)
 	}
 
-	override fun onPrepareOptionsMenu(menu: Menu) {
-		super.onPrepareOptionsMenu(menu)
+	override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
+		super.onCreateOptionsMenu(menu, inflater)
 		menu.clear()
+		if (!item.isNull("room")) inflater.inflate(R.menu.fragment_people_details_menu, menu)
+	}
+
+	override fun onOptionsItemSelected(item: MenuItem): Boolean {
+		return if (item.itemId == R.id.maps) {
+			if (coordinates.isNotEmpty()) {
+				val mapIntent = Intent(
+					Intent.ACTION_VIEW, Uri.parse(
+						"geo:0,0?q=$coordinates"
+					)
+				)
+				mapIntent.setPackage("com.google.android.apps.maps")
+				startActivity(mapIntent)
+			} else {
+				MaterialAlertDialogBuilder(context)
+					.setTitle(R.string.people_details)
+					.setMessage(R.string.errors_failed_loading_from_server_message)
+					.setPositiveButton(R.string.all_ok) { _, _ -> }
+					.show()
+			}
+			true
+		} else false
 	}
 
 	override fun onCreateView(
@@ -105,6 +129,8 @@ class PeopleDetailsFragment(private val item: JSONObject) : Fragment() {
 												text = innerCurrentItem.optString("name") +
 														" " + currentItem.optString("name")
 											}
+											coordinates = innerCurrentItem
+												.optString("coordinatesCenter")
 											return
 										}
 									}

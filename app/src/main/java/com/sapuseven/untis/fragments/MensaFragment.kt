@@ -132,7 +132,7 @@ class MensaFragment : Fragment(), StringDisplay {
 	}
 
 	override fun onOptionsItemSelected(item: MenuItem): Boolean {
-		return if (item.title == resources.getString(R.string.mensa_meal_additives)) {
+		return if (item.itemId == R.id.nav_additives) {
 			loadAdditives()
 			true
 		} else false
