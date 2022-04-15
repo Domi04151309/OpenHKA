@@ -1,15 +1,21 @@
 Open HKA ist ein mobiler Open-Source-Client für das IWI HKA Stundenplansystem,
-womit Sie Ihren Stundenplan auf Ihrem Smartphone anzeigen können.
+womit Sie Ihren Stundenplan auf Ihrem Smartphone oder Tablet anzeigen können.
 
 Die App ermöglicht die Anpassung fast aller Aspekte Ihres Stundenplans,
-einschließlich mehrerer Themen und dunklem Modus.
+einschließlich mehrerer Themen und einem dunklem Modus.
 
 Fügen Sie einfach mehrere Profile mit separaten Einstellungen und Stundenplänen hinzu.
-
 Verwenden Sie Benachrichtigungen, um Informationen über die nächste Stunde anzuzeigen.
-
 Genießen Sie ein schnelles und reibungsloses Erlebnis mit Open HKA.
 
+Hauptmerkmale der App:
+- Anzeigen Ihres Stundenplans
+- Anzeigen von RSS-Feeds (News)
+- Anzeigen von Events im Zusammenhang mit der HKA
+- Suchen und Finden von Personen an der HKA
+- Einsicht in die Belegung von Lernplätzen
+- Einsehen der Mensa-Speisekarten
 
 Diese App ist spezialisiert auf die Hochschule Karlsruhe.
 Die Unterstützung für andere Stundenpläne kann nicht garantiert werden.
+Diese App ist Open-Source! Helfen Sie mit, sie zu verbessern!

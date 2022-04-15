@@ -1,15 +1,21 @@
-Open HKA is an open-source mobile client for the IWI HKA timetable system
-which allows you to view your timetable on your smartphone.
+Open HKA is an open-source mobile client for the IWI HKA timetable system,
+which allows you to view your timetable on your smartphone or tablet.
 
 The app allows customization of almost any aspect of your timetable,
-including multiple themes and dark mode.
+including multiple themes and a dark mode.
 
 Easily add multiple profiles with separate settings and timetables.
-
 Use Notifications to show information about the next lesson.
-
 Enjoy a fast and smooth experience with Open HKA.
 
+Main features of the app:
+- Viewing your timetable
+- Viewing RSS feeds (News)
+- Viewing events related to the HKA
+- Searching and finding people at HKA
+- Viewing the occupation of study places
+- Viewing the mensa menus
 
 This app is specialized for the Hochschule Karlsruhe.
 Support for other timetables can not be guaranteed.
+This app is open-source! Help improve it!

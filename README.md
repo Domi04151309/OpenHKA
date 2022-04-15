@@ -11,12 +11,21 @@ A mobile client for the IWI HKA system
 | <img src="https://raw.githubusercontent.com/Domi04151309/OpenHKA/main/fastlane/metadata/android/en-US/images/phoneScreenshots/1.jpg" alt="Screenshot" /> | <img src="https://raw.githubusercontent.com/Domi04151309/OpenHKA/main/fastlane/metadata/android/en-US/images/phoneScreenshots/2.jpg" alt="Screenshot" /> | <img src="https://raw.githubusercontent.com/Domi04151309/OpenHKA/main/fastlane/metadata/android/en-US/images/phoneScreenshots/3.jpg" alt="Screenshot" /> | <img src="https://raw.githubusercontent.com/Domi04151309/OpenHKA/main/fastlane/metadata/android/en-US/images/phoneScreenshots/4.jpg" alt="Screenshot" /> | <img src="https://raw.githubusercontent.com/Domi04151309/OpenHKA/main/fastlane/metadata/android/en-US/images/phoneScreenshots/5.jpg" alt="Screenshot" /> |
 | --- | --- | --- | --- | --- |
 
+## Inspiration
+The development of this app was inspired by the original HsKAmpus app.
+However, that app however had a significant problem with caching timetables, which made accessing up-to-date information hard for the users.
+This app uses a server-first approach for timetable loading to ensure up-to-date information.
+
 ## Development notes
 This app is based on [BetterUntis](https://github.com/SapuSeven/BetterUntis) by [SapuSeven](https://github.com/SapuSeven). Make sure to check out his project as well.
 
 ## Translating the app
 Before starting with the translation process, check out the [BetterUntis](https://github.com/SapuSeven/BetterUntis) source code to avoid redoing work that has already been done.
 Translations into other languages may already be available there.
+
+## Wear OS
+The wear module contains an experimental version for your Android wearables.
+Feel free to check out the module and give some feedback.
 
 ## Legal Notice
 Copyright (C) SapuSeven  
