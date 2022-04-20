@@ -11,11 +11,11 @@ Genießen Sie ein schnelles und reibungsloses Erlebnis mit Open HKA.
 Hauptmerkmale der App:
 - Anzeigen Ihres Stundenplans
 - Anzeigen von RSS-Feeds (News)
-- Anzeigen von Events im Zusammenhang mit der HKA
-- Suchen und Finden von Personen an der HKA
+- Anzeigen von Events im Zusammenhang mit der Hochschule Karlsruhe (HKA)
+- Suchen und Finden von Personen an der Hochschule Karlsruhe (HKA)
 - Einsicht in die Belegung von Lernplätzen
 - Einsehen der Mensa-Speisekarten
 
-Diese App ist spezialisiert auf die Hochschule Karlsruhe.
+Diese App ist spezialisiert auf die Hochschule Karlsruhe (HKA).
 Die Unterstützung für andere Stundenpläne kann nicht garantiert werden.
 Diese App ist Open-Source! Helfen Sie mit, sie zu verbessern!

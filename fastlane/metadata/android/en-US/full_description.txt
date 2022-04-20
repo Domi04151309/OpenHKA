@@ -11,11 +11,11 @@ Enjoy a fast and smooth experience with Open HKA.
 Main features of the app:
 - Viewing your timetable
 - Viewing RSS feeds (News)
-- Viewing events related to the HKA
-- Searching and finding people at HKA
+- Viewing events related to the Hochschule Karlsruhe (HKA)
+- Searching and finding people at Hochschule Karlsruhe (HKA)
 - Viewing the occupation of study places
 - Viewing the mensa menus
 
-This app is specialized for the Hochschule Karlsruhe.
+This app is specialized for the Hochschule Karlsruhe (HKA).
 Support for other timetables can not be guaranteed.
 This app is open-source! Help improve it!
