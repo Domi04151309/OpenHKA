@@ -12,6 +12,7 @@ import android.os.Build
 import android.os.Bundle
 import android.provider.Settings
 import android.view.MenuItem
+import androidx.appcompat.app.AlertDialog
 import androidx.core.content.pm.PackageInfoCompat
 import androidx.fragment.app.DialogFragment
 import androidx.fragment.app.FragmentTransaction
@@ -218,18 +219,27 @@ class SettingsActivity : BaseActivity(), PreferenceFragmentCompat.OnPreferenceSt
 						}
 					}
 					"preferences_info" -> {
-						findPreference<Preference>("preference_info_app_version")?.summary = let {
-							val pInfo = requireContext().packageManager.getPackageInfo(
-								requireContext().packageName,
-								0
-							)
-							requireContext().getString(
+						findPreference<Preference>("preference_info_app_version")?.apply {
+							val pInfo =
+								requireContext().packageManager.getPackageInfo(
+									requireContext().packageName,
+									0
+								)
+							summary = requireContext().getString(
 								R.string.preference_info_app_version_desc,
 								pInfo.versionName,
 								PackageInfoCompat.getLongVersionCode(pInfo)
 							)
+							setOnPreferenceClickListener {
+								startActivity(
+									Intent(
+										Intent.ACTION_VIEW,
+										Uri.parse("$REPOSITORY_URL_GITHUB/releases")
+									)
+								)
+								true
+							}
 						}
-
 						findPreference<Preference>("preference_info_github")?.apply {
 							summary = REPOSITORY_URL_GITHUB
 							setOnPreferenceClickListener {
@@ -242,25 +252,50 @@ class SettingsActivity : BaseActivity(), PreferenceFragmentCompat.OnPreferenceSt
 								true
 							}
 						}
+						findPreference<Preference>("preference_info_license")?.setOnPreferenceClickListener {
+							startActivity(
+								Intent(
+									Intent.ACTION_VIEW,
+									Uri.parse("$REPOSITORY_URL_GITHUB/blob/main/LICENSE")
+								)
+							)
+							true
+						}
 					}
 					"preferences_contributors" -> {
-						GlobalScope.launch(Dispatchers.Main) {
-							"https://api.github.com/repos/sapuseven/betteruntis/contributors"
-								.httpGet()
-								.awaitStringResult()
-								.fold({ original ->
-									"https://api.github.com/repos/domi04151309/openhka/contributors"
+						AlertDialog.Builder(requireContext())
+							.setTitle(R.string.preference_info_privacy)
+							.setMessage(R.string.preference_info_privacy_desc)
+							.setPositiveButton(android.R.string.ok) { _, _ ->
+								GlobalScope.launch(Dispatchers.Main) {
+									"https://api.github.com/repos/sapuseven/betteruntis/contributors"
 										.httpGet()
 										.awaitStringResult()
-										.fold({ data ->
-											showContributorList(true, original, data)
+										.fold({ original ->
+											"https://api.github.com/repos/domi04151309/openhka/contributors"
+												.httpGet()
+												.awaitStringResult()
+												.fold({ data ->
+													showContributorList(true, original, data)
+												}, {
+													showContributorList(false)
+												})
 										}, {
 											showContributorList(false)
 										})
-								}, {
-									showContributorList(false)
-								})
-						}
+								}
+							}
+							.setNegativeButton(android.R.string.cancel) { _, _ -> }
+							.setNeutralButton(R.string.preference_info_privacy_policy) { _, _ ->
+								startActivity(
+									Intent(
+										Intent.ACTION_VIEW, Uri.parse(
+											"https://docs.github.com/en/github/site-policy/github-privacy-statement"
+										)
+									)
+								)
+							}
+							.show()
 					}
 				}
 			}
