@@ -283,6 +283,10 @@ class MainActivity :
 				supportActionBar?.setTitle(R.string.activity_title_mensa)
 				setFragment(MensaFragment())
 			}
+			R.id.nav_links -> {
+				supportActionBar?.setTitle(R.string.activity_title_links)
+				setFragment(LinksFragment())
+			}
 			R.id.nav_settings -> {
 				val i = Intent(this, SettingsActivity::class.java)
 				i.putExtra(SettingsActivity.EXTRA_LONG_PROFILE_ID, profileId)

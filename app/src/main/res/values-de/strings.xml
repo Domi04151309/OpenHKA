@@ -3,6 +3,7 @@
     <string name="activity_title_errors">Fehler</string>
     <string name="activity_title_events">Termine</string>
     <string name="activity_title_info_center">Info-Center</string>
+    <string name="activity_title_links">Links</string>
     <string name="activity_title_locations">Orte</string>
     <string name="activity_title_mensa">Mensa</string>
     <string name="activity_title_people">Personen</string>
@@ -45,6 +46,13 @@
     <string name="link_input_rss_link">RSS Link</string>
     <string name="link_input_select">Link auswählen</string>
     <string name="link_input_skip">Links überspringen</string>
+    <string name="links_bw_sync_and_share">BW Sync&amp;Share</string>
+    <string name="links_hisinone">HISinOne</string>
+    <string name="links_ilias">Ilias</string>
+    <string name="links_lsf">LSF</string>
+    <string name="links_qis">QIS</string>
+    <string name="links_webmail">Webmail</string>
+    <string name="links_website">Website</string>
     <string name="loading">Wird geladen</string>
     <string name="loading_failed">Ladevorgang fehlgeschlagen</string>
     <string name="logindatainput_connecting">Verbindung wird hergestellt…</string>

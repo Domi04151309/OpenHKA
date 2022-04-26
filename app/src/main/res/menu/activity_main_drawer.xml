@@ -36,6 +36,11 @@
 			android:id="@+id/nav_mensa"
 			android:icon="@drawable/all_mensa"
 			android:title="@string/activity_title_mensa" />
+
+		<item
+			android:id="@+id/nav_links"
+			android:icon="@drawable/all_list"
+			android:title="@string/activity_title_links" />
 	</group>
 
 	<group android:checkableBehavior="none">
