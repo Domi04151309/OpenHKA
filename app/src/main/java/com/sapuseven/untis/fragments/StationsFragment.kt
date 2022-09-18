@@ -55,9 +55,9 @@ class StationsFragment : Fragment(), StringDisplay {
 		recyclerview.layoutManager = LinearLayoutManager(context)
 		recyclerview.adapter = stationAdapter
 		swiperefreshlayout.isRefreshing = stationsLoading
-		swiperefreshlayout.setOnRefreshListener { refreshLocations(StringLoader.FLAG_LOAD_SERVER) }
+		swiperefreshlayout.setOnRefreshListener { refreshStations(StringLoader.FLAG_LOAD_SERVER) }
 
-		refreshLocations(StringLoader.FLAG_LOAD_CACHE)
+		refreshStations(StringLoader.FLAG_LOAD_CACHE)
 
 		stationAdapter.onClickListener = View.OnClickListener {
 			val key = it.findViewById<TextView>(R.id.textview_itemmessage_subject).text.toString()
@@ -79,7 +79,7 @@ class StationsFragment : Fragment(), StringDisplay {
 		return root
 	}
 
-	private fun refreshLocations(flags: Int) {
+	private fun refreshStations(flags: Int) {
 		stationsLoading = true
 		stringLoader.load(flags)
 	}
