@@ -1,0 +1,84 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+	xmlns:app="http://schemas.android.com/apk/res-auto"
+	android:layout_width="match_parent"
+	android:layout_height="match_parent"
+	android:background="?android:attr/windowBackground">
+
+	<LinearLayout
+		android:layout_width="match_parent"
+		android:layout_height="wrap_content"
+		android:orientation="vertical"
+		android:clipToPadding="false">
+
+		<ImageView
+			android:layout_width="@dimen/size_login_icon"
+			android:layout_height="@dimen/size_login_icon"
+			android:layout_gravity="center"
+			android:layout_marginTop="24dp"
+			android:layout_marginBottom="24dp"
+			android:contentDescription="@null"
+			android:scaleType="centerCrop"
+			app:srcCompat="@drawable/all_station_color" />
+
+		<TextView
+			android:id="@+id/name"
+			android:layout_width="match_parent"
+			android:layout_height="wrap_content"
+			android:paddingHorizontal="24dp"
+			android:textAppearance="@style/TextAppearance.MaterialComponents.Subtitle1"
+			android:gravity="center"
+			android:textIsSelectable="false" />
+
+		<View
+			android:layout_width="match_parent"
+			android:layout_height="1dp"
+			android:layout_marginHorizontal="16dp"
+			android:layout_marginTop="24dp"
+			android:layout_marginBottom="12dp"
+			android:background="?android:attr/listDivider" />
+
+		<TextView
+			style="@style/DetailsListItemStyle"
+			android:id="@+id/tvStop"
+			android:layout_width="match_parent"
+			android:layout_height="wrap_content"
+			app:drawableStartCompat="@drawable/all_station"
+			android:textIsSelectable="true" />
+
+		<TextView
+			style="@style/DetailsListItemStyle"
+			android:layout_width="match_parent"
+			android:layout_height="wrap_content"
+			app:drawableStartCompat="@drawable/all_station"
+			android:textIsSelectable="true" />
+
+		<TextView
+			style="@style/DetailsListItemStyle"
+			android:layout_width="match_parent"
+			android:layout_height="wrap_content"
+			app:drawableStartCompat="@drawable/all_station"
+			android:textIsSelectable="true" />
+
+		<TextView
+			style="@style/DetailsListItemStyle"
+			android:layout_width="match_parent"
+			android:layout_height="wrap_content"
+			app:drawableStartCompat="@drawable/all_station"
+			android:textIsSelectable="true" />
+
+		<TextView
+			style="@style/DetailsListItemStyle"
+			android:layout_width="match_parent"
+			android:layout_height="wrap_content"
+			app:drawableStartCompat="@drawable/all_station"
+			android:textIsSelectable="true" />
+
+		<TextView
+			style="@style/DetailsListItemStyle"
+			android:layout_width="match_parent"
+			android:layout_height="wrap_content"
+			app:drawableStartCompat="@drawable/all_station"
+			android:textIsSelectable="true" />
+	</LinearLayout>
+</ScrollView>

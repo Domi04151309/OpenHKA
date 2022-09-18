@@ -96,6 +96,7 @@
 	</string-array>
 
 	<string name="stations_add">Add Stations</string>
+	<string name="stations_departure_summary">in %1$s minutes from platform %2$s</string>
 
 	<string name="preference_automute_cancelled_lessons">Also mute in cancelled lessons</string>
 	<string name="preference_automute_enable">Enable auto-mute</string>

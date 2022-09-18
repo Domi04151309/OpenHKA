@@ -7,7 +7,9 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
 import android.widget.Toast
+import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.FragmentTransaction
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
@@ -28,7 +30,7 @@ class StationsFragment : Fragment(), StringDisplay {
 	private val stationList = arrayListOf<ListItem>()
 	private val stationAdapter = MessageAdapter(stationList)
 	private var stationsLoading = true
-	private val keyMap: MutableMap<String, String> = mutableMapOf()
+	private val keyMap: MutableMap<String, JSONObject> = mutableMapOf()
 	private var requestCounter = 0
 	private lateinit var stringLoader: StringLoader
 	private lateinit var recyclerview: RecyclerView
@@ -40,6 +42,7 @@ class StationsFragment : Fragment(), StringDisplay {
 	companion object {
 		private const val API_URL: String =
 			"https://projekte.kvv-efa.de/sl3-alone/XSLT_DM_REQUEST?outputFormat=JSON&coordOutputFormat=WGS84[dd.ddddd]&depType=stopEvents&locationServerActive=1&mode=direct&type_dm=stop&useOnlyStops=1&useRealtime=1&name_dm="
+		private const val FRAGMENT_TAG_STATION: String = "com.sapuseven.untis.fragments.station"
 	}
 
 	override fun onCreateView(
@@ -65,9 +68,15 @@ class StationsFragment : Fragment(), StringDisplay {
 		refreshStations()
 
 		stationAdapter.onClickListener = View.OnClickListener {
-			val key = it.findViewById<TextView>(R.id.textview_itemmessage_subject).text.toString()
-			if (key.isNotEmpty()) {
-				//TODO: open details view
+			val fragment = StationDetailsFragment(
+				keyMap[it.findViewById<TextView>(R.id.textview_itemmessage_subject).text]
+					?: return@OnClickListener
+			)
+			(activity as AppCompatActivity).supportFragmentManager.beginTransaction().run {
+				setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN)
+				add(R.id.content_main, fragment, FRAGMENT_TAG_STATION)
+				addToBackStack(fragment.tag)
+				commit()
 			}
 		}
 
@@ -112,7 +121,7 @@ class StationsFragment : Fragment(), StringDisplay {
 			parsedDepartures[i] = (departures.getJSONObject(i).optJSONObject("servingLine") ?: JSONObject()).optString("number")
 		}
 		stationList.add(ListItem(title, parsedDepartures.joinToString(", ")))
-		keyMap[title] = stop.optString("stateless")
+		keyMap[title] = json
 
 		checkRequests()
 	}

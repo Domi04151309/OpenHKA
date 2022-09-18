@@ -123,7 +123,7 @@ class AddStationActivity : BaseActivity(), StringDisplay {
 			)
 			keyMap[currentItem.optString("object") + currentItem.optString("mainLoc")] =
 				refs.optString("coords").split(",").toMutableList().apply {
-					if (size < 2) return
+					if (size < 2) return@apply
 					val temp = this[1]
 					this[1] = this[0]
 					this[0] = temp
