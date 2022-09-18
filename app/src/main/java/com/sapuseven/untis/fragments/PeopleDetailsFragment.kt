@@ -161,7 +161,7 @@ class PeopleDetailsFragment(private val item: JSONObject) : Fragment() {
 
 	override fun onStart() {
 		super.onStart()
-		if (activity is MainActivity) (activity as MainActivity).setFullscreenDialogActionBar(R.string.people_details)
+		if (activity is MainActivity) (activity as MainActivity).setFullscreenDialogActionBar(R.string.all_details)
 	}
 
 	override fun onStop() {
