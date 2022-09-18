@@ -6,9 +6,13 @@ import android.os.Bundle
 import android.view.*
 import android.widget.TextView
 import androidx.fragment.app.Fragment
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.sapuseven.untis.R
 import com.sapuseven.untis.activities.MainActivity
+import com.sapuseven.untis.adapters.DepartureAdapter
+import com.sapuseven.untis.data.lists.DepartureListItem
 import org.json.JSONArray
 import org.json.JSONObject
 
@@ -70,17 +74,31 @@ class StationDetailsFragment(private val item: JSONObject) : Fragment() {
 			(((item.optJSONObject("dm") ?: JSONObject()).optJSONObject("points")
 				?: JSONObject()).optJSONObject("point") ?: JSONObject()).optString("name")
 
+
 		val departures = item.optJSONArray("departureList") ?: JSONArray()
-		val parsedDepartures = Array(departures.length()) { "" }
+		val parsedDepartures = ArrayList<DepartureListItem>(departures.length())
 		var currentItem: JSONObject
 		var currentLine: JSONObject
 		for (i in 0 until departures.length()) {
 			currentItem = departures.getJSONObject(i)
 			currentLine = (currentItem.optJSONObject("servingLine") ?: JSONObject())
-			parsedDepartures[i] = currentLine.optString("number") + " " + currentLine.optString("direction") + "\n" +
-					resources.getString(R.string.stations_departure_summary, currentItem.optString("countdown"), currentItem.optString("platform"))
+			parsedDepartures.add(
+				DepartureListItem(
+					currentLine.optString("direction"),
+					resources.getString(
+						R.string.stations_departure_summary,
+						currentItem.optString("countdown"),
+						currentItem.optString("platform")
+					),
+					currentLine.optString("number")
+				)
+			)
 		}
-		root.findViewById<TextView>(R.id.tvStop).text = parsedDepartures.joinToString("\n")
+
+		val recyclerview = root.findViewById<RecyclerView>(R.id.recyclerview)
+		recyclerview.isNestedScrollingEnabled = false
+		recyclerview.layoutManager = LinearLayoutManager(context)
+		recyclerview.adapter = DepartureAdapter(parsedDepartures)
 
 		return root
 	}

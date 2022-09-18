@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+	xmlns:app="http://schemas.android.com/apk/res-auto"
+	android:layout_width="match_parent"
+	android:layout_height="wrap_content"
+	android:orientation="horizontal"
+	android:layout_marginHorizontal="24dp"
+	android:layout_marginVertical="12dp">
+
+	<FrameLayout
+		android:layout_width="24dp"
+		android:layout_height="24dp"
+		android:layout_gravity="center_vertical"
+		android:layout_marginEnd="24dp">
+
+		<ImageView
+			android:layout_width="match_parent"
+			android:layout_height="match_parent"
+			app:srcCompat="@drawable/all_circle"
+			android:contentDescription="@null" />
+
+		<TextView
+			android:id="@+id/textview_itemmessage_line"
+			android:layout_width="wrap_content"
+			android:layout_height="wrap_content"
+			android:layout_gravity="center"
+			android:textAppearance="@style/TextAppearance.MaterialComponents.Body2"
+			android:textColor="@android:color/white"
+			android:textIsSelectable="false" />
+	</FrameLayout>
+
+	<LinearLayout
+		android:layout_width="match_parent"
+		android:layout_height="wrap_content"
+		android:layout_gravity="center_vertical"
+		android:orientation="vertical">
+
+		<TextView
+			android:id="@+id/textview_itemmessage_subject"
+			android:layout_width="match_parent"
+			android:layout_height="wrap_content"
+			android:textAppearance="@style/TextAppearance.MaterialComponents.Body2"
+			android:textColor="?android:attr/textColorPrimary"
+			android:textIsSelectable="false" />
+
+		<TextView
+			android:id="@+id/textview_itemmessage_body"
+			android:layout_width="match_parent"
+			android:layout_height="wrap_content"
+			android:textAppearance="@style/TextAppearance.MaterialComponents.Body2"
+			android:textColor="?android:attr/textColorSecondary"
+			android:textIsSelectable="false" />
+	</LinearLayout>
+</LinearLayout>
