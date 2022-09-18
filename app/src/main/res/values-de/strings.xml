@@ -28,6 +28,7 @@
     <string name="all_report">Melden</string>
     <string name="all_reset">Zurücksetzen</string>
     <string name="all_rooms">Räume</string>
+    <string name="all_search">Suchen</string>
     <string name="all_subjects">Fächer</string>
     <string name="all_success">erfolgreich</string>
     <string name="all_today">Heute</string>
@@ -95,7 +96,6 @@
     <string name="notifications_text_title">Pause bis %1$s</string>
     <string name="people_details">Details</string>
     <string name="people_locate">Finden</string>
-    <string name="people_search">Suchen</string>
     <string name="preferences_connectivity">Verbindungseinstellungen</string>
     <string name="preferences_general">Allgemein</string>
     <string name="preferences_infos">Informationen</string>

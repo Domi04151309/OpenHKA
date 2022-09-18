@@ -81,7 +81,7 @@
 	<string name="logindatainput_title_edit">Edit profile</string>
 
 	<string name="people_details">Details</string>
-	<string name="people_search">Search</string>
+	<string name="all_search">Search</string>
 	<string name="people_locate">Locate</string>
 
 	<string name="mensa_meal_summary">Additives: %1$s</string>
