@@ -52,7 +52,7 @@ class PeopleDetailsFragment(private val item: JSONObject) : Fragment() {
 				startActivity(mapIntent)
 			} else {
 				MaterialAlertDialogBuilder(context)
-					.setTitle(R.string.people_details)
+					.setTitle(R.string.all_details)
 					.setMessage(R.string.errors_failed_loading_from_server_message)
 					.setPositiveButton(R.string.all_ok) { _, _ -> }
 					.show()
