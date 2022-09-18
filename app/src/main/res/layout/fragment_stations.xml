@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.swiperefreshlayout.widget.SwipeRefreshLayout xmlns:android="http://schemas.android.com/apk/res/android"
+	xmlns:app="http://schemas.android.com/apk/res-auto"
+	android:id="@+id/swiperefreshlayout_infocenter"
+	android:layout_width="match_parent"
+	android:layout_height="match_parent">
+
+	<RelativeLayout
+		android:layout_width="match_parent"
+		android:layout_height="match_parent">
+
+		<androidx.recyclerview.widget.RecyclerView
+			android:id="@+id/recyclerview_infocenter"
+			android:layout_width="match_parent"
+			android:layout_height="match_parent" />
+
+		<com.google.android.material.floatingactionbutton.FloatingActionButton
+			android:id="@+id/button_stations_add"
+			style="@style/FabStyle"
+			android:layout_width="wrap_content"
+			android:layout_height="wrap_content"
+			android:layout_alignParentEnd="true"
+			android:layout_alignParentBottom="true"
+			android:contentDescription="@string/stations_add"
+			app:srcCompat="@drawable/all_add"
+			app:tint="@android:color/white" />
+	</RelativeLayout>
+</androidx.swiperefreshlayout.widget.SwipeRefreshLayout>

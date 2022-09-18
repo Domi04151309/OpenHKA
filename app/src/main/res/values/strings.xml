@@ -95,6 +95,8 @@
 		<item>Pupil</item>
 	</string-array>
 
+	<string name="stations_add">Add Stations</string>
+
 	<string name="preference_automute_cancelled_lessons">Also mute in cancelled lessons</string>
 	<string name="preference_automute_enable">Enable auto-mute</string>
 	<string name="preference_automute_enable_summary">Automatically turns on Do Not Disturb during lessons</string>
