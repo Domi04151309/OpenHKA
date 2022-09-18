@@ -63,8 +63,7 @@ class PeopleFragment : Fragment(), StringDisplay {
 		swiperefreshlayout.setOnRefreshListener { refreshEvents(StringLoader.FLAG_LOAD_SERVER) }
 
 		refreshEvents(StringLoader.FLAG_LOAD_CACHE)
-
-		//TODO: add onClick
+		
 		adapter.onClickListener = View.OnClickListener {
 			val fragment = PeopleDetailsFragment(
 				keyMap[it.findViewById<TextView>(R.id.textview_itemmessage_subject).text]
