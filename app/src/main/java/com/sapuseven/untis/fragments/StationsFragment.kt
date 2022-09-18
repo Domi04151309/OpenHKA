@@ -1,7 +1,6 @@
 package com.sapuseven.untis.fragments
 
 import android.content.Intent
-import android.net.Uri
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -24,17 +23,23 @@ import org.json.JSONObject
 import java.lang.ref.WeakReference
 
 
+//TODO: add offline support
 class StationsFragment : Fragment(), StringDisplay {
 	private val stationList = arrayListOf<ListItem>()
 	private val stationAdapter = MessageAdapter(stationList)
 	private var stationsLoading = true
-	private val keyMap: MutableMap<String, Pair<Double, Double>> = mutableMapOf()
+	private val keyMap: MutableMap<String, String> = mutableMapOf()
+	private var requestCounter = 0
 	private lateinit var stringLoader: StringLoader
 	private lateinit var recyclerview: RecyclerView
 	private lateinit var swiperefreshlayout: SwipeRefreshLayout
 
+	//TODO: dynamic favorites
+	private val favorites = arrayOf("7000037", "7001004")
+
 	companion object {
-		private const val API_URL: String = "https://www.iwi.hs-karlsruhe.de/iwii/REST"
+		private const val API_URL: String =
+			"https://projekte.kvv-efa.de/sl3-alone/XSLT_DM_REQUEST?outputFormat=JSON&coordOutputFormat=WGS84[dd.ddddd]&depType=stopEvents&locationServerActive=1&mode=direct&type_dm=stop&useOnlyStops=1&useRealtime=1&name_dm="
 	}
 
 	override fun onCreateView(
@@ -55,20 +60,14 @@ class StationsFragment : Fragment(), StringDisplay {
 		recyclerview.layoutManager = LinearLayoutManager(context)
 		recyclerview.adapter = stationAdapter
 		swiperefreshlayout.isRefreshing = stationsLoading
-		swiperefreshlayout.setOnRefreshListener { refreshStations(StringLoader.FLAG_LOAD_SERVER) }
+		swiperefreshlayout.setOnRefreshListener { refreshStations() }
 
-		refreshStations(StringLoader.FLAG_LOAD_CACHE)
+		refreshStations()
 
 		stationAdapter.onClickListener = View.OnClickListener {
 			val key = it.findViewById<TextView>(R.id.textview_itemmessage_subject).text.toString()
 			if (key.isNotEmpty()) {
-				val mapIntent = Intent(
-					Intent.ACTION_VIEW, Uri.parse(
-						"geo:0,0?q=${keyMap[key]?.first},${keyMap[key]?.second}"
-					)
-				)
-				mapIntent.setPackage("com.google.android.apps.maps")
-				startActivity(mapIntent)
+				//TODO: open details view
 			}
 		}
 
@@ -79,59 +78,52 @@ class StationsFragment : Fragment(), StringDisplay {
 		return root
 	}
 
-	private fun refreshStations(flags: Int) {
+	private fun refreshStations() {
+		stationList.clear()
 		stationsLoading = true
-		stringLoader.load(flags)
+		requestCounter = 0
+		for (station in favorites) {
+			StringLoader(
+				WeakReference(context),
+				this,
+				API_URL + station
+			).load(StringLoader.FLAG_LOAD_SERVER)
+		}
+	}
+
+	private fun checkRequests() {
+		if (requestCounter == favorites.size) {
+			stationAdapter.notifyDataSetChanged()
+			stationsLoading = false
+			swiperefreshlayout.isRefreshing = false
+		}
 	}
 
 	override fun onStringLoaded(string: String) {
-		stationList.clear()
-		val json = JSONArray(string)
-		var departments: JSONArray
-		var currentBuilding: JSONObject
-		var currentDepartment: String
-		for (i in 0 until json.length()) {
-			currentBuilding = json.getJSONObject(i)
-			departments = currentBuilding.optJSONArray("departments") ?: JSONArray()
-			if (departments.length() > 0) stationList.add(
-				ListItem(
-					"",
-					currentBuilding.optString("name")
-				)
-			)
-			for (j in 0 until departments.length()) {
-				currentDepartment = departments.getJSONObject(j).optString("name")
-				stationList.add(
-					ListItem(
-						currentDepartment,
-						""
-					)
-				)
-				keyMap[currentDepartment] = Pair(
-					currentBuilding.optDouble("latitude"),
-					currentBuilding.optDouble("longitude")
-				)
-			}
+		requestCounter++
+
+		val json = JSONObject(string)
+		val stop = (((json.optJSONObject("dm") ?: JSONObject()).optJSONObject("points")
+			?: JSONObject()).optJSONObject("point") ?: JSONObject())
+		val title = stop.optString("name")
+		val departures = json.optJSONArray("departureList") ?: JSONArray()
+		val parsedDepartures = Array(departures.length()) { "" }
+		for (i in 0 until departures.length()) {
+			parsedDepartures[i] = (departures.getJSONObject(i).optJSONObject("servingLine") ?: JSONObject()).optString("number")
 		}
-		stationAdapter.notifyDataSetChanged()
-		stationsLoading = false
-		swiperefreshlayout.isRefreshing = false
+		stationList.add(ListItem(title, parsedDepartures.joinToString(", ")))
+		keyMap[title] = stop.optString("stateless")
+
+		checkRequests()
 	}
 
 	override fun onStringLoadingError(code: Int) {
-		when (code) {
-			StringLoader.CODE_CACHE_MISSING -> stringLoader.repeat(
-				StringLoader.FLAG_LOAD_SERVER
-			)
-			else -> {
-				Toast.makeText(
-					context,
-					R.string.errors_failed_loading_from_server_message,
-					Toast.LENGTH_LONG
-				).show()
-				stationsLoading = false
-				swiperefreshlayout.isRefreshing = false
-			}
-		}
+		requestCounter++
+		Toast.makeText(
+			context,
+			R.string.errors_failed_loading_from_server_message,
+			Toast.LENGTH_LONG
+		).show()
+		checkRequests()
 	}
 }
