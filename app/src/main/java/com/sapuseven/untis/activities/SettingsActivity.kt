@@ -258,7 +258,7 @@ class SettingsActivity : BaseActivity(), PreferenceFragmentCompat.OnPreferenceSt
 						}
 					}
 					"preferences_contributors" -> {
-						AlertDialog.Builder(requireContext())
+						MaterialAlertDialogBuilder(requireContext())
 							.setTitle(R.string.preference_info_privacy)
 							.setMessage(R.string.preference_info_privacy_desc)
 							.setPositiveButton(android.R.string.ok) { _, _ ->
@@ -266,22 +266,18 @@ class SettingsActivity : BaseActivity(), PreferenceFragmentCompat.OnPreferenceSt
 									"https://api.github.com/repos/sapuseven/betteruntis/contributors"
 										.httpGet()
 										.awaitStringResult()
-										.fold({ original ->
-											"https://api.github.com/repos/domi04151309/openhka/contributors"
-												.httpGet()
-												.awaitStringResult()
-												.fold({ data ->
-													showContributorList(true, original, data)
-												}, {
-													showContributorList(false)
-												})
+										.fold({ data ->
+											showContributorList(true, data)
 										}, {
 											showContributorList(false)
 										})
 								}
 							}
-							.setNegativeButton(android.R.string.cancel) { _, _ -> }
+							.setNegativeButton(android.R.string.cancel) { _, _ ->
+								parentFragmentManager.popBackStackImmediate()
+							}
 							.setNeutralButton(R.string.preference_info_privacy_policy) { _, _ ->
+								parentFragmentManager.popBackStackImmediate()
 								startActivity(
 									Intent(
 										Intent.ACTION_VIEW, Uri.parse(
