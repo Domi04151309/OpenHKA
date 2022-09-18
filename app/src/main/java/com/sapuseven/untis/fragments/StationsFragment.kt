@@ -12,7 +12,9 @@ import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
+import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.sapuseven.untis.R
+import com.sapuseven.untis.activities.AddStationActivity
 import com.sapuseven.untis.adapters.MessageAdapter
 import com.sapuseven.untis.data.lists.ListItem
 import com.sapuseven.untis.helpers.strings.StringLoader
@@ -41,7 +43,7 @@ class StationsFragment : Fragment(), StringDisplay {
 		savedInstanceState: Bundle?
 	): View? {
 		val root = inflater.inflate(
-			R.layout.fragment_infocenter,
+			R.layout.fragment_stations,
 			container,
 			false
 		)
@@ -68,6 +70,10 @@ class StationsFragment : Fragment(), StringDisplay {
 				mapIntent.setPackage("com.google.android.apps.maps")
 				startActivity(mapIntent)
 			}
+		}
+
+		root.findViewById<FloatingActionButton>(R.id.button_stations_add).setOnClickListener {
+			startActivity(Intent(context, AddStationActivity::class.java))
 		}
 
 		return root
