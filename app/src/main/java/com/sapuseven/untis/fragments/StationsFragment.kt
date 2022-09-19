@@ -29,7 +29,6 @@ import java.lang.ref.WeakReference
 
 
 //TODO: add offline support
-//TODO: remove to favorites
 class StationsFragment : Fragment(), StringDisplay {
 	private val stationList = arrayListOf<ListItem>()
 	private val stationAdapter = MessageAdapter(stationList)
