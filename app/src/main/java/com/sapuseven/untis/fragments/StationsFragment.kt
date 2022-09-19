@@ -40,7 +40,7 @@ class StationsFragment : Fragment(), StringDisplay {
 	private val favorites = arrayOf("7000037", "7001004")
 
 	companion object {
-		private const val API_URL: String =
+		internal const val API_URL: String =
 			"https://projekte.kvv-efa.de/sl3-alone/XSLT_DM_REQUEST?outputFormat=JSON&coordOutputFormat=WGS84[dd.ddddd]&depType=stopEvents&locationServerActive=1&mode=direct&type_dm=stop&useOnlyStops=1&useRealtime=1&name_dm="
 		private const val FRAGMENT_TAG_STATION: String = "com.sapuseven.untis.fragments.station"
 	}
