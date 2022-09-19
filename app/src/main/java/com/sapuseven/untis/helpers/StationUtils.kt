@@ -7,7 +7,7 @@ object StationUtils {
 	fun getFavorites(preferences: PreferenceManager): MutableSet<String?> {
 		val immutableSet = preferences.defaultPrefs.getStringSet(
 			"preference_stations",
-			setOf("7007003", "7000037", "7001004")
+			setOf("7007003", "7000039", "7000037", "7001004")
 		) ?: setOf()
 		return mutableSetOf<String?>().apply {
 			addAll(immutableSet)
