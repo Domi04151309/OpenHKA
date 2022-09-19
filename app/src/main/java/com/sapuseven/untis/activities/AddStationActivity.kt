@@ -34,7 +34,7 @@ class AddStationActivity : BaseActivity(), StringDisplay {
 	companion object {
 		// The 0 is there to prevent auto stop selection by the API
 		private const val API_URL: String =
-			"https://www.kvv.de/tunnelEfaDirect.php?outputFormat=JSON&coordOutputFormat=WGS84[dd.ddddd]&action=XSLT_STOPFINDER_REQUEST&type_sf=any&name_sf=0"
+			"https://kvv.de/tunnelEfaDirect.php?outputFormat=JSON&coordOutputFormat=WGS84[dd.ddddd]&action=XSLT_STOPFINDER_REQUEST&type_sf=any&name_sf=0"
 	}
 
 	override fun onCreate(savedInstanceState: Bundle?) {
