@@ -3,6 +3,7 @@ package com.sapuseven.untis.activities
 import android.os.Bundle
 import android.view.Menu
 import android.view.View
+import android.widget.ImageView
 import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.widget.SearchView
@@ -10,8 +11,8 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 import com.sapuseven.untis.R
-import com.sapuseven.untis.adapters.MessageAdapter
-import com.sapuseven.untis.data.lists.ListItem
+import com.sapuseven.untis.adapters.ChecklistAdapter
+import com.sapuseven.untis.data.lists.ChecklistItem
 import com.sapuseven.untis.helpers.StationUtils
 import com.sapuseven.untis.helpers.strings.StringLoader
 import com.sapuseven.untis.interfaces.StringDisplay
@@ -22,9 +23,10 @@ import java.lang.ref.WeakReference
 import java.net.URLEncoder
 
 class AddStationActivity : BaseActivity(), StringDisplay {
-	private val list = arrayListOf<ListItem>()
-	private val adapter = MessageAdapter(list)
+	private val list = arrayListOf<ChecklistItem>()
+	private val adapter = ChecklistAdapter(list)
 	private val keyMap: MutableMap<String, String> = mutableMapOf()
+	private var favorites = mutableSetOf<String?>()
 	private lateinit var stringLoader: StringLoader
 	private lateinit var recyclerview: RecyclerView
 	private lateinit var swiperefreshlayout: SwipeRefreshLayout
@@ -46,6 +48,7 @@ class AddStationActivity : BaseActivity(), StringDisplay {
 		)
 		recyclerview = findViewById(R.id.recyclerview_infocenter)
 		swiperefreshlayout = findViewById(R.id.swiperefreshlayout_infocenter)
+		favorites = StationUtils.getFavorites(preferences)
 
 		recyclerview.layoutManager = LinearLayoutManager(this)
 		recyclerview.adapter = adapter
@@ -56,9 +59,18 @@ class AddStationActivity : BaseActivity(), StringDisplay {
 		adapter.onClickListener = View.OnClickListener {
 			val key = it.findViewById<TextView>(R.id.textview_itemmessage_subject).text.toString() +
 					it.findViewById<TextView>(R.id.textview_itemmessage_body).text.toString()
-			StationUtils.addFavorite(preferences, keyMap[key])
-			//TODO: update view
-			//TODO: highlight already added stops
+			val checked = if (favorites.contains(keyMap[key])) {
+				StationUtils.removeFavorite(preferences, keyMap[key])
+				favorites.remove(keyMap[key])
+				false
+			} else {
+				StationUtils.addFavorite(preferences, keyMap[key])
+				favorites.add(keyMap[key])
+				true
+			}
+			it.findViewById<ImageView>(R.id.textview_itemmessage_check).visibility =
+				if (checked) View.VISIBLE else View.GONE
+
 		}
 	}
 
@@ -98,13 +110,20 @@ class AddStationActivity : BaseActivity(), StringDisplay {
 				)
 		}
 		var currentItem: JSONObject
+		var id: String
 		for (i in 0 until min(json.length(), 20)) {
 			currentItem = json.optJSONObject(i)
 			if (currentItem.optString("anyType") != "stop") continue
+			id = currentItem.optString("stateless").run {
+				val delimiter = indexOf(':')
+				if (delimiter > -1) substring(0, delimiter)
+				else this
+			}
 			list.add(
-				ListItem(
+				ChecklistItem(
 					currentItem.optString("object"),
-					currentItem.optString("mainLoc")
+					currentItem.optString("mainLoc"),
+					favorites.contains(id)
 				)
 			)
 			keyMap[currentItem.optString("object") + currentItem.optString("mainLoc")] =
