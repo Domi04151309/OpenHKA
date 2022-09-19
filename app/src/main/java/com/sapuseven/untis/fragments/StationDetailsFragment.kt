@@ -3,6 +3,7 @@ package com.sapuseven.untis.fragments
 import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
+import android.text.format.DateFormat
 import android.view.*
 import android.widget.TextView
 import androidx.fragment.app.Fragment
@@ -15,7 +16,9 @@ import com.sapuseven.untis.adapters.DepartureAdapter
 import com.sapuseven.untis.data.lists.DepartureListItem
 import org.json.JSONArray
 import org.json.JSONObject
+import java.text.SimpleDateFormat
 
+//TODO: add option to refresh
 class StationDetailsFragment(private val item: JSONObject) : Fragment() {
 
 	override fun onCreate(savedInstanceState: Bundle?) {
@@ -74,6 +77,15 @@ class StationDetailsFragment(private val item: JSONObject) : Fragment() {
 			(((item.optJSONObject("dm") ?: JSONObject()).optJSONObject("points")
 				?: JSONObject()).optJSONObject("point") ?: JSONObject()).optString("name")
 
+		root.findViewById<TextView>(R.id.last_refresh).text = resources.getString(
+			R.string.main_last_refreshed,
+			DateFormat.getTimeFormat(context).format(
+				SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss").parse(
+					((item.optJSONArray("parameters")
+						?: JSONArray()).optJSONObject(4)).optString("value")
+				) ?: ""
+			)
+		)
 
 		val departures = item.optJSONArray("departureList") ?: JSONArray()
 		val parsedDepartures = ArrayList<DepartureListItem>(departures.length())
