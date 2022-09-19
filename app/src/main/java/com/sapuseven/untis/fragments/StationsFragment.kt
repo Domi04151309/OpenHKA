@@ -105,6 +105,7 @@ class StationsFragment : Fragment(), StringDisplay {
 
 	private fun checkRequests() {
 		if (requestCounter == favorites.size) {
+			stationList.sortBy { it.title }
 			stationAdapter.notifyDataSetChanged()
 			stationsLoading = false
 			swiperefreshlayout.isRefreshing = false
