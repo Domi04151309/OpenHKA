@@ -30,7 +30,6 @@ import java.util.*
 class EventFragment : Fragment(), StringDisplay {
 	private val eventList = arrayListOf<ListItem>()
 	private val eventAdapter = MessageAdapter(eventList)
-	private var eventsLoading = true
 	private val keyMap: MutableMap<String, Pair<Long, Long>> = mutableMapOf()
 	private lateinit var stringLoader: StringLoader
 	private lateinit var recyclerview: RecyclerView
@@ -58,7 +57,6 @@ class EventFragment : Fragment(), StringDisplay {
 
 		recyclerview.layoutManager = LinearLayoutManager(context)
 		recyclerview.adapter = eventAdapter
-		swiperefreshlayout.isRefreshing = eventsLoading
 		swiperefreshlayout.setOnRefreshListener { refreshEvents(StringLoader.FLAG_LOAD_SERVER) }
 
 		refreshEvents(StringLoader.FLAG_LOAD_CACHE)
@@ -79,7 +77,7 @@ class EventFragment : Fragment(), StringDisplay {
 	}
 
 	private fun refreshEvents(flags: Int) {
-		eventsLoading = true
+		swiperefreshlayout.isRefreshing = true
 		stringLoader.load(flags)
 	}
 
@@ -105,7 +103,6 @@ class EventFragment : Fragment(), StringDisplay {
 		}
 		eventList.addAll(treeMap.values)
 		eventAdapter.notifyDataSetChanged()
-		eventsLoading = false
 		swiperefreshlayout.isRefreshing = false
 	}
 
@@ -120,7 +117,6 @@ class EventFragment : Fragment(), StringDisplay {
 					R.string.errors_failed_loading_from_server_message,
 					Toast.LENGTH_LONG
 				).show()
-				eventsLoading = false
 				swiperefreshlayout.isRefreshing = false
 			}
 		}

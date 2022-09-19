@@ -26,7 +26,6 @@ class PeopleFragment : Fragment(), StringDisplay {
 	private val wholeList = arrayListOf<PeopleListItem>()
 	private val list = arrayListOf<PeopleListItem>()
 	private val adapter = PeopleAdapter(list)
-	private var loading = true
 	private val keyMap: MutableMap<String, JSONObject> = mutableMapOf()
 	private lateinit var stringLoader: StringLoader
 	private lateinit var recyclerview: RecyclerView
@@ -59,7 +58,6 @@ class PeopleFragment : Fragment(), StringDisplay {
 
 		recyclerview.layoutManager = LinearLayoutManager(context)
 		recyclerview.adapter = adapter
-		swiperefreshlayout.isRefreshing = loading
 		swiperefreshlayout.setOnRefreshListener { refreshEvents(StringLoader.FLAG_LOAD_SERVER) }
 
 		refreshEvents(StringLoader.FLAG_LOAD_CACHE)
@@ -103,7 +101,7 @@ class PeopleFragment : Fragment(), StringDisplay {
 
 
 	private fun refreshEvents(flags: Int) {
-		loading = true
+		swiperefreshlayout.isRefreshing = true
 		stringLoader.load(flags)
 	}
 
@@ -133,7 +131,6 @@ class PeopleFragment : Fragment(), StringDisplay {
 		wholeList.addAll(treeMap.values)
 		list.addAll(treeMap.values)
 		adapter.notifyDataSetChanged()
-		loading = false
 		swiperefreshlayout.isRefreshing = false
 	}
 
@@ -148,7 +145,6 @@ class PeopleFragment : Fragment(), StringDisplay {
 					R.string.errors_failed_loading_from_server_message,
 					Toast.LENGTH_LONG
 				).show()
-				loading = false
 				swiperefreshlayout.isRefreshing = false
 			}
 		}

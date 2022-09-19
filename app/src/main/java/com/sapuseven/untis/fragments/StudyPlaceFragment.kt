@@ -26,7 +26,6 @@ import java.lang.ref.WeakReference
 class StudyPlaceFragment : Fragment(), StringDisplay {
 	private val locationList = arrayListOf<StudyPlaceListItem>()
 	private val locationAdapter = StudyPlaceAdapter(locationList)
-	private var locationsLoading = true
 	private val keyMap: MutableMap<String, Pair<Double, Double>> = mutableMapOf()
 	private lateinit var stringLoader: StringLoader
 	private lateinit var recyclerview: RecyclerView
@@ -53,7 +52,6 @@ class StudyPlaceFragment : Fragment(), StringDisplay {
 
 		recyclerview.layoutManager = LinearLayoutManager(context)
 		recyclerview.adapter = locationAdapter
-		swiperefreshlayout.isRefreshing = locationsLoading
 		swiperefreshlayout.setOnRefreshListener { refreshLocations(StringLoader.FLAG_LOAD_SERVER) }
 
 		refreshLocations(StringLoader.FLAG_LOAD_CACHE)
@@ -75,7 +73,7 @@ class StudyPlaceFragment : Fragment(), StringDisplay {
 	}
 
 	private fun refreshLocations(flags: Int) {
-		locationsLoading = true
+		swiperefreshlayout.isRefreshing = true
 		stringLoader.load(flags)
 	}
 
@@ -118,7 +116,6 @@ class StudyPlaceFragment : Fragment(), StringDisplay {
 				array.sortBy { it.title }
 				locationList.addAll(array)
 				locationAdapter.notifyDataSetChanged()
-				locationsLoading = false
 				swiperefreshlayout.isRefreshing = false
 			}
 
@@ -146,7 +143,6 @@ class StudyPlaceFragment : Fragment(), StringDisplay {
 					.setMessage(R.string.errors_failed_loading_from_server_message)
 					.setPositiveButton(R.string.all_ok) { _, _ -> }
 					.show()
-				locationsLoading = false
 				swiperefreshlayout.isRefreshing = false
 			}
 		}

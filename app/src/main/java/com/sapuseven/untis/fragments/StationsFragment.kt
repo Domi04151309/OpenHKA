@@ -32,7 +32,6 @@ import java.lang.ref.WeakReference
 class StationsFragment : Fragment(), StringDisplay {
 	private val stationList = arrayListOf<ListItem>()
 	private val stationAdapter = MessageAdapter(stationList)
-	private var stationsLoading = true
 	private val keyMap: MutableMap<String, JSONObject> = mutableMapOf()
 	private var favorites = setOf<String?>()
 	private var requestCounter = 0
@@ -61,7 +60,6 @@ class StationsFragment : Fragment(), StringDisplay {
 
 		recyclerview.layoutManager = LinearLayoutManager(context)
 		recyclerview.adapter = stationAdapter
-		swiperefreshlayout.isRefreshing = stationsLoading
 		swiperefreshlayout.setOnRefreshListener { refreshStations() }
 
 		stationAdapter.onClickListener = View.OnClickListener {
@@ -91,7 +89,7 @@ class StationsFragment : Fragment(), StringDisplay {
 
 	private fun refreshStations() {
 		stationList.clear()
-		stationsLoading = true
+		swiperefreshlayout.isRefreshing = true
 		requestCounter = 0
 		favorites = StationUtils.getFavorites((activity as BaseActivity).preferences)
 		for (station in favorites) {
@@ -107,7 +105,6 @@ class StationsFragment : Fragment(), StringDisplay {
 		if (requestCounter == favorites.size) {
 			stationList.sortBy { it.title }
 			stationAdapter.notifyDataSetChanged()
-			stationsLoading = false
 			swiperefreshlayout.isRefreshing = false
 		}
 	}

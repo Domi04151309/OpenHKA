@@ -30,7 +30,6 @@ import java.util.*
 class MensaFragment : Fragment(), StringDisplay {
 	private val menu = arrayListOf<MensaListItem>()
 	private val menuAdapter = MensaListAdapter(menu)
-	private var menuLoading = true
 	private var dateOffset = 0
 	private val idMap: MutableMap<String, Int> = mutableMapOf()
 	private val pricingMap: MutableMap<String, MensaPricing> = mutableMapOf()
@@ -120,7 +119,6 @@ class MensaFragment : Fragment(), StringDisplay {
 
 		recyclerview.layoutManager = LinearLayoutManager(context)
 		recyclerview.adapter = menuAdapter
-		swiperefreshlayout.isRefreshing = menuLoading
 		swiperefreshlayout.setOnRefreshListener { refreshMenu(StringLoader.FLAG_LOAD_SERVER) }
 
 		return root
@@ -223,7 +221,7 @@ class MensaFragment : Fragment(), StringDisplay {
 	}
 
 	private fun refreshMenu(flags: Int) {
-		menuLoading = true
+		swiperefreshlayout.isRefreshing = true
 		stringLoader.load(flags)
 	}
 
@@ -280,7 +278,6 @@ class MensaFragment : Fragment(), StringDisplay {
 			}
 		}
 		menuAdapter.notifyDataSetChanged()
-		menuLoading = false
 		swiperefreshlayout.isRefreshing = false
 	}
 
@@ -297,7 +294,6 @@ class MensaFragment : Fragment(), StringDisplay {
 				).show()
 				menu.clear()
 				menuAdapter.notifyDataSetChanged()
-				menuLoading = false
 				swiperefreshlayout.isRefreshing = false
 			}
 		}

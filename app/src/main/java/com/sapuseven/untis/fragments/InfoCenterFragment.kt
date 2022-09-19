@@ -24,7 +24,6 @@ import java.nio.charset.StandardCharsets
 class InfoCenterFragment : Fragment() {
 	private val messageList = arrayListOf<Article>()
 	private val messageAdapter = RSSAdapter(messageList)
-	private var messagesLoading = true
 	private var link: LinkDatabase.Link? = null
 	private lateinit var recyclerview: RecyclerView
 	private lateinit var swiperefreshlayout: SwipeRefreshLayout
@@ -65,14 +64,13 @@ class InfoCenterFragment : Fragment() {
 
 		recyclerview.layoutManager = LinearLayoutManager(context)
 		recyclerview.adapter = messageAdapter
-		swiperefreshlayout.isRefreshing = messagesLoading
 		swiperefreshlayout.setOnRefreshListener { link?.let { refreshMessages(it) } }
 
 		return root
 	}
 
 	private fun refreshMessages(link: LinkDatabase.Link) = GlobalScope.launch(Dispatchers.Main) {
-		messagesLoading = true
+		swiperefreshlayout.isRefreshing = true
 		loadMessages(requireContext(), link)?.let {
 			messageList.clear()
 			messageList.addAll(it)
@@ -86,7 +84,6 @@ class InfoCenterFragment : Fragment() {
 					.apply()
 			}
 		}
-		messagesLoading = false
 		swiperefreshlayout.isRefreshing = false
 	}
 }

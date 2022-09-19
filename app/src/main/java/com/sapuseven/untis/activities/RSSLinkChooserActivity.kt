@@ -22,7 +22,6 @@ class RSSLinkChooserActivity : BaseActivity(), StringDisplay {
 
 	private val linkList = arrayListOf<ListItem>()
 	private val linkAdapter = MessageAdapter(linkList)
-	private var linksLoading = true
 	private val keyMap: MutableMap<String, String> = mutableMapOf()
 	private lateinit var stringLoader: StringLoader
 	private lateinit var recyclerview: RecyclerView
@@ -43,7 +42,6 @@ class RSSLinkChooserActivity : BaseActivity(), StringDisplay {
 
 		recyclerview.layoutManager = LinearLayoutManager(this)
 		recyclerview.adapter = linkAdapter
-		swiperefreshlayout.isRefreshing = linksLoading
 		swiperefreshlayout.setOnRefreshListener { refreshEvents(StringLoader.FLAG_LOAD_SERVER) }
 
 		refreshEvents(StringLoader.FLAG_LOAD_CACHE)
@@ -58,7 +56,7 @@ class RSSLinkChooserActivity : BaseActivity(), StringDisplay {
 	}
 
 	private fun refreshEvents(flags: Int) {
-		linksLoading = true
+		swiperefreshlayout.isRefreshing = true
 		stringLoader.load(flags)
 	}
 
@@ -81,7 +79,6 @@ class RSSLinkChooserActivity : BaseActivity(), StringDisplay {
 			}
 		}
 		linkAdapter.notifyDataSetChanged()
-		linksLoading = false
 		swiperefreshlayout.isRefreshing = false
 	}
 
@@ -96,7 +93,6 @@ class RSSLinkChooserActivity : BaseActivity(), StringDisplay {
 					R.string.errors_failed_loading_from_server_message,
 					Toast.LENGTH_LONG
 				).show()
-				linksLoading = false
 				swiperefreshlayout.isRefreshing = false
 			}
 		}

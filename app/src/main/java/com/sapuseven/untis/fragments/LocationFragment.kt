@@ -25,7 +25,6 @@ import java.lang.ref.WeakReference
 class LocationFragment : Fragment(), StringDisplay {
 	private val locationList = arrayListOf<ListItem>()
 	private val locationAdapter = MessageAdapter(locationList)
-	private var locationsLoading = true
 	private val keyMap: MutableMap<String, Pair<Double, Double>> = mutableMapOf()
 	private lateinit var stringLoader: StringLoader
 	private lateinit var recyclerview: RecyclerView
@@ -52,7 +51,6 @@ class LocationFragment : Fragment(), StringDisplay {
 
 		recyclerview.layoutManager = LinearLayoutManager(context)
 		recyclerview.adapter = locationAdapter
-		swiperefreshlayout.isRefreshing = locationsLoading
 		swiperefreshlayout.setOnRefreshListener { refreshLocations(StringLoader.FLAG_LOAD_SERVER) }
 
 		refreshLocations(StringLoader.FLAG_LOAD_CACHE)
@@ -74,7 +72,7 @@ class LocationFragment : Fragment(), StringDisplay {
 	}
 
 	private fun refreshLocations(flags: Int) {
-		locationsLoading = true
+		swiperefreshlayout.isRefreshing = true
 		stringLoader.load(flags)
 	}
 
@@ -108,7 +106,6 @@ class LocationFragment : Fragment(), StringDisplay {
 			}
 		}
 		locationAdapter.notifyDataSetChanged()
-		locationsLoading = false
 		swiperefreshlayout.isRefreshing = false
 	}
 
@@ -123,7 +120,6 @@ class LocationFragment : Fragment(), StringDisplay {
 					R.string.errors_failed_loading_from_server_message,
 					Toast.LENGTH_LONG
 				).show()
-				locationsLoading = false
 				swiperefreshlayout.isRefreshing = false
 			}
 		}
