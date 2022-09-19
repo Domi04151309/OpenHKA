@@ -1,7 +1,5 @@
 package com.sapuseven.untis.activities
 
-import android.content.Intent
-import android.net.Uri
 import android.os.Bundle
 import android.view.Menu
 import android.view.View
@@ -14,6 +12,7 @@ import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 import com.sapuseven.untis.R
 import com.sapuseven.untis.adapters.MessageAdapter
 import com.sapuseven.untis.data.lists.ListItem
+import com.sapuseven.untis.helpers.StationUtils
 import com.sapuseven.untis.helpers.strings.StringLoader
 import com.sapuseven.untis.interfaces.StringDisplay
 import org.json.JSONArray
@@ -25,7 +24,6 @@ import java.net.URLEncoder
 class AddStationActivity : BaseActivity(), StringDisplay {
 	private val list = arrayListOf<ListItem>()
 	private val adapter = MessageAdapter(list)
-	private var stationsLoading = true
 	private val keyMap: MutableMap<String, String> = mutableMapOf()
 	private lateinit var stringLoader: StringLoader
 	private lateinit var recyclerview: RecyclerView
@@ -51,7 +49,6 @@ class AddStationActivity : BaseActivity(), StringDisplay {
 
 		recyclerview.layoutManager = LinearLayoutManager(this)
 		recyclerview.adapter = adapter
-		swiperefreshlayout.isRefreshing = stationsLoading
 		swiperefreshlayout.setOnRefreshListener { refreshStations(StringLoader.FLAG_LOAD_SERVER) }
 
 		refreshStations(StringLoader.FLAG_LOAD_CACHE)
@@ -59,15 +56,9 @@ class AddStationActivity : BaseActivity(), StringDisplay {
 		adapter.onClickListener = View.OnClickListener {
 			val key = it.findViewById<TextView>(R.id.textview_itemmessage_subject).text.toString() +
 					it.findViewById<TextView>(R.id.textview_itemmessage_body).text.toString()
-			if (key.isNotEmpty()) {
-				val mapIntent = Intent(
-					Intent.ACTION_VIEW, Uri.parse(
-						"geo:0,0?q=${keyMap[key]}"
-					)
-				)
-				mapIntent.setPackage("com.google.android.apps.maps")
-				startActivity(mapIntent)
-			}
+			StationUtils.addFavorite(preferences, keyMap[key])
+			//TODO: update view
+			//TODO: highlight already added stops
 		}
 	}
 
@@ -86,8 +77,6 @@ class AddStationActivity : BaseActivity(), StringDisplay {
 						this@AddStationActivity,
 						API_URL + URLEncoder.encode(newText, "UTF-8")
 					)
-					stationsLoading = true
-					swiperefreshlayout.isRefreshing = true
 					refreshStations(StringLoader.FLAG_LOAD_SERVER)
 					return true
 				}
@@ -96,7 +85,7 @@ class AddStationActivity : BaseActivity(), StringDisplay {
 	}
 
 	private fun refreshStations(flags: Int) {
-		stationsLoading = true
+		swiperefreshlayout.isRefreshing = true
 		stringLoader.load(flags)
 	}
 
@@ -109,12 +98,9 @@ class AddStationActivity : BaseActivity(), StringDisplay {
 				)
 		}
 		var currentItem: JSONObject
-		var refs: JSONObject
 		for (i in 0 until min(json.length(), 20)) {
 			currentItem = json.optJSONObject(i)
 			if (currentItem.optString("anyType") != "stop") continue
-
-			refs = (currentItem.optJSONObject("ref") ?: JSONObject())
 			list.add(
 				ListItem(
 					currentItem.optString("object"),
@@ -122,15 +108,13 @@ class AddStationActivity : BaseActivity(), StringDisplay {
 				)
 			)
 			keyMap[currentItem.optString("object") + currentItem.optString("mainLoc")] =
-				refs.optString("coords").split(",").toMutableList().apply {
-					if (size < 2) return@apply
-					val temp = this[1]
-					this[1] = this[0]
-					this[0] = temp
-				}.joinToString(",")
+				currentItem.optString("stateless").run {
+					val delimiter = indexOf(':')
+					if (delimiter > -1) substring(0, delimiter)
+					else this
+				}
 		}
 		adapter.notifyDataSetChanged()
-		stationsLoading = false
 		swiperefreshlayout.isRefreshing = false
 	}
 
@@ -145,7 +129,6 @@ class AddStationActivity : BaseActivity(), StringDisplay {
 					R.string.errors_failed_loading_from_server_message,
 					Toast.LENGTH_LONG
 				).show()
-				stationsLoading = false
 				swiperefreshlayout.isRefreshing = false
 			}
 		}
