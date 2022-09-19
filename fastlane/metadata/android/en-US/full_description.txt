@@ -15,6 +15,7 @@ Main features of the app:
 - Searching and finding people at Hochschule Karlsruhe (HKA)
 - Viewing the occupation of study places
 - Viewing the mensa menus
+- Viewing public transport data
 
 This app is specialized for the Hochschule Karlsruhe (HKA).
 Support for other timetables can not be guaranteed.
