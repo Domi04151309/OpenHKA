@@ -6,20 +6,26 @@ import android.os.Bundle
 import android.text.format.DateFormat
 import android.view.*
 import android.widget.TextView
+import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.sapuseven.untis.R
 import com.sapuseven.untis.activities.MainActivity
 import com.sapuseven.untis.adapters.DepartureAdapter
 import com.sapuseven.untis.data.lists.DepartureListItem
+import com.sapuseven.untis.helpers.strings.StringLoader
+import com.sapuseven.untis.interfaces.StringDisplay
 import org.json.JSONArray
 import org.json.JSONObject
+import java.lang.ref.WeakReference
 import java.text.SimpleDateFormat
 
-//TODO: add option to refresh
-class StationDetailsFragment(private val item: JSONObject) : Fragment() {
+class StationDetailsFragment(private var item: JSONObject) : Fragment() {
+
+	private lateinit var swiperefreshlayout: SwipeRefreshLayout
 
 	override fun onCreate(savedInstanceState: Bundle?) {
 		super.onCreate(savedInstanceState)
@@ -73,6 +79,35 @@ class StationDetailsFragment(private val item: JSONObject) : Fragment() {
 			false
 		)
 
+		swiperefreshlayout = root.findViewById(R.id.swiperefreshlayout_infocenter)
+		swiperefreshlayout.setOnRefreshListener {
+			StringLoader(
+				WeakReference(context),
+				object : StringDisplay {
+					override fun onStringLoaded(string: String) {
+						item = JSONObject(string)
+						refreshView(root)
+					}
+					override fun onStringLoadingError(code: Int) {
+						Toast.makeText(
+							context,
+							R.string.errors_failed_loading_from_server_message,
+							Toast.LENGTH_LONG
+						).show()
+						swiperefreshlayout.isRefreshing = false
+					}
+				}, StationsFragment.API_URL + (((item.optJSONObject("dm")
+					?: JSONObject()).optJSONObject("points")
+					?: JSONObject()).optJSONObject("point")
+					?: JSONObject()).optString("stateless")
+			).load(StringLoader.FLAG_LOAD_SERVER)
+		}
+		refreshView(root)
+
+		return root
+	}
+
+	private fun refreshView(root: View) {
 		root.findViewById<TextView>(R.id.name).text =
 			(((item.optJSONObject("dm") ?: JSONObject()).optJSONObject("points")
 				?: JSONObject()).optJSONObject("point") ?: JSONObject()).optString("name")
@@ -111,8 +146,7 @@ class StationDetailsFragment(private val item: JSONObject) : Fragment() {
 		recyclerview.isNestedScrollingEnabled = false
 		recyclerview.layoutManager = LinearLayoutManager(context)
 		recyclerview.adapter = DepartureAdapter(parsedDepartures)
-
-		return root
+		swiperefreshlayout.isRefreshing = false
 	}
 
 	override fun onStart() {
