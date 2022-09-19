@@ -5,4 +5,8 @@
 		android:title="@string/people_locate"
 		android:icon="@drawable/all_location"
 		app:showAsAction="ifRoom" />
+	<item android:id="@+id/fav"
+		android:title="@string/stations_remove_favorite"
+		android:icon="@drawable/all_remove"
+		app:showAsAction="ifRoom" />
 </menu>

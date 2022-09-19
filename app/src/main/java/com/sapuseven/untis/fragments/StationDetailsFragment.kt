@@ -13,9 +13,11 @@ import androidx.recyclerview.widget.RecyclerView
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.sapuseven.untis.R
+import com.sapuseven.untis.activities.BaseActivity
 import com.sapuseven.untis.activities.MainActivity
 import com.sapuseven.untis.adapters.DepartureAdapter
 import com.sapuseven.untis.data.lists.DepartureListItem
+import com.sapuseven.untis.helpers.StationUtils
 import com.sapuseven.untis.helpers.strings.StringLoader
 import com.sapuseven.untis.interfaces.StringDisplay
 import org.json.JSONArray
@@ -39,33 +41,55 @@ class StationDetailsFragment(private var item: JSONObject) : Fragment() {
 	}
 
 	override fun onOptionsItemSelected(item: MenuItem): Boolean {
-		return if (item.itemId == R.id.maps) {
-			val coordinates =
-				((((this.item.optJSONObject("dm") ?: JSONObject()).optJSONObject("points")
-					?: JSONObject()).optJSONObject("point") ?: JSONObject()).optJSONObject("ref")
-					?: JSONObject()).optString("coords").split(",").toMutableList().apply {
-					if (size < 2) return@apply
-					val temp = this[1]
-					this[1] = this[0]
-					this[0] = temp
-				}.joinToString(",")
-			if (coordinates.isNotEmpty()) {
-				val mapIntent = Intent(
-					Intent.ACTION_VIEW, Uri.parse(
-						"geo:0,0?q=$coordinates"
+		val point = (((this.item.optJSONObject("dm") ?: JSONObject()).optJSONObject("points")
+			?: JSONObject()).optJSONObject("point") ?: JSONObject())
+		return when (item.itemId) {
+			R.id.maps -> {
+				val coordinates =
+					(point.optJSONObject("ref") ?: JSONObject()).optString("coords")
+						.split(",").toMutableList().apply {
+							if (size < 2) return@apply
+							val temp = this[1]
+							this[1] = this[0]
+							this[0] = temp
+						}.joinToString(",")
+				if (coordinates.isNotEmpty()) {
+					val mapIntent = Intent(
+						Intent.ACTION_VIEW, Uri.parse(
+							"geo:0,0?q=$coordinates"
+						)
 					)
-				)
-				mapIntent.setPackage("com.google.android.apps.maps")
-				startActivity(mapIntent)
-			} else {
-				MaterialAlertDialogBuilder(context)
-					.setTitle(R.string.all_details)
-					.setMessage(R.string.errors_failed_loading_from_server_message)
-					.setPositiveButton(R.string.all_ok) { _, _ -> }
-					.show()
+					mapIntent.setPackage("com.google.android.apps.maps")
+					startActivity(mapIntent)
+				} else {
+					MaterialAlertDialogBuilder(context)
+						.setTitle(R.string.all_details)
+						.setMessage(R.string.errors_failed_loading_from_server_message)
+						.setPositiveButton(R.string.all_ok) { _, _ -> }
+						.show()
+				}
+				true
 			}
-			true
-		} else false
+			R.id.fav -> {
+				MaterialAlertDialogBuilder(context)
+					.setTitle(R.string.stations_remove_favorite)
+					.setMessage(R.string.stations_remove_favorite_summary)
+					.setPositiveButton(R.string.stations_remove_favorite_button) { _, _ ->
+						StationUtils.removeFavorite(
+							(activity as BaseActivity).preferences,
+							point.optString("stateless").run {
+								val delimiter = indexOf(':')
+								if (delimiter > -1) substring(0, delimiter)
+								else this
+							})
+						parentFragmentManager.popBackStackImmediate()
+					}
+					.setNegativeButton(R.string.all_cancel) { _, _ -> }
+					.show()
+				true
+			}
+			else -> false
+		}
 	}
 
 	override fun onCreateView(
@@ -88,6 +112,7 @@ class StationDetailsFragment(private var item: JSONObject) : Fragment() {
 						item = JSONObject(string)
 						refreshView(root)
 					}
+
 					override fun onStringLoadingError(code: Int) {
 						Toast.makeText(
 							context,

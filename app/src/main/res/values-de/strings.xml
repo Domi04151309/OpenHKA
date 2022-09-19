@@ -200,6 +200,9 @@
     <string name="preference_week_snap_to_days_summary">statt wochenweise</string>
     <string name="stations_add">Haltestellen hinzufügen</string>
     <string name="stations_departure_summary">in %1$s Minuten von Gleis %2$s</string>
+    <string name="stations_remove_favorite">Haltestelle entfernen</string>
+    <string name="stations_remove_favorite_button">Entfernen</string>
+    <string name="stations_remove_favorite_summary">Möchtest du diese Haltestelle aus deinen Favoriten entfernen?</string>
     <string name="study_places_occupation">%1$d / %2$d belegt</string>
     <string name="study_places_occupation_unknown">Belegung unbekannt</string>
     <string name="widget_configuration">Widget-Konfiguration</string>

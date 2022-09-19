@@ -97,6 +97,9 @@
 
 	<string name="stations_add">Add Stations</string>
 	<string name="stations_departure_summary">in %1$s minutes from platform %2$s</string>
+	<string name="stations_remove_favorite">Remove favorite</string>
+	<string name="stations_remove_favorite_summary">Do you want to remove this station from your favorites?</string>
+	<string name="stations_remove_favorite_button">Remove</string>
 
 	<string name="preference_automute_cancelled_lessons">Also mute in cancelled lessons</string>
 	<string name="preference_automute_enable">Enable auto-mute</string>
