@@ -16,8 +16,10 @@ import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.sapuseven.untis.R
 import com.sapuseven.untis.activities.AddStationActivity
+import com.sapuseven.untis.activities.BaseActivity
 import com.sapuseven.untis.adapters.MessageAdapter
 import com.sapuseven.untis.data.lists.ListItem
+import com.sapuseven.untis.helpers.StationUtils
 import com.sapuseven.untis.helpers.strings.StringLoader
 import com.sapuseven.untis.interfaces.StringDisplay
 import org.json.JSONArray
@@ -27,17 +29,16 @@ import java.lang.ref.WeakReference
 
 
 //TODO: add offline support
+//TODO: remove to favorites
 class StationsFragment : Fragment(), StringDisplay {
 	private val stationList = arrayListOf<ListItem>()
 	private val stationAdapter = MessageAdapter(stationList)
 	private var stationsLoading = true
 	private val keyMap: MutableMap<String, JSONObject> = mutableMapOf()
+	private var favorites = setOf<String?>()
 	private var requestCounter = 0
 	private lateinit var recyclerview: RecyclerView
 	private lateinit var swiperefreshlayout: SwipeRefreshLayout
-
-	//TODO: dynamic favorites
-	private val favorites = arrayOf("7000037", "7001004")
 
 	companion object {
 		internal const val API_URL: String =
@@ -64,8 +65,6 @@ class StationsFragment : Fragment(), StringDisplay {
 		swiperefreshlayout.isRefreshing = stationsLoading
 		swiperefreshlayout.setOnRefreshListener { refreshStations() }
 
-		refreshStations()
-
 		stationAdapter.onClickListener = View.OnClickListener {
 			val fragment = StationDetailsFragment(
 				keyMap[it.findViewById<TextView>(R.id.textview_itemmessage_subject).text]
@@ -86,10 +85,16 @@ class StationsFragment : Fragment(), StringDisplay {
 		return root
 	}
 
+	override fun onStart() {
+		super.onStart()
+		refreshStations()
+	}
+
 	private fun refreshStations() {
 		stationList.clear()
 		stationsLoading = true
 		requestCounter = 0
+		favorites = StationUtils.getFavorites((activity as BaseActivity).preferences)
 		for (station in favorites) {
 			StringLoader(
 				WeakReference(context),
@@ -117,7 +122,8 @@ class StationsFragment : Fragment(), StringDisplay {
 		val departures = json.optJSONArray("departureList") ?: JSONArray()
 		val parsedDepartures = Array(min(departures.length(), 10)) { "" }
 		for (i in parsedDepartures.indices) {
-			parsedDepartures[i] = (departures.getJSONObject(i).optJSONObject("servingLine") ?: JSONObject()).optString("number")
+			parsedDepartures[i] = (departures.getJSONObject(i).optJSONObject("servingLine")
+				?: JSONObject()).optString("number")
 		}
 		stationList.add(ListItem(title, parsedDepartures.joinToString(", ")))
 		keyMap[title] = json
