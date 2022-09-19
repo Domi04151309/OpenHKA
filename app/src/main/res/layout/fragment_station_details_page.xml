@@ -25,8 +25,15 @@
 			android:id="@+id/name"
 			android:layout_width="match_parent"
 			android:layout_height="wrap_content"
-			android:paddingHorizontal="24dp"
 			android:textAppearance="@style/TextAppearance.MaterialComponents.Subtitle1"
+			android:gravity="center"
+			android:textIsSelectable="false" />
+
+		<TextView
+			android:id="@+id/last_refresh"
+			android:layout_width="match_parent"
+			android:layout_height="wrap_content"
+			android:textAppearance="@style/TextAppearance.MaterialComponents.Caption"
 			android:gravity="center"
 			android:textIsSelectable="false" />
 

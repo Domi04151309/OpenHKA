@@ -22,6 +22,7 @@ import com.sapuseven.untis.helpers.strings.StringLoader
 import com.sapuseven.untis.interfaces.StringDisplay
 import org.json.JSONArray
 import org.json.JSONObject
+import java.lang.Integer.min
 import java.lang.ref.WeakReference
 
 
@@ -32,7 +33,6 @@ class StationsFragment : Fragment(), StringDisplay {
 	private var stationsLoading = true
 	private val keyMap: MutableMap<String, JSONObject> = mutableMapOf()
 	private var requestCounter = 0
-	private lateinit var stringLoader: StringLoader
 	private lateinit var recyclerview: RecyclerView
 	private lateinit var swiperefreshlayout: SwipeRefreshLayout
 
@@ -56,7 +56,6 @@ class StationsFragment : Fragment(), StringDisplay {
 			false
 		)
 
-		stringLoader = StringLoader(WeakReference(context), this, "${API_URL}/buildings/v2/all")
 		recyclerview = root.findViewById(R.id.recyclerview_infocenter)
 		swiperefreshlayout = root.findViewById(R.id.swiperefreshlayout_infocenter)
 
@@ -116,8 +115,8 @@ class StationsFragment : Fragment(), StringDisplay {
 			?: JSONObject()).optJSONObject("point") ?: JSONObject())
 		val title = stop.optString("name")
 		val departures = json.optJSONArray("departureList") ?: JSONArray()
-		val parsedDepartures = Array(departures.length()) { "" }
-		for (i in 0 until departures.length()) {
+		val parsedDepartures = Array(min(departures.length(), 10)) { "" }
+		for (i in parsedDepartures.indices) {
 			parsedDepartures[i] = (departures.getJSONObject(i).optJSONObject("servingLine") ?: JSONObject()).optString("number")
 		}
 		stationList.add(ListItem(title, parsedDepartures.joinToString(", ")))
