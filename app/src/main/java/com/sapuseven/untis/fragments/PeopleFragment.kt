@@ -57,7 +57,7 @@ class PeopleFragment : Fragment(), StringDisplay {
 					map[title] = currentObject
 				}
 			}
-			return GenericParseResult(treeMap.values.toMutableList(), map)
+			return GenericParseResult(ArrayList(treeMap.values), map)
 		}
 	}
 

@@ -10,7 +10,7 @@ import com.sapuseven.untis.R
 import com.sapuseven.untis.data.lists.ListItem
 
 class MessageAdapter(
-	private val items: ArrayList<ListItem>
+	private var items: ArrayList<ListItem> = arrayListOf()
 ) : RecyclerView.Adapter<MessageAdapter.ViewHolder>() {
 
 	var onClickListener: View.OnClickListener? = null
@@ -29,6 +29,11 @@ class MessageAdapter(
 		holder.tvBody.movementMethod = LinkMovementMethod.getInstance()
 
 		holder.tvBody.visibility = if (items[position].summary.isEmpty()) View.GONE else View.VISIBLE
+	}
+
+	internal fun updateItems(newItems: ArrayList<ListItem>) {
+		items = newItems
+		notifyDataSetChanged()
 	}
 
 	class ViewHolder(rootView: View) : RecyclerView.ViewHolder(rootView) {

@@ -14,6 +14,7 @@ import androidx.recyclerview.widget.RecyclerView
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 import com.sapuseven.untis.R
 import com.sapuseven.untis.adapters.MessageAdapter
+import com.sapuseven.untis.data.GenericParseResult
 import com.sapuseven.untis.data.lists.ListItem
 import com.sapuseven.untis.helpers.strings.StringLoader
 import com.sapuseven.untis.interfaces.StringDisplay
@@ -23,15 +24,46 @@ import java.lang.ref.WeakReference
 
 
 class LocationFragment : Fragment(), StringDisplay {
-	private val locationList = arrayListOf<ListItem>()
-	private val locationAdapter = MessageAdapter(locationList)
-	private val keyMap: MutableMap<String, Pair<Double, Double>> = mutableMapOf()
+	private val adapter = MessageAdapter()
+	private var parsedData: GenericParseResult<ListItem, Pair<Double, Double>> = GenericParseResult()
 	private lateinit var stringLoader: StringLoader
 	private lateinit var recyclerview: RecyclerView
 	private lateinit var swiperefreshlayout: SwipeRefreshLayout
 
 	companion object {
 		private const val API_URL: String = "https://www.iwi.hs-karlsruhe.de/iwii/REST"
+
+		fun parseLocations(input: String): GenericParseResult<ListItem, Pair<Double, Double>> {
+			val result = GenericParseResult<ListItem, Pair<Double, Double>>()
+			val json = JSONArray(input)
+			var departments: JSONArray
+			var currentBuilding: JSONObject
+			var currentDepartment: String
+			for (i in 0 until json.length()) {
+				currentBuilding = json.getJSONObject(i)
+				departments = currentBuilding.optJSONArray("departments") ?: JSONArray()
+				if (departments.length() > 0) result.list.add(
+					ListItem(
+						"",
+						currentBuilding.optString("name")
+					)
+				)
+				for (j in 0 until departments.length()) {
+					currentDepartment = departments.getJSONObject(j).optString("name")
+					result.list.add(
+						ListItem(
+							currentDepartment,
+							""
+						)
+					)
+					result.map[currentDepartment] = Pair(
+						currentBuilding.optDouble("latitude"),
+						currentBuilding.optDouble("longitude")
+					)
+				}
+			}
+			return result
+		}
 	}
 
 	override fun onCreateView(
@@ -50,17 +82,17 @@ class LocationFragment : Fragment(), StringDisplay {
 		swiperefreshlayout = root.findViewById(R.id.swiperefreshlayout_infocenter)
 
 		recyclerview.layoutManager = LinearLayoutManager(context)
-		recyclerview.adapter = locationAdapter
+		recyclerview.adapter = adapter
 		swiperefreshlayout.setOnRefreshListener { refreshLocations(StringLoader.FLAG_LOAD_SERVER) }
 
 		refreshLocations(StringLoader.FLAG_LOAD_CACHE)
 
-		locationAdapter.onClickListener = View.OnClickListener {
+		adapter.onClickListener = View.OnClickListener {
 			val key = it.findViewById<TextView>(R.id.textview_itemmessage_subject).text.toString()
 			if (key.isNotEmpty()) {
 				val mapIntent = Intent(
 					Intent.ACTION_VIEW, Uri.parse(
-						"geo:0,0?q=${keyMap[key]?.first},${keyMap[key]?.second}"
+						"geo:0,0?q=${parsedData.map[key]?.first},${parsedData.map[key]?.second}"
 					)
 				)
 				mapIntent.setPackage("com.google.android.apps.maps")
@@ -77,35 +109,8 @@ class LocationFragment : Fragment(), StringDisplay {
 	}
 
 	override fun onStringLoaded(string: String) {
-		locationList.clear()
-		val json = JSONArray(string)
-		var departments: JSONArray
-		var currentBuilding: JSONObject
-		var currentDepartment: String
-		for (i in 0 until json.length()) {
-			currentBuilding = json.getJSONObject(i)
-			departments = currentBuilding.optJSONArray("departments") ?: JSONArray()
-			if (departments.length() > 0) locationList.add(
-				ListItem(
-					"",
-					currentBuilding.optString("name")
-				)
-			)
-			for (j in 0 until departments.length()) {
-				currentDepartment = departments.getJSONObject(j).optString("name")
-				locationList.add(
-					ListItem(
-						currentDepartment,
-						""
-					)
-				)
-				keyMap[currentDepartment] = Pair(
-					currentBuilding.optDouble("latitude"),
-					currentBuilding.optDouble("longitude")
-				)
-			}
-		}
-		locationAdapter.notifyDataSetChanged()
+		parsedData = parseLocations(string)
+		adapter.updateItems(parsedData.list)
 		swiperefreshlayout.isRefreshing = false
 	}
 
