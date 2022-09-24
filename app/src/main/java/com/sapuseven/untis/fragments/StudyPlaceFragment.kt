@@ -1,6 +1,7 @@
 package com.sapuseven.untis.fragments
 
 import android.content.Intent
+import android.content.res.Resources
 import android.net.Uri
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -15,6 +16,7 @@ import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.sapuseven.untis.R
 import com.sapuseven.untis.adapters.StudyPlaceAdapter
+import com.sapuseven.untis.data.GenericParseResult
 import com.sapuseven.untis.data.lists.StudyPlaceListItem
 import com.sapuseven.untis.helpers.strings.StringLoader
 import com.sapuseven.untis.interfaces.StringDisplay
@@ -24,15 +26,51 @@ import java.lang.ref.WeakReference
 
 
 class StudyPlaceFragment : Fragment(), StringDisplay {
-	private val locationList = arrayListOf<StudyPlaceListItem>()
-	private val locationAdapter = StudyPlaceAdapter(locationList)
-	private val keyMap: MutableMap<String, Pair<Double, Double>> = mutableMapOf()
+	private val adapter = StudyPlaceAdapter()
+	private var parsedData: GenericParseResult<StudyPlaceListItem, Pair<Double, Double>> = GenericParseResult()
 	private lateinit var stringLoader: StringLoader
 	private lateinit var recyclerview: RecyclerView
 	private lateinit var swiperefreshlayout: SwipeRefreshLayout
 
 	companion object {
 		private const val API_URL: String = "https://www.iwi.hs-karlsruhe.de/hskampus-broker/api"
+
+		fun parseStudyPlaces(resources: Resources, places: String, occupations: String): GenericParseResult<StudyPlaceListItem, Pair<Double, Double>> {
+			val result = GenericParseResult<StudyPlaceListItem, Pair<Double, Double>>()
+			val json = JSONArray(places)
+			val array = Array(json.length()) { StudyPlaceListItem(0, 0, "", "", "") }
+			var currentItem: JSONObject
+			var currentTitle: String
+			for (i in 0 until json.length()) {
+				currentItem = json.getJSONObject(i)
+				currentTitle = currentItem.optString("longName").replace(", ", ",\n")
+				array[currentItem.optInt("id") - 1] = StudyPlaceListItem(
+					5,
+					currentItem.optInt("availableSeats"),
+					resources.getString(R.string.study_places_occupation_unknown),
+					currentTitle,
+					currentItem.optString("openingHours")
+				)
+				result.map[currentTitle] = Pair(
+					currentItem.optDouble("latitude"),
+					currentItem.optDouble("longitude")
+				)
+			}
+
+			val innerJson = JSONArray(occupations)
+			for (i in 0 until innerJson.length()) {
+				currentItem = innerJson.getJSONObject(i)
+				array[currentItem.optInt("id") - 1].let {
+					it.value = currentItem.optInt("occupiedSeats")
+					it.overline = resources.getString(
+						R.string.study_places_occupation, it.value, it.max
+					)
+				}
+			}
+			result.list = ArrayList(array.sortedBy { it.title })
+
+			return result
+		}
 	}
 
 	override fun onCreateView(
@@ -51,17 +89,17 @@ class StudyPlaceFragment : Fragment(), StringDisplay {
 		swiperefreshlayout = root.findViewById(R.id.swiperefreshlayout_infocenter)
 
 		recyclerview.layoutManager = LinearLayoutManager(context)
-		recyclerview.adapter = locationAdapter
+		recyclerview.adapter = adapter
 		swiperefreshlayout.setOnRefreshListener { refreshLocations(StringLoader.FLAG_LOAD_SERVER) }
 
 		refreshLocations(StringLoader.FLAG_LOAD_CACHE)
 
-		locationAdapter.onClickListener = View.OnClickListener {
+		adapter.onClickListener = View.OnClickListener {
 			val key = it.findViewById<TextView>(R.id.textview_itemmessage_subject).text.toString()
 			if (key.isNotEmpty()) {
 				val mapIntent = Intent(
 					Intent.ACTION_VIEW, Uri.parse(
-						"geo:0,0?q=${keyMap[key]?.first},${keyMap[key]?.second}"
+						"geo:0,0?q=${parsedData.map[key]?.first},${parsedData.map[key]?.second}"
 					)
 				)
 				mapIntent.setPackage("com.google.android.apps.maps")
@@ -78,44 +116,11 @@ class StudyPlaceFragment : Fragment(), StringDisplay {
 	}
 
 	override fun onStringLoaded(string: String) {
-		locationList.clear()
-		val json = JSONArray(string)
-		val array = Array(json.length()) { StudyPlaceListItem(0, 0, "", "", "") }
-		var currentItem: JSONObject
-		var currentTitle: String
-
-		for (i in 0 until json.length()) {
-			currentItem = json.getJSONObject(i)
-			currentTitle = currentItem.optString("longName").replace(", ", ",\n")
-			array[currentItem.optInt("id") - 1] = StudyPlaceListItem(
-				5,
-				currentItem.optInt("availableSeats"),
-				resources.getString(R.string.study_places_occupation_unknown),
-				currentTitle,
-				currentItem.optString("openingHours")
-			)
-			keyMap[currentTitle] = Pair(
-				currentItem.optDouble("latitude"),
-				currentItem.optDouble("longitude")
-			)
-		}
-
 		lateinit var loader: StringLoader
 		val callback = object : StringDisplay {
-			override fun onStringLoaded(string: String) {
-				val innerJson = JSONArray(string)
-				for (i in 0 until innerJson.length()) {
-					currentItem = innerJson.getJSONObject(i)
-					array[currentItem.optInt("id") - 1].let {
-						it.value = currentItem.optInt("occupiedSeats")
-						it.overline = resources.getString(
-							R.string.study_places_occupation, it.value, it.max
-						)
-					}
-				}
-				array.sortBy { it.title }
-				locationList.addAll(array)
-				locationAdapter.notifyDataSetChanged()
+			override fun onStringLoaded(innerString: String) {
+				parsedData = parseStudyPlaces(resources, string, innerString)
+				adapter.updateItems(parsedData.list)
 				swiperefreshlayout.isRefreshing = false
 			}
 

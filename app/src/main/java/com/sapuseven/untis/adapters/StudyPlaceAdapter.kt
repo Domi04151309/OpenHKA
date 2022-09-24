@@ -11,7 +11,7 @@ import com.sapuseven.untis.R
 import com.sapuseven.untis.data.lists.StudyPlaceListItem
 
 class StudyPlaceAdapter(
-	private val items: ArrayList<StudyPlaceListItem>
+	private var items: ArrayList<StudyPlaceListItem> = arrayListOf()
 ) : RecyclerView.Adapter<StudyPlaceAdapter.ViewHolder>() {
 
 	var onClickListener: View.OnClickListener? = null
@@ -31,6 +31,11 @@ class StudyPlaceAdapter(
 		holder.tvSubject.text = items[position].title
 		holder.tvBody.text = items[position].summary
 		holder.tvBody.movementMethod = LinkMovementMethod.getInstance()
+	}
+
+	internal fun updateItems(newItems: ArrayList<StudyPlaceListItem>) {
+		items = newItems
+		notifyDataSetChanged()
 	}
 
 	class ViewHolder(rootView: View) : RecyclerView.ViewHolder(rootView) {
