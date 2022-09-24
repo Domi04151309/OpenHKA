@@ -448,6 +448,9 @@
 					android:title="@string/library_joda_time" />
 				<Preference
 					android:icon="@drawable/settings_about_library"
+					android:title="@string/library_junit" />
+				<Preference
+					android:icon="@drawable/settings_about_library"
 					android:title="@string/library_kotlin_reflect" />
 				<Preference
 					android:icon="@drawable/settings_about_library"
@@ -470,6 +473,9 @@
 				<Preference
 					android:icon="@drawable/settings_about_library"
 					android:title="@string/library_play_services_wearable" />
+				<Preference
+					android:icon="@drawable/settings_about_library"
+					android:title="@string/library_robolectric" />
 				<Preference
 					android:icon="@drawable/settings_about_library"
 					android:title="@string/library_rssparser" />

@@ -13,6 +13,7 @@ import androidx.recyclerview.widget.RecyclerView
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 import com.sapuseven.untis.R
 import com.sapuseven.untis.adapters.PeopleAdapter
+import com.sapuseven.untis.data.GenericParseResult
 import com.sapuseven.untis.data.lists.PeopleListItem
 import com.sapuseven.untis.helpers.strings.StringLoader
 import com.sapuseven.untis.interfaces.StringDisplay
@@ -23,10 +24,9 @@ import java.util.*
 
 
 class PeopleFragment : Fragment(), StringDisplay {
-	private val wholeList = arrayListOf<PeopleListItem>()
 	private val list = arrayListOf<PeopleListItem>()
 	private val adapter = PeopleAdapter(list)
-	private val keyMap: MutableMap<String, JSONObject> = mutableMapOf()
+	private var parsedData: GenericParseResult<PeopleListItem, JSONObject> = GenericParseResult()
 	private lateinit var stringLoader: StringLoader
 	private lateinit var recyclerview: RecyclerView
 	private lateinit var swiperefreshlayout: SwipeRefreshLayout
@@ -34,6 +34,31 @@ class PeopleFragment : Fragment(), StringDisplay {
 	companion object {
 		private const val API_URL: String = "https://www.iwi.hs-karlsruhe.de/hskampus-broker/api"
 		private const val FRAGMENT_TAG_PEOPLE: String = "com.sapuseven.untis.fragments.people"
+
+		//TODO: doesn't work if two people have the same name; use ids
+		fun parsePeople(input: String): GenericParseResult<PeopleListItem, JSONObject> {
+			val treeMap = TreeMap<String, PeopleListItem>()
+			val map = mutableMapOf<String, JSONObject>()
+			val json = JSONArray(input)
+			var currentObject: JSONObject
+			var title: String
+			for (i in 0 until json.length()) {
+				currentObject = json.getJSONObject(i)
+				if (!currentObject.optBoolean("deleted")) {
+					title = currentObject.optString("lastName") + ", " +
+							currentObject.optString("firstName")
+					treeMap[title] = PeopleListItem(
+						currentObject.optString("imageUrl"),
+						currentObject.optString("academicDegree"),
+						title,
+						currentObject.optString("email") + " | " +
+								currentObject.optString("faculty")
+					)
+					map[title] = currentObject
+				}
+			}
+			return GenericParseResult(treeMap.values.toMutableList(), map)
+		}
 	}
 
 	override fun onCreate(savedInstanceState: Bundle?) {
@@ -64,7 +89,7 @@ class PeopleFragment : Fragment(), StringDisplay {
 
 		adapter.onClickListener = View.OnClickListener {
 			val fragment = PeopleDetailsFragment(
-				keyMap[it.findViewById<TextView>(R.id.textview_itemmessage_subject).text]
+				parsedData.map[it.findViewById<TextView>(R.id.textview_itemmessage_subject).text]
 					?: return@OnClickListener
 			)
 			(activity as AppCompatActivity).supportFragmentManager.beginTransaction().run {
@@ -90,7 +115,7 @@ class PeopleFragment : Fragment(), StringDisplay {
 
 				override fun onQueryTextChange(newText: String): Boolean {
 					list.clear()
-					list.addAll(wholeList.filter {
+					list.addAll(parsedData.list.filter {
 						it.title.lowercase().contains(newText.lowercase())
 					})
 					adapter.notifyDataSetChanged()
@@ -105,31 +130,10 @@ class PeopleFragment : Fragment(), StringDisplay {
 		stringLoader.load(flags)
 	}
 
-	//TODO: doesn't work if two people have the same name; use ids
 	override fun onStringLoaded(string: String) {
-		wholeList.clear()
+		parsedData = parsePeople(string)
 		list.clear()
-		val treeMap = TreeMap<String, PeopleListItem>()
-		val json = JSONArray(string)
-		var currentObject: JSONObject
-		var title: String
-		for (i in 0 until json.length()) {
-			currentObject = json.getJSONObject(i)
-			if (!currentObject.optBoolean("deleted")) {
-				title = currentObject.optString("lastName") + ", " +
-						currentObject.optString("firstName")
-				treeMap[title] = PeopleListItem(
-					currentObject.optString("imageUrl"),
-					currentObject.optString("academicDegree"),
-					title,
-					currentObject.optString("email") + " | " +
-							currentObject.optString("faculty")
-				)
-				keyMap[title] = currentObject
-			}
-		}
-		wholeList.addAll(treeMap.values)
-		list.addAll(treeMap.values)
+		list.addAll(parsedData.list)
 		adapter.notifyDataSetChanged()
 		swiperefreshlayout.isRefreshing = false
 	}

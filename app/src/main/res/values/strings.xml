@@ -237,6 +237,7 @@
 	<string name="library_fuel_coroutines" translatable="false">Fuel Coroutines</string>
 	<string name="library_ical4j" translatable="false">Ical4j</string>
 	<string name="library_joda_time" translatable="false">Joda Time</string>
+	<string name="library_junit" translatable="false">JUnit</string>
 	<string name="library_kotlin_reflect" translatable="false">Kotlin Reflection</string>
 	<string name="library_kotlin_stdlib" translatable="false">Kotlin Standard Library</string>
 	<string name="library_kotlinx_coroutines_android" translatable="false">Kotlinx Coroutines Android</string>
@@ -248,6 +249,7 @@
 	<string name="library_play_services_wearable" translatable="false">Play Services Wearable</string>
 	<string name="library_preference_ktx" translatable="false">Android Preferences KTX</string>
 	<string name="library_recyclerview" translatable="false">Android Support RecyclerView V7</string>
+	<string name="library_robolectric" translatable="false">Robolectric</string>
 	<string name="library_rssparser" translatable="false">Rssparser</string>
 	<string name="library_swiperefreshlayout" translatable="false">Android Support Library Custom View</string>
 	<string name="library_weekview" translatable="false">WeekView</string>
