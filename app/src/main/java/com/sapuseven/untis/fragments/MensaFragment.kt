@@ -1,5 +1,6 @@
 package com.sapuseven.untis.fragments
 
+import android.content.res.Resources
 import android.os.Bundle
 import android.view.*
 import android.widget.ArrayAdapter
@@ -16,6 +17,7 @@ import com.google.android.material.textfield.TextInputLayout
 import com.sapuseven.untis.R
 import com.sapuseven.untis.activities.BaseActivity
 import com.sapuseven.untis.adapters.MensaListAdapter
+import com.sapuseven.untis.data.GenericParseResult
 import com.sapuseven.untis.data.lists.MensaListItem
 import com.sapuseven.untis.data.lists.MensaPricing
 import com.sapuseven.untis.helpers.strings.StringLoader
@@ -28,11 +30,10 @@ import java.util.*
 
 
 class MensaFragment : Fragment(), StringDisplay {
-	private val menu = arrayListOf<MensaListItem>()
-	private val menuAdapter = MensaListAdapter(menu)
+	private val adapter = MensaListAdapter()
 	private var dateOffset = 0
-	private val idMap: MutableMap<String, Int> = mutableMapOf()
-	private val pricingMap: MutableMap<String, MensaPricing> = mutableMapOf()
+	private var idMap: MutableMap<String, Int> = mutableMapOf()
+	private var parsedData: GenericParseResult<MensaListItem, MensaPricing> = GenericParseResult()
 	private lateinit var stringLoader: StringLoader
 	private lateinit var recyclerview: RecyclerView
 	private lateinit var swiperefreshlayout: SwipeRefreshLayout
@@ -46,6 +47,83 @@ class MensaFragment : Fragment(), StringDisplay {
 		const val DEFAULT_ID: Int = 1
 		const val PREFERENCE_MENSA_PRICING_LEVEL: String = "preference_mensa_pricing_level"
 		const val DEFAULT_PRICING_LEVEL: String = "Student"
+
+		fun parseAdditives(input: String): Array<CharSequence> {
+			val json = JSONArray(input)
+			val items = Array<CharSequence>(json.length()) { "" }
+			var currentItem: JSONObject
+			for (i in 0 until json.length()) {
+				currentItem = json.getJSONObject(i)
+				items[i] = currentItem.optString("id") + ": " + currentItem.optString("name")
+			}
+			return items
+		}
+
+		fun parseCanteens(
+			input: String,
+			lambda: (Int, String) -> Unit = { _, _ -> }
+		): GenericParseResult<String, Int> {
+			val result = GenericParseResult<String, Int>()
+			val json = JSONArray(input)
+			var currentItem: JSONObject
+			var currentTitle: String
+			var currentId: Int
+			for (i in 0 until json.length()) {
+				currentItem = json.getJSONObject(i)
+				currentTitle = currentItem.optString("name").replace("Mensa ", "")
+				currentId = currentItem.optInt("id")
+				result.list.add(currentTitle)
+				result.map[currentTitle] = currentId
+				lambda(currentId, currentTitle)
+			}
+			return result
+		}
+
+		fun parseMenu(
+			resources: Resources,
+			input: String,
+			pricingLevel: String
+		): GenericParseResult<MensaListItem, MensaPricing> {
+			val result = GenericParseResult<MensaListItem, MensaPricing>()
+			val json = JSONObject(input)
+			val mealGroups = json.optJSONArray("mealGroups") ?: JSONArray()
+			var meals: JSONArray
+			var currentGroup: JSONObject
+			var currentMeal: JSONObject
+			for (i in 0 until mealGroups.length()) {
+				currentGroup = mealGroups.getJSONObject(i)
+				result.list.add(MensaListItem("", currentGroup.optString("title"), null))
+				meals = currentGroup.optJSONArray("meals") ?: JSONArray()
+				for (j in 0 until meals.length()) {
+					currentMeal = meals.getJSONObject(j)
+					result.map[currentMeal.optString("name")] = MensaPricing(
+						currentMeal.optDouble("priceStudent"),
+						currentMeal.optDouble("priceGuest"),
+						currentMeal.optDouble("priceEmployee"),
+						currentMeal.optDouble("pricePupil")
+					)
+					(currentMeal.optJSONArray("foodAdditiveNumbers") ?: JSONArray()).let {
+						result.list.add(
+							MensaListItem(
+								currentMeal.optString("name"),
+								if (it.length() == 0) ""
+								else resources.getString(
+									R.string.mensa_meal_summary,
+									it.join(", ").replace("\"", "")
+								),
+								null
+							).apply {
+								price = result.map[title]?.getPriceFromLevel(
+									resources,
+									pricingLevel
+								)
+							}
+						)
+					}
+				}
+			}
+			return result
+		}
 	}
 
 	override fun onCreate(savedInstanceState: Bundle?) {
@@ -87,13 +165,13 @@ class MensaFragment : Fragment(), StringDisplay {
 			(activity as BaseActivity).preferences.defaultPrefs.edit().putString(
 				PREFERENCE_MENSA_PRICING_LEVEL, it.toString()
 			).apply()
-			menu.forEach { item ->
+			parsedData.list.forEach { item ->
 				if (item.title.isNotEmpty()) {
 					item.price =
-						pricingMap[item.title]?.getPriceFromLevel(requireContext(), it.toString())
+						parsedData.map[item.title]?.getPriceFromLevel(resources, it.toString())
 				}
 			}
-			menuAdapter.notifyDataSetChanged()
+			adapter.notifyDataSetChanged()
 		}
 
 		loadCanteens()
@@ -118,7 +196,7 @@ class MensaFragment : Fragment(), StringDisplay {
 		}
 
 		recyclerview.layoutManager = LinearLayoutManager(context)
-		recyclerview.adapter = menuAdapter
+		recyclerview.adapter = adapter
 		swiperefreshlayout.setOnRefreshListener { refreshMenu(StringLoader.FLAG_LOAD_SERVER) }
 
 		return root
@@ -140,16 +218,9 @@ class MensaFragment : Fragment(), StringDisplay {
 		lateinit var loader: StringLoader
 		val callback = object : StringDisplay {
 			override fun onStringLoaded(string: String) {
-				val json = JSONArray(string)
-				val items = Array<CharSequence>(json.length()) { "" }
-				var currentItem: JSONObject
-				for (i in 0 until json.length()) {
-					currentItem = json.getJSONObject(i)
-					items[i] = currentItem.optString("id") + ": " + currentItem.optString("name")
-				}
 				MaterialAlertDialogBuilder(context)
 					.setTitle(R.string.mensa_meal_additives)
-					.setItems(items) { _, _ -> }
+					.setItems(parseAdditives(string)) { _, _ -> }
 					.setPositiveButton(R.string.all_ok) { _, _ -> }
 					.show()
 			}
@@ -179,24 +250,15 @@ class MensaFragment : Fragment(), StringDisplay {
 			override fun onStringLoaded(string: String) {
 				val targetId = (activity as BaseActivity).preferences.defaultPrefs
 					.getInt(PREFERENCE_MENSA_ID, DEFAULT_ID)
-				val json = JSONArray(string)
-				val canteens = MutableList(json.length()) { "" }
-				var currentItem: JSONObject
-				var currentTitle: String
-				var currentId: Int
-				for (i in 0 until json.length()) {
-					currentItem = json.getJSONObject(i)
-					currentTitle = currentItem.optString("name").replace("Mensa ", "")
-					currentId = currentItem.optInt("id")
-					idMap[currentTitle] = currentId
-					canteens[i] = currentTitle
+				val canteens = parseCanteens(string) { currentId, currentTitle ->
 					if (currentId == targetId) dropdownMensa.setText(currentTitle, false)
 				}
+				idMap = canteens.map
 				dropdownMensa.setAdapter(
 					ArrayAdapter(
 						requireContext(),
 						android.R.layout.simple_list_item_1,
-						canteens
+						canteens.list
 					)
 				)
 			}
@@ -238,46 +300,8 @@ class MensaFragment : Fragment(), StringDisplay {
 	}
 
 	override fun onStringLoaded(string: String) {
-		menu.clear()
-		pricingMap.clear()
-		val json = JSONObject(string)
-		val mealGroups = json.optJSONArray("mealGroups") ?: JSONArray()
-		var meals: JSONArray
-		var currentGroup: JSONObject
-		var currentMeal: JSONObject
-		for (i in 0 until mealGroups.length()) {
-			currentGroup = mealGroups.getJSONObject(i)
-			menu.add(MensaListItem("", currentGroup.optString("title"), null))
-			meals = currentGroup.optJSONArray("meals") ?: JSONArray()
-			for (j in 0 until meals.length()) {
-				currentMeal = meals.getJSONObject(j)
-				pricingMap[currentMeal.optString("name")] = MensaPricing(
-					currentMeal.optDouble("priceStudent"),
-					currentMeal.optDouble("priceGuest"),
-					currentMeal.optDouble("priceEmployee"),
-					currentMeal.optDouble("pricePupil")
-				)
-				(currentMeal.optJSONArray("foodAdditiveNumbers") ?: JSONArray()).let {
-					menu.add(
-						MensaListItem(
-							currentMeal.optString("name"),
-							if (it.length() == 0) ""
-							else resources.getString(
-								R.string.mensa_meal_summary,
-								it.join(", ").replace("\"", "")
-							),
-							null
-						).apply {
-							price = pricingMap[title]?.getPriceFromLevel(
-								requireContext(),
-								dropdownPricing.text.toString()
-							)
-						}
-					)
-				}
-			}
-		}
-		menuAdapter.notifyDataSetChanged()
+		parsedData = parseMenu(resources, string, dropdownPricing.text.toString())
+		adapter.updateItems(parsedData.list)
 		swiperefreshlayout.isRefreshing = false
 	}
 
@@ -292,8 +316,7 @@ class MensaFragment : Fragment(), StringDisplay {
 					R.string.errors_failed_loading_from_server_message,
 					Toast.LENGTH_LONG
 				).show()
-				menu.clear()
-				menuAdapter.notifyDataSetChanged()
+				adapter.updateItems(arrayListOf())
 				swiperefreshlayout.isRefreshing = false
 			}
 		}

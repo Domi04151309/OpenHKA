@@ -193,7 +193,7 @@ class WidgetRemoteViewsFactory(private val applicationContext: Context, intent: 
 												currentMeal.optDouble("priceEmployee"),
 												currentMeal.optDouble("pricePupil")
 											).getPriceFromLevel(
-												applicationContext, preferences.defaultPrefs
+												applicationContext.resources, preferences.defaultPrefs
 													.getString(
 														MensaFragment.PREFERENCE_MENSA_PRICING_LEVEL,
 														MensaFragment.DEFAULT_PRICING_LEVEL

@@ -8,13 +8,14 @@ import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.sapuseven.untis.R
 import com.sapuseven.untis.data.lists.MensaListItem
+import com.sapuseven.untis.data.lists.StudyPlaceListItem
 import java.text.DecimalFormat
 import java.text.DecimalFormatSymbols
 import java.util.*
 import kotlin.collections.ArrayList
 
 class MensaListAdapter(
-	private val items: ArrayList<MensaListItem>
+	private var items: ArrayList<MensaListItem> = arrayListOf()
 ) : RecyclerView.Adapter<MensaListAdapter.ViewHolder>() {
 
 	private val formatter = DecimalFormat(
@@ -40,6 +41,11 @@ class MensaListAdapter(
 
 		holder.tvBody.visibility =
 			if (items[position].summary.isEmpty()) View.GONE else View.VISIBLE
+	}
+
+	internal fun updateItems(newItems: ArrayList<MensaListItem>) {
+		items = newItems
+		notifyDataSetChanged()
 	}
 
 	class ViewHolder(rootView: View) : RecyclerView.ViewHolder(rootView) {

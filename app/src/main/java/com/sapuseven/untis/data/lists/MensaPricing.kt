@@ -1,6 +1,7 @@
 package com.sapuseven.untis.data.lists
 
 import android.content.Context
+import android.content.res.Resources
 import com.sapuseven.untis.R
 
 data class MensaPricing(
@@ -9,8 +10,8 @@ data class MensaPricing(
 	val employee: Double,
 	val pupil: Double
 ) {
-	fun getPriceFromLevel(context: Context, level: String): Double {
-		val values = context.resources.getStringArray(R.array.mensa_pricing_values)
+	fun getPriceFromLevel(resources: Resources, level: String): Double {
+		val values = resources.getStringArray(R.array.mensa_pricing_values)
 		return when (values.indexOf(level)) {
 			0 -> student
 			1 -> guest
