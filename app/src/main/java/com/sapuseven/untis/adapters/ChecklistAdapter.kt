@@ -10,7 +10,7 @@ import com.sapuseven.untis.R
 import com.sapuseven.untis.data.lists.ChecklistItem
 
 class ChecklistAdapter(
-	private val items: ArrayList<ChecklistItem>
+	private var items: ArrayList<ChecklistItem> = arrayListOf()
 ) : RecyclerView.Adapter<ChecklistAdapter.ViewHolder>() {
 
 	var onClickListener: View.OnClickListener? = null
@@ -27,6 +27,11 @@ class ChecklistAdapter(
 		holder.tvSubject.text = items[position].title
 		holder.tvBody.text = items[position].summary
 		holder.ivCheck.visibility = if (items[position].checked) View.VISIBLE else View.GONE
+	}
+
+	internal fun updateItems(newItems: ArrayList<ChecklistItem>) {
+		items = newItems
+		notifyDataSetChanged()
 	}
 
 	class ViewHolder(rootView: View) : RecyclerView.ViewHolder(rootView) {

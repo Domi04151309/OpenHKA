@@ -12,6 +12,7 @@ import androidx.recyclerview.widget.RecyclerView
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 import com.sapuseven.untis.R
 import com.sapuseven.untis.adapters.ChecklistAdapter
+import com.sapuseven.untis.data.GenericParseResult
 import com.sapuseven.untis.data.lists.ChecklistItem
 import com.sapuseven.untis.helpers.StationUtils
 import com.sapuseven.untis.helpers.strings.StringLoader
@@ -23,9 +24,8 @@ import java.lang.ref.WeakReference
 import java.net.URLEncoder
 
 class AddStationActivity : BaseActivity(), StringDisplay {
-	private val list = arrayListOf<ChecklistItem>()
-	private val adapter = ChecklistAdapter(list)
-	private val keyMap: MutableMap<String, String> = mutableMapOf()
+	private val adapter = ChecklistAdapter()
+	private var parsedData: GenericParseResult<ChecklistItem, String> = GenericParseResult()
 	private var favorites = mutableSetOf<String?>()
 	private lateinit var stringLoader: StringLoader
 	private lateinit var recyclerview: RecyclerView
@@ -35,6 +35,45 @@ class AddStationActivity : BaseActivity(), StringDisplay {
 		// The 0 is there to prevent auto stop selection by the API
 		private const val API_URL: String =
 			"https://kvv.de/tunnelEfaDirect.php?outputFormat=JSON&coordOutputFormat=WGS84[dd.ddddd]&action=XSLT_STOPFINDER_REQUEST&type_sf=any&name_sf=0"
+
+		fun parseStations(
+			input: String,
+			favorites: Set<String?>
+		): GenericParseResult<ChecklistItem, String> {
+			val result = GenericParseResult<ChecklistItem, String>()
+			val json = (JSONObject(input).optJSONObject("stopFinder") ?: JSONObject()).run {
+				optJSONArray("points")
+					?: JSONArray().put(
+						(optJSONObject("points") ?: JSONObject()).optJSONObject("point")
+							?: JSONObject()
+					)
+			}
+			var currentItem: JSONObject
+			var id: String
+			for (i in 0 until min(json.length(), 20)) {
+				currentItem = json.optJSONObject(i)
+				if (currentItem.optString("anyType") != "stop") continue
+				id = currentItem.optString("stateless").run {
+					val delimiter = indexOf(':')
+					if (delimiter > -1) substring(0, delimiter)
+					else this
+				}
+				result.list.add(
+					ChecklistItem(
+						currentItem.optString("object"),
+						currentItem.optString("mainLoc"),
+						favorites.contains(id)
+					)
+				)
+				result.map[currentItem.optString("object") + currentItem.optString("mainLoc")] =
+					currentItem.optString("stateless").run {
+						val delimiter = indexOf(':')
+						if (delimiter > -1) substring(0, delimiter)
+						else this
+					}
+			}
+			return result
+		}
 	}
 
 	override fun onCreate(savedInstanceState: Bundle?) {
@@ -59,13 +98,13 @@ class AddStationActivity : BaseActivity(), StringDisplay {
 		adapter.onClickListener = View.OnClickListener {
 			val key = it.findViewById<TextView>(R.id.textview_itemmessage_subject).text.toString() +
 					it.findViewById<TextView>(R.id.textview_itemmessage_body).text.toString()
-			val checked = if (favorites.contains(keyMap[key])) {
-				StationUtils.removeFavorite(preferences, keyMap[key])
-				favorites.remove(keyMap[key])
+			val checked = if (favorites.contains(parsedData.map[key])) {
+				StationUtils.removeFavorite(preferences, parsedData.map[key])
+				favorites.remove(parsedData.map[key])
 				false
 			} else {
-				StationUtils.addFavorite(preferences, keyMap[key])
-				favorites.add(keyMap[key])
+				StationUtils.addFavorite(preferences, parsedData.map[key])
+				favorites.add(parsedData.map[key])
 				true
 			}
 			it.findViewById<ImageView>(R.id.textview_itemmessage_check).visibility =
@@ -102,38 +141,8 @@ class AddStationActivity : BaseActivity(), StringDisplay {
 	}
 
 	override fun onStringLoaded(string: String) {
-		list.clear()
-		val json = (JSONObject(string).optJSONObject("stopFinder") ?: JSONObject()).run {
-			optJSONArray("points")
-				?: JSONArray().put(
-					(optJSONObject("points") ?: JSONObject()).optJSONObject("point") ?: JSONObject()
-				)
-		}
-		var currentItem: JSONObject
-		var id: String
-		for (i in 0 until min(json.length(), 20)) {
-			currentItem = json.optJSONObject(i)
-			if (currentItem.optString("anyType") != "stop") continue
-			id = currentItem.optString("stateless").run {
-				val delimiter = indexOf(':')
-				if (delimiter > -1) substring(0, delimiter)
-				else this
-			}
-			list.add(
-				ChecklistItem(
-					currentItem.optString("object"),
-					currentItem.optString("mainLoc"),
-					favorites.contains(id)
-				)
-			)
-			keyMap[currentItem.optString("object") + currentItem.optString("mainLoc")] =
-				currentItem.optString("stateless").run {
-					val delimiter = indexOf(':')
-					if (delimiter > -1) substring(0, delimiter)
-					else this
-				}
-		}
-		adapter.notifyDataSetChanged()
+		parsedData = parseStations(string, favorites)
+		adapter.updateItems(parsedData.list)
 		swiperefreshlayout.isRefreshing = false
 	}
 

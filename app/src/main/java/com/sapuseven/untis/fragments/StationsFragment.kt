@@ -42,6 +42,20 @@ class StationsFragment : Fragment(), StringDisplay {
 		internal const val API_URL: String =
 			"https://kvv.de/tunnelEfaDirect.php?outputFormat=JSON&coordOutputFormat=WGS84[dd.ddddd]&action=XSLT_DM_REQUEST&mode=direct&type_dm=stop&name_dm="
 		private const val FRAGMENT_TAG_STATION: String = "com.sapuseven.untis.fragments.station"
+
+		fun parseStation(input: String): Pair<ListItem, JSONObject> {
+			val json = JSONObject(input)
+			val stop = (((json.optJSONObject("dm") ?: JSONObject()).optJSONObject("points")
+				?: JSONObject()).optJSONObject("point") ?: JSONObject())
+			val title = stop.optString("name")
+			val departures = json.optJSONArray("departureList") ?: JSONArray()
+			val parsedDepartures = Array(min(departures.length(), 10)) { "" }
+			for (i in parsedDepartures.indices) {
+				parsedDepartures[i] = (departures.getJSONObject(i).optJSONObject("servingLine")
+					?: JSONObject()).optString("number")
+			}
+			return Pair(ListItem(title, parsedDepartures.joinToString(", ")), json)
+		}
 	}
 
 	override fun onCreateView(
@@ -111,20 +125,10 @@ class StationsFragment : Fragment(), StringDisplay {
 
 	override fun onStringLoaded(string: String) {
 		requestCounter++
-
-		val json = JSONObject(string)
-		val stop = (((json.optJSONObject("dm") ?: JSONObject()).optJSONObject("points")
-			?: JSONObject()).optJSONObject("point") ?: JSONObject())
-		val title = stop.optString("name")
-		val departures = json.optJSONArray("departureList") ?: JSONArray()
-		val parsedDepartures = Array(min(departures.length(), 10)) { "" }
-		for (i in parsedDepartures.indices) {
-			parsedDepartures[i] = (departures.getJSONObject(i).optJSONObject("servingLine")
-				?: JSONObject()).optString("number")
+		parseStation(string).run {
+			stationList.add(first)
+			keyMap[first.title] = second
 		}
-		stationList.add(ListItem(title, parsedDepartures.joinToString(", ")))
-		keyMap[title] = json
-
 		checkRequests()
 	}
 
