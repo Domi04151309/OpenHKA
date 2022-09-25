@@ -97,6 +97,7 @@
 
 	<string name="stations_add">Add Stations</string>
 	<string name="stations_departure_summary">in %1$s minutes from platform %2$s</string>
+	<string name="stations_departure_short_summary">%1$s %2$s in %3$s min</string>
 	<string name="stations_remove_favorite">Remove favorite</string>
 	<string name="stations_remove_favorite_summary">Do you want to remove this station from your favorites?</string>
 	<string name="stations_remove_favorite_button">Remove</string>

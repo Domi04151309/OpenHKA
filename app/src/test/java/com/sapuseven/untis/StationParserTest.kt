@@ -6,6 +6,7 @@ import org.junit.Assert
 import org.junit.Test
 import org.junit.runner.RunWith
 import org.robolectric.RobolectricTestRunner
+import org.robolectric.RuntimeEnvironment
 
 @RunWith(RobolectricTestRunner::class)
 class StationParserTest {
@@ -13,10 +14,17 @@ class StationParserTest {
 	@Test
 	fun parseStation() {
 		val file = Helpers.getFileContents("/kvv/XSLT_DM_REQUEST.json")
-		val result = StationsFragment.parseStation(file)
+
+		val result = StationsFragment.parseStation(
+			RuntimeEnvironment.getApplication().applicationContext.resources,
+			file
+		)
 
 		Assert.assertEquals("Karlsruhe, Kunstakademie/Hochschule", result.first.title)
-		Assert.assertEquals("1, 1, 1, 1, 1, 1, 1, 1, 1, 1", result.first.summary)
+		Assert.assertEquals(
+			"1 Heide in 11 min\n1 Durlach in 16 min\n1 Heide in 31 min\n1 Durlach in 36 min\n1 Heide in 51 min",
+			result.first.summary
+		)
 	}
 
 	@Test

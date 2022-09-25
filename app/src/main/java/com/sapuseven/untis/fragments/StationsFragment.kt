@@ -1,6 +1,7 @@
 package com.sapuseven.untis.fragments
 
 import android.content.Intent
+import android.content.res.Resources
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -43,18 +44,26 @@ class StationsFragment : Fragment(), StringDisplay {
 			"https://kvv.de/tunnelEfaDirect.php?outputFormat=JSON&coordOutputFormat=WGS84[dd.ddddd]&action=XSLT_DM_REQUEST&mode=direct&type_dm=stop&name_dm="
 		private const val FRAGMENT_TAG_STATION: String = "com.sapuseven.untis.fragments.station"
 
-		fun parseStation(input: String): Pair<ListItem, JSONObject> {
+		fun parseStation(resources: Resources, input: String): Pair<ListItem, JSONObject> {
 			val json = JSONObject(input)
 			val stop = (((json.optJSONObject("dm") ?: JSONObject()).optJSONObject("points")
 				?: JSONObject()).optJSONObject("point") ?: JSONObject())
 			val title = stop.optString("name")
 			val departures = json.optJSONArray("departureList") ?: JSONArray()
-			val parsedDepartures = Array(min(departures.length(), 10)) { "" }
+			val parsedDepartures = Array(min(departures.length(), 5)) { "" }
+			var currentItem: JSONObject
+			var currentLine: JSONObject
 			for (i in parsedDepartures.indices) {
-				parsedDepartures[i] = (departures.getJSONObject(i).optJSONObject("servingLine")
-					?: JSONObject()).optString("number")
+				currentItem = departures.getJSONObject(i)
+				currentLine = currentItem.optJSONObject("servingLine") ?: JSONObject()
+				parsedDepartures[i] = resources.getString(
+					R.string.stations_departure_short_summary,
+					currentLine.optString("number"),
+					currentLine.optString("direction"),
+					currentItem.optString("countdown")
+				)
 			}
-			return Pair(ListItem(title, parsedDepartures.joinToString(", ")), json)
+			return Pair(ListItem(title, parsedDepartures.joinToString("\n")), json)
 		}
 	}
 
@@ -125,7 +134,7 @@ class StationsFragment : Fragment(), StringDisplay {
 
 	override fun onStringLoaded(string: String) {
 		requestCounter++
-		parseStation(string).run {
+		parseStation(resources, string).run {
 			stationList.add(first)
 			keyMap[first.title] = second
 		}

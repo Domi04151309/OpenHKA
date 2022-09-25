@@ -153,7 +153,7 @@ class StationDetailsFragment(private var item: JSONObject) : Fragment() {
 		var currentLine: JSONObject
 		for (i in 0 until departures.length()) {
 			currentItem = departures.getJSONObject(i)
-			currentLine = (currentItem.optJSONObject("servingLine") ?: JSONObject())
+			currentLine = currentItem.optJSONObject("servingLine") ?: JSONObject()
 			parsedDepartures.add(
 				DepartureListItem(
 					currentLine.optString("direction"),
