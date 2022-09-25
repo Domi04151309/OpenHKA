@@ -9,6 +9,8 @@ import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
+import com.github.kittinunf.fuel.coroutines.awaitStringResult
+import com.github.kittinunf.fuel.httpGet
 import com.prof.rssparser.Article
 import com.prof.rssparser.Parser
 import com.sapuseven.untis.R
@@ -19,6 +21,8 @@ import com.sapuseven.untis.data.databases.LinkDatabase
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
+import org.json.JSONArray
+import org.json.JSONObject
 import java.nio.charset.StandardCharsets
 
 class InfoCenterFragment : Fragment() {
@@ -29,6 +33,7 @@ class InfoCenterFragment : Fragment() {
 	private lateinit var swiperefreshlayout: SwipeRefreshLayout
 
 	companion object {
+		//TODO: find out faster if it is json
 		suspend fun loadMessages(context: Context, link: LinkDatabase.Link): List<Article>? {
 			val parser = Parser.Builder()
 				.context(context)
@@ -39,7 +44,38 @@ class InfoCenterFragment : Fragment() {
 			return try {
 				parser.getChannel(link.rssUrl).articles
 			} catch (e: Exception) {
-				null
+				link.rssUrl.httpGet().awaitStringResult()
+					.fold({ data ->
+						//TODO: add cache support
+						val json = JSONArray(data)
+						val articles = arrayListOf<Article>()
+						var currentItem: JSONObject
+						for (i in 0 until json.length()) {
+							currentItem = json.getJSONObject(i)
+							articles.add(
+								Article(
+									"",
+									currentItem.optString("title"),
+									"",
+									"",
+									currentItem.optString("updatedAt"),
+									currentItem.optString("content"),
+									"",
+									"",
+									"",
+									"",
+									"",
+									"",
+									listOf(),
+									null
+								)
+							)
+						}
+						articles
+					}, {
+						//TODO: handle error
+						null
+					})
 			}
 		}
 	}
