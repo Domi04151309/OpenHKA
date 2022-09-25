@@ -33,49 +33,57 @@ class InfoCenterFragment : Fragment() {
 	private lateinit var swiperefreshlayout: SwipeRefreshLayout
 
 	companion object {
-		//TODO: find out faster if it is json
-		suspend fun loadMessages(context: Context, link: LinkDatabase.Link): List<Article>? {
-			val parser = Parser.Builder()
-				.context(context)
-				.charset(StandardCharsets.UTF_8)
-				.cacheExpirationMillis(24L * 60L * 60L * 100L) // one day
-				.build()
 
-			return try {
-				parser.getChannel(link.rssUrl).articles
-			} catch (e: Exception) {
-				link.rssUrl.httpGet().awaitStringResult()
+		private fun parseJSONFeed(input: String): List<Article> {
+			val json = JSONArray(input)
+			val articles = arrayListOf<Article>()
+			var currentItem: JSONObject
+			for (i in 0 until json.length()) {
+				currentItem = json.getJSONObject(i)
+				articles.add(
+					Article(
+						"",
+						currentItem.optString("title"),
+						"",
+						"",
+						currentItem.optString("updatedAt"),
+						currentItem.optString("content"),
+						"",
+						"",
+						"",
+						"",
+						"",
+						"",
+						listOf(),
+						null
+					)
+				)
+			}
+			return articles
+		}
+
+		suspend fun loadMessages(context: Context, link: LinkDatabase.Link): List<Article>? {
+			if (link.rssUrl.startsWith("https://www.iwi.hs-karlsruhe.de/hskampus-broker/api")) {
+				return link.rssUrl.httpGet().awaitStringResult()
 					.fold({ data ->
 						//TODO: add cache support
-						val json = JSONArray(data)
-						val articles = arrayListOf<Article>()
-						var currentItem: JSONObject
-						for (i in 0 until json.length()) {
-							currentItem = json.getJSONObject(i)
-							articles.add(
-								Article(
-									"",
-									currentItem.optString("title"),
-									"",
-									"",
-									currentItem.optString("updatedAt"),
-									currentItem.optString("content"),
-									"",
-									"",
-									"",
-									"",
-									"",
-									"",
-									listOf(),
-									null
-								)
-							)
-						}
-						articles
+						parseJSONFeed(data)
 					}, {
 						//TODO: handle error
 						null
 					})
+			} else {
+				val parser = Parser.Builder()
+					.context(context)
+					.charset(StandardCharsets.UTF_8)
+					.cacheExpirationMillis(24L * 60L * 60L * 100L) // one day
+					.build()
+
+				return try {
+					parser.getChannel(link.rssUrl).articles
+				} catch (e: Exception) {
+					null
+				}
 			}
 		}
 	}
