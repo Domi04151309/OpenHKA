@@ -12,7 +12,6 @@ class LocationParserTest {
     @Test
     fun parseLocations() {
 		val file = Helpers.getFileContents("/iwii/REST/buildings/v2/all.json")
-
 		val result = LocationFragment.parseLocations(file)
 
 		var num = 0

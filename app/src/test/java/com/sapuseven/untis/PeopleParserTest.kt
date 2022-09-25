@@ -12,7 +12,6 @@ class PeopleParserTest {
     @Test
     fun parsePeople() {
 		val file = Helpers.getFileContents("/hskampus-broker/api/persons.json")
-
 		val result = PeopleFragment.parsePeople(file)
 
 		var num = 0

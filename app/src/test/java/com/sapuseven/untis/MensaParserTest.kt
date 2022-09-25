@@ -13,7 +13,6 @@ class MensaParserTest {
 	@Test
 	fun parseAdditives() {
 		val file = Helpers.getFileContents("/iwii/REST/canteen/v2/foodadditives.json")
-
 		val result = MensaFragment.parseAdditives(file)
 
 		var num = 0
@@ -26,7 +25,6 @@ class MensaParserTest {
 	@Test
 	fun parseCanteens() {
 		val file = Helpers.getFileContents("/iwii/REST/canteen/names.json")
-
 		val result = MensaFragment.parseCanteens(file)
 
 		var num = 0
