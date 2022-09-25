@@ -49,7 +49,10 @@ class RSSLinkChooserActivity : BaseActivity(), StringDisplay {
 		linkAdapter.onClickListener = View.OnClickListener {
 			val key = it.findViewById<TextView>(R.id.textview_itemmessage_subject).text.toString()
 			if (key.isNotEmpty()) {
-				setResult(RESULT_OK, Intent().putExtra("link", keyMap[key]))
+				setResult(
+					RESULT_OK,
+					Intent().putExtra("link", "${API_URL}/news?categoryId=${keyMap[key]}")
+				)
 				finish()
 			}
 		}
@@ -67,16 +70,14 @@ class RSSLinkChooserActivity : BaseActivity(), StringDisplay {
 		var mapKey: String
 		for (i in 0 until json.length()) {
 			currentCategory = json.getJSONObject(i)
-			if (currentCategory.optString("format") == "RSS") {
-				mapKey = currentCategory.optString("name")
-				linkList.add(
-					ListItem(
-						mapKey,
-						""
-					)
+			mapKey = currentCategory.optString("name")
+			linkList.add(
+				ListItem(
+					mapKey,
+					""
 				)
-				keyMap[mapKey] = currentCategory.optString("feed")
-			}
+			)
+			keyMap[mapKey] = currentCategory.optString("id")
 		}
 		linkAdapter.notifyDataSetChanged()
 		swiperefreshlayout.isRefreshing = false

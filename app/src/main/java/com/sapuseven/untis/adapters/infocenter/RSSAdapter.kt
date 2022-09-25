@@ -20,11 +20,14 @@ class RSSAdapter(
 ) : RecyclerView.Adapter<RSSAdapter.ViewHolder>() {
 
 	companion object {
+		private val dateFormat = SimpleDateFormat("EEE, dd MMM yyyy HH:mm:ss Z", Locale.US)
+
 		fun parseDate(context: Context, date: String): String {
-			val millis = (
-					SimpleDateFormat("EEE, dd MMM yyyy HH:mm:ss Z", Locale.US).parse(date)
-						?: Date()
-					).time
+			val millis = try {
+				(dateFormat.parse(date) ?: Date()).time
+			} catch (e: Exception) {
+				date.toLong() * 1000
+			}
 			return DateFormat.getMediumDateFormat(context).format(millis) +
 					", " +
 					DateFormat.getTimeFormat(context).format(millis)
