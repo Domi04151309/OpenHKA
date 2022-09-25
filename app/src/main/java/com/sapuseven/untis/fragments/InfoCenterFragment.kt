@@ -34,7 +34,7 @@ class InfoCenterFragment : Fragment() {
 
 	companion object {
 
-		private fun parseJSONFeed(input: String): List<Article> {
+		fun parseJSONFeed(input: String): List<Article> {
 			val json = JSONArray(input)
 			val articles = arrayListOf<Article>()
 			var currentItem: JSONObject
