@@ -9,8 +9,6 @@ import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
-import com.github.kittinunf.fuel.coroutines.awaitStringResult
-import com.github.kittinunf.fuel.httpGet
 import com.prof.rssparser.Article
 import com.prof.rssparser.Parser
 import com.sapuseven.untis.R
@@ -18,11 +16,13 @@ import com.sapuseven.untis.activities.BaseActivity
 import com.sapuseven.untis.activities.MainActivity
 import com.sapuseven.untis.adapters.infocenter.*
 import com.sapuseven.untis.data.databases.LinkDatabase
+import com.sapuseven.untis.helpers.strings.StringLoaderSync
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
 import org.json.JSONArray
 import org.json.JSONObject
+import java.lang.ref.WeakReference
 import java.nio.charset.StandardCharsets
 
 class InfoCenterFragment : Fragment() {
@@ -64,14 +64,8 @@ class InfoCenterFragment : Fragment() {
 
 		suspend fun loadMessages(context: Context, link: LinkDatabase.Link): List<Article>? {
 			if (link.rssUrl.startsWith("https://www.iwi.hs-karlsruhe.de/hskampus-broker/api")) {
-				return link.rssUrl.httpGet().awaitStringResult()
-					.fold({ data ->
-						//TODO: add cache support
-						parseJSONFeed(data)
-					}, {
-						//TODO: handle error
-						null
-					})
+				val feed = StringLoaderSync(WeakReference(context), link.rssUrl).load() ?: return null
+				return parseJSONFeed(feed)
 			} else {
 				val parser = Parser.Builder()
 					.context(context)

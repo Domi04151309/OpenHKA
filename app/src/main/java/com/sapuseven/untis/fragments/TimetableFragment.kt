@@ -475,7 +475,7 @@ class TimetableFragment : Fragment(),
 			else -> {
 				showLoading(false)
 				Toast.makeText(
-					context,
+					requireContext(),
 					R.string.errors_failed_loading_from_server_message,
 					Toast.LENGTH_LONG
 				).show()
