@@ -9,11 +9,10 @@ import androidx.recyclerview.widget.RecyclerView
 import com.sapuseven.untis.R
 import com.sapuseven.untis.data.lists.ChecklistItem
 
-class ChecklistAdapter(
-	private var items: ArrayList<ChecklistItem> = arrayListOf()
-) : RecyclerView.Adapter<ChecklistAdapter.ViewHolder>() {
+class ChecklistAdapter() : RecyclerView.Adapter<ChecklistAdapter.ViewHolder>() {
 
 	var onClickListener: View.OnClickListener? = null
+	private var items: ArrayList<ChecklistItem> = arrayListOf()
 
 	override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder = ViewHolder(
 		LayoutInflater.from(parent.context).inflate(R.layout.item_checklist, parent, false)

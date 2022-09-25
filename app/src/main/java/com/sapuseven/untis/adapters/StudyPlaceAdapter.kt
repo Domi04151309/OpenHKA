@@ -10,11 +10,10 @@ import androidx.recyclerview.widget.RecyclerView
 import com.sapuseven.untis.R
 import com.sapuseven.untis.data.lists.StudyPlaceListItem
 
-class StudyPlaceAdapter(
-	private var items: ArrayList<StudyPlaceListItem> = arrayListOf()
-) : RecyclerView.Adapter<StudyPlaceAdapter.ViewHolder>() {
+class StudyPlaceAdapter() : RecyclerView.Adapter<StudyPlaceAdapter.ViewHolder>() {
 
 	var onClickListener: View.OnClickListener? = null
+	private var items: ArrayList<StudyPlaceListItem> = arrayListOf()
 
 	override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder = ViewHolder(
 		LayoutInflater.from(parent.context).inflate(R.layout.item_study_place, parent, false)

@@ -14,10 +14,9 @@ import java.text.DecimalFormatSymbols
 import java.util.*
 import kotlin.collections.ArrayList
 
-class MensaListAdapter(
-	private var items: ArrayList<MensaListItem> = arrayListOf()
-) : RecyclerView.Adapter<MensaListAdapter.ViewHolder>() {
+class MensaListAdapter() : RecyclerView.Adapter<MensaListAdapter.ViewHolder>() {
 
+	private var items: ArrayList<MensaListItem> = arrayListOf()
 	private val formatter = DecimalFormat(
 		"0.00", DecimalFormatSymbols.getInstance(Locale.getDefault())
 	)
