@@ -9,7 +9,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.sapuseven.untis.R
 import com.sapuseven.untis.data.lists.ChecklistItem
 
-class ChecklistAdapter() : RecyclerView.Adapter<ChecklistAdapter.ViewHolder>() {
+class ChecklistAdapter : RecyclerView.Adapter<ChecklistAdapter.ViewHolder>() {
 
 	var onClickListener: View.OnClickListener? = null
 	private var items: ArrayList<ChecklistItem> = arrayListOf()

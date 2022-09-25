@@ -10,7 +10,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.sapuseven.untis.R
 import com.sapuseven.untis.data.lists.StudyPlaceListItem
 
-class StudyPlaceAdapter() : RecyclerView.Adapter<StudyPlaceAdapter.ViewHolder>() {
+class StudyPlaceAdapter : RecyclerView.Adapter<StudyPlaceAdapter.ViewHolder>() {
 
 	var onClickListener: View.OnClickListener? = null
 	private var items: ArrayList<StudyPlaceListItem> = arrayListOf()
