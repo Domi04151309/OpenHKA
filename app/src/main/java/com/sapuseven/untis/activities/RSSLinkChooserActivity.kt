@@ -79,6 +79,7 @@ class RSSLinkChooserActivity : BaseActivity(), StringDisplay {
 			)
 			keyMap[mapKey] = currentCategory.optString("id")
 		}
+		linkList.sortBy { it.title }
 		linkAdapter.notifyDataSetChanged()
 		swiperefreshlayout.isRefreshing = false
 	}
