@@ -41,7 +41,7 @@ class StationsFragment : Fragment(), StringDisplay {
 
 	companion object {
 		internal const val API_URL: String =
-			"https://kvv.de/tunnelEfaDirect.php?outputFormat=JSON&coordOutputFormat=WGS84[dd.ddddd]&action=XSLT_DM_REQUEST&mode=direct&type_dm=stop&name_dm="
+			"https://kvv.de/tunnelEfaDirect.php?outputFormat=JSON&coordOutputFormat=WGS84[dd.ddddd]&action=XSLT_DM_REQUEST&mode=direct&type_dm=stop&useRealtime=1&name_dm="
 		private const val FRAGMENT_TAG_STATION: String = "com.sapuseven.untis.fragments.station"
 
 		fun parseStation(resources: Resources, input: String): Pair<ListItem, JSONObject> {
