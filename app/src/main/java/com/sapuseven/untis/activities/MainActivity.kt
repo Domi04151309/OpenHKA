@@ -263,6 +263,10 @@ class MainActivity :
 				supportActionBar?.setTitle(R.string.activity_title_info_center)
 				setFragment(InfoCenterFragment())
 			}
+			R.id.nav_mail -> {
+				supportActionBar?.setTitle(R.string.activity_title_mail)
+				setFragment(MailFragment())
+			}
 			R.id.nav_events -> {
 				supportActionBar?.setTitle(R.string.activity_title_events)
 				setFragment(EventFragment())

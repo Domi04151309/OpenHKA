@@ -35,3 +35,5 @@
 -keepclassmembernames class kotlinx.** {
     volatile <fields>;
 }
+
+-keep class android.org.apache.** { *; }

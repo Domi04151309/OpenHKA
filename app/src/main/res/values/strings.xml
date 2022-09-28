@@ -28,6 +28,7 @@
 
 	<string name="activity_title_errors">Errors</string>
 	<string name="activity_title_info_center">Info Center</string>
+	<string name="activity_title_mail">Mail</string>
 	<string name="activity_title_events">Events</string>
 	<string name="activity_title_people">People</string>
 	<string name="activity_title_locations">Locations</string>

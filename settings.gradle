@@ -1,1 +1,3 @@
 include ':app', ':weekview', ':wear'
+
+include ':eWSForAndroid'

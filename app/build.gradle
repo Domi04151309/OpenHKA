@@ -26,8 +26,8 @@ android {
 		}
 
 		debug {
-			minifyEnabled true
-			shrinkResources true
+			minifyEnabled false
+			shrinkResources false
 			proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
 			applicationIdSuffix '.debug'
 			versionNameSuffix '-DEBUG'
@@ -51,6 +51,15 @@ android {
 		resources {
 			excludes += ['org/apache/commons/codec/language/bm/*.txt']
 		}
+		exclude 'META-INF/DEPENDENCIES'
+		exclude 'META-INF/LICENSE'
+		exclude 'META-INF/LICENSE.txt'
+		exclude 'META-INF/license.txt'
+		exclude 'META-INF/NOTICE'
+		exclude 'META-INF/NOTICE.txt'
+		exclude 'META-INF/notice.txt'
+		exclude 'META-INF/ASL2.0'
+		exclude("META-INF/*.kotlin_module")
 	}
 	lint {
 		disable 'MissingTranslation'
@@ -81,6 +90,8 @@ dependencies {
 	implementation 'backport-util-concurrent:backport-util-concurrent:3.1'
 	implementation 'commons-codec:commons-codec:1.10'
 	implementation 'commons-lang:commons-lang:2.6'
+
+	implementation project(':eWSForAndroid')
 
 	implementation 'androidx.localbroadcastmanager:localbroadcastmanager:1.1.0'
 	implementation 'com.google.android.gms:play-services-wearable:17.1.0'
