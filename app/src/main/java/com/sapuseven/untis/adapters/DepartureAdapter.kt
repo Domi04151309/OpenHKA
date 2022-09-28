@@ -3,6 +3,7 @@ package com.sapuseven.untis.adapters
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.ImageView
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.sapuseven.untis.R
@@ -22,11 +23,13 @@ class DepartureAdapter(
 		holder.tvLine.text = items[position].line
 		holder.tvSubject.text = items[position].title
 		holder.tvBody.text = items[position].summary
+		holder.ivLow.visibility = if (items[position].lowFloor) View.VISIBLE else View.GONE
 	}
 
 	class ViewHolder(rootView: View) : RecyclerView.ViewHolder(rootView) {
 		val tvLine: TextView = rootView.findViewById(R.id.textview_itemmessage_line)
 		val tvSubject: TextView = rootView.findViewById(R.id.textview_itemmessage_subject)
 		val tvBody: TextView = rootView.findViewById(R.id.textview_itemmessage_body)
+		val ivLow: ImageView = rootView.findViewById(R.id.imageview_itemmessage_low)
 	}
 }

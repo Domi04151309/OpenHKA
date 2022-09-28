@@ -162,7 +162,9 @@ class StationDetailsFragment(private var item: JSONObject) : Fragment() {
 						currentItem.optString("countdown"),
 						currentItem.optString("platform")
 					),
-					currentLine.optString("number")
+					currentLine.optString("number"),
+					((currentLine.optJSONArray("hints") ?: JSONArray()).optJSONObject(0)
+						?: JSONObject()).optString("content") == "Niederflurwagen"
 				)
 			)
 		}
