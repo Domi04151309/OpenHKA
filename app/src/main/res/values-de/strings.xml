@@ -88,6 +88,8 @@
     <string name="notifications_channel_backgrounderrors_desc">Zeigt Fehlermeldungen von Hintergrundprozessen an</string>
     <string name="notifications_channel_breakinfo">Pauseninfo</string>
     <string name="notifications_channel_breakinfo_desc">Zeigt Informationen der aktuellen Pause und der nächsten Stunde an</string>
+    <string name="notifications_channel_feed">Nachrichten</string>
+    <string name="notifications_channel_feed_desc">Zeigt Informationen über Nachrichten an</string>
     <string name="notifications_text_error_message">Du wirst heute keine Benachrichtigungen erhalten.</string>
     <string name="notifications_text_error_title">Fehler beim Laden des Stundenplans</string>
     <string name="notifications_text_first_title">Vorlesungsbeginn um %1$s</string>
