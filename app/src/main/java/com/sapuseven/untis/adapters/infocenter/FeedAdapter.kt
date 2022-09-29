@@ -15,9 +15,9 @@ import java.text.SimpleDateFormat
 import java.util.*
 import kotlin.collections.ArrayList
 
-class RSSAdapter(
+class FeedAdapter(
 	private val messageList: List<Article> = ArrayList()
-) : RecyclerView.Adapter<RSSAdapter.ViewHolder>() {
+) : RecyclerView.Adapter<FeedAdapter.ViewHolder>() {
 
 	companion object {
 		private val dateFormat = SimpleDateFormat("EEE, dd MMM yyyy HH:mm:ss Z", Locale.US)

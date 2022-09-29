@@ -18,7 +18,7 @@ import org.json.JSONObject
 import java.lang.ref.WeakReference
 
 
-class RSSLinkChooserActivity : BaseActivity(), StringDisplay {
+class FeedLinkChooserActivity : BaseActivity(), StringDisplay {
 
 	private val linkList = arrayListOf<ListItem>()
 	private val linkAdapter = MessageAdapter(linkList)

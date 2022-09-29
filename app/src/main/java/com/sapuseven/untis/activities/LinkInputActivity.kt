@@ -19,13 +19,13 @@ import kotlinx.android.synthetic.main.activity_link_input.*
 class LinkInputActivity : BaseActivity() {
 
 	companion object {
-		private const val REQUEST_CODE_RSS_LIST = 1
+		private const val REQUEST_CODE_FEED_LIST = 1
 		private const val REQUEST_CODE_ICAL_LIST = 2
 		private const val BACKUP_PREF_NAME = "linkInputBackup"
 		private const val HELP_URL = "https://github.com/Domi04151309/OpenHKA/wiki/Help"
 		private const val PRIVACY_POLICY_URL =
 			"https://github.com/Domi04151309/OpenHKA/wiki/Privacy-Policy"
-		private const val NO_LINK_RSS = "https://www.h-ka.de/feed.rss"
+		private const val NO_LINK_FEED = "https://www.h-ka.de/feed.rss"
 		private const val NO_LINK_ICAL =
 			"https://www.iwi.hs-karlsruhe.de/hskampus-broker/api/calendar/schedule/current"
 
@@ -74,15 +74,15 @@ class LinkInputActivity : BaseActivity() {
 		}
 
 		button_link_input_skip?.setOnClickListener {
-			edittext_link_input_rss?.setText(NO_LINK_RSS)
+			edittext_link_input_rss?.setText(NO_LINK_FEED)
 			edittext_link_input_ical?.setText(NO_LINK_ICAL)
 			validate()?.requestFocus() ?: run { loadData() }
 		}
 
 		textinputlayout_link_input_rss.setEndIconOnClickListener {
 			startActivityForResult(
-				Intent(this, RSSLinkChooserActivity::class.java),
-				REQUEST_CODE_RSS_LIST
+				Intent(this, FeedLinkChooserActivity::class.java),
+				REQUEST_CODE_FEED_LIST
 			)
 		}
 
@@ -229,7 +229,7 @@ class LinkInputActivity : BaseActivity() {
 	@Deprecated("")
 	override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
 		super.onActivityResult(requestCode, resultCode, data)
-		if (requestCode == REQUEST_CODE_RSS_LIST && resultCode == RESULT_OK) {
+		if (requestCode == REQUEST_CODE_FEED_LIST && resultCode == RESULT_OK) {
 			edittext_link_input_rss.setText(data?.getStringExtra("link"))
 		} else if (requestCode == REQUEST_CODE_ICAL_LIST && resultCode == RESULT_OK) {
 			edittext_link_input_ical.setText(data?.getStringExtra("link"))
