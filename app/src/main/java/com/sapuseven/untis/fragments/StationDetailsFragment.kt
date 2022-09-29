@@ -45,6 +45,7 @@ class StationDetailsFragment(private var item: JSONObject) : Fragment() {
 			?: JSONObject()).optJSONObject("point") ?: JSONObject())
 		return when (item.itemId) {
 			R.id.maps -> {
+				// lat and long are swapped
 				val coordinates =
 					(point.optJSONObject("ref") ?: JSONObject()).optString("coords")
 						.split(",").toMutableList().apply {
