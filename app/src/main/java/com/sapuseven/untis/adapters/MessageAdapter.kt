@@ -1,6 +1,5 @@
 package com.sapuseven.untis.adapters
 
-import android.text.method.LinkMovementMethod
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -26,7 +25,6 @@ class MessageAdapter(
 
 		holder.tvSubject.text = items[position].title
 		holder.tvBody.text = items[position].summary
-		holder.tvBody.movementMethod = LinkMovementMethod.getInstance()
 
 		holder.tvBody.visibility = if (items[position].summary.isEmpty()) View.GONE else View.VISIBLE
 	}
