@@ -3,6 +3,7 @@ package com.sapuseven.untis.fragments
 import android.content.Intent
 import android.content.res.Resources
 import android.os.Bundle
+import android.text.format.DateFormat
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -36,6 +37,7 @@ class StationsFragment : Fragment(), StringDisplay {
 	private val keyMap: MutableMap<String, JSONObject> = mutableMapOf()
 	private var favorites = setOf<String?>()
 	private var requestCounter = 0
+	private lateinit var lastRefreshed: TextView
 	private lateinit var recyclerview: RecyclerView
 	private lateinit var swiperefreshlayout: SwipeRefreshLayout
 
@@ -78,6 +80,7 @@ class StationsFragment : Fragment(), StringDisplay {
 			false
 		)
 
+		lastRefreshed = root.findViewById(R.id.textview_stations_lastrefresh)
 		recyclerview = root.findViewById(R.id.recyclerview_infocenter)
 		swiperefreshlayout = root.findViewById(R.id.swiperefreshlayout_infocenter)
 
@@ -128,6 +131,10 @@ class StationsFragment : Fragment(), StringDisplay {
 		if (requestCounter == favorites.size) {
 			stationList.sortBy { it.title }
 			stationAdapter.notifyDataSetChanged()
+			lastRefreshed.text = resources.getString(
+				R.string.main_last_refreshed,
+				DateFormat.getTimeFormat(context).format(System.currentTimeMillis())
+			)
 			swiperefreshlayout.isRefreshing = false
 		}
 	}
