@@ -24,6 +24,17 @@ class StartupReceiver : BroadcastReceiver() {
 
 		val dateTime = DateTime().withTime(2, 0, 0, 0)
 
+		Intent(context, FeedNotificationReceiver::class.java).apply {
+			putExtra(EXTRA_LONG_PROFILE_ID, preferenceManager.currentProfileId())
+			putExtra(NotificationSetup.EXTRA_BOOLEAN_MANUAL, intent.getBooleanExtra(NotificationSetup.EXTRA_BOOLEAN_MANUAL, false))
+		}.let {
+			val pendingIntent = PendingIntent.getBroadcast(context, 0, it, PendingIntent.FLAG_IMMUTABLE)
+			val am = context.getSystemService(Context.ALARM_SERVICE) as AlarmManager
+			am.setInexactRepeating(AlarmManager.RTC_WAKEUP, dateTime.millis, AlarmManager.INTERVAL_HOUR, pendingIntent)
+
+			context.sendBroadcast(it)
+		}
+
 		listOf(
 				Intent(context, NotificationSetup::class.java).apply {
 					putExtra(EXTRA_LONG_PROFILE_ID, preferenceManager.currentProfileId())
