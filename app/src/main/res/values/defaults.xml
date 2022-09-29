@@ -11,6 +11,7 @@
 	<bool name="preference_timetable_range_index_reset_default">false</bool>
 	<bool name="preference_notifications_before_first_default">false</bool>
 	<bool name="preference_notifications_enable_default">true</bool>
+	<bool name="preference_notifications_feed_enable_default">true</bool>
 	<bool name="preference_notifications_subjects_default">true</bool>
 	<bool name="preference_notifications_rooms_default">true</bool>
 	<bool name="preference_double_tap_to_exit_default">true</bool>

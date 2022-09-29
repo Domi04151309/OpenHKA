@@ -152,9 +152,13 @@
 	<string name="preference_info_libraries">Libraries</string>
 	<string name="preference_info_libraries_desc">A list of all used libraries</string>
 	<string name="preference_marker">Time indicator</string>
+	<string name="preference_notifications_feed">Feed Notifications</string>
+	<string name="preference_notifications_timetable">Timetable Notifications</string>
 	<string name="preference_notifications_clear">Clear all notifications</string>
 	<string name="preference_notifications_enable">Enable notification</string>
+	<string name="preference_notifications_enable_feed">Enable feed notifications</string>
 	<string name="preference_notifications_enable_desc">Displays a notification with information about the next lesson while you have break.</string>
+	<string name="preference_notifications_enable_feed_desc">Displays notifications for new feed entries</string>
 	<string name="preference_notifications_first_lesson">Notification before first lesson</string>
 	<string name="preference_notifications_first_lesson_desc">Show a notification right before lessons start</string>
 	<string name="preference_notifications_first_lesson_time">Notification time</string>

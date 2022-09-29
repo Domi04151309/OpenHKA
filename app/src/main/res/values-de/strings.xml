@@ -153,11 +153,15 @@
     <string name="preference_marker">Zeitanzeige</string>
     <string name="preference_notifications_clear">Alle Benachrichtigungen löschen</string>
     <string name="preference_notifications_enable">Benachrichtigungen aktivieren</string>
+    <string name="preference_notifications_enable_feed">Feed-Benachrichtigungen aktivieren</string>
     <string name="preference_notifications_enable_desc">Zeigt während Pausen eine Benachrichtigung mit Infos zur nächsten Stunde an.</string>
+    <string name="preference_notifications_enable_feed_desc">Zeigt Benachrichtigungen für neue Feedeinträge an</string>
+    <string name="preference_notifications_feed">Feed-Benachrichtigungen</string>
     <string name="preference_notifications_first_lesson">Benachrichtigung vor der ersten Stunde</string>
     <string name="preference_notifications_first_lesson_desc">Zeigt eine zusätzliche Benachrichtigung vor Beginn der ersten Stunde an</string>
     <string name="preference_notifications_first_lesson_time">Benachrichtigungszeit</string>
     <string name="preference_notifications_first_lesson_time_unit">min vor der ersten Stunde</string>
+    <string name="preference_notifications_timetable">Stundenplanbenachrichtigungen</string>
     <string name="preference_theme">Design auswählen</string>
     <string name="preference_theme_blue">Blau</string>
     <string name="preference_theme_cyan">Türkis</string>
