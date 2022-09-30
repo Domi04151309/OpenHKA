@@ -72,7 +72,7 @@ class PeopleFragment : Fragment(), StringDisplay {
 		savedInstanceState: Bundle?
 	): View? {
 		val root = inflater.inflate(
-			R.layout.fragment_infocenter,
+			R.layout.fragment_people,
 			container,
 			false
 		)
