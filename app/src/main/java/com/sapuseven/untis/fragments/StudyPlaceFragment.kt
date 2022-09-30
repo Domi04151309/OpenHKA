@@ -36,10 +36,9 @@ class StudyPlaceFragment : Fragment(), StringDisplay {
 	companion object {
 		private const val API_URL: String = "https://www.iwi.hs-karlsruhe.de/hskampus-broker/api"
 
-		fun parseStudyPlaces(
+		private fun parseStudyPlacesIntern(
 			resources: Resources,
-			places: String,
-			occupations: String
+			places: String
 		): GenericParseResult<StudyPlaceListItem, Pair<Double, Double>> {
 			val result = GenericParseResult<StudyPlaceListItem, Pair<Double, Double>>()
 			val json = JSONArray(places)
@@ -50,7 +49,7 @@ class StudyPlaceFragment : Fragment(), StringDisplay {
 				currentItem = json.getJSONObject(i)
 				currentTitle = currentItem.optString("longName").replace(", ", ",\n")
 				array[currentItem.optInt("id") - 1] = StudyPlaceListItem(
-					5,
+					0,
 					currentItem.optInt("availableSeats"),
 					resources.getString(R.string.study_places_occupation_unknown),
 					currentTitle,
@@ -61,19 +60,37 @@ class StudyPlaceFragment : Fragment(), StringDisplay {
 					currentItem.optDouble("longitude")
 				)
 			}
+			result.list = ArrayList(array.toMutableList())
+			return result
+		}
 
-			val innerJson = JSONArray(occupations)
-			for (i in 0 until innerJson.length()) {
-				currentItem = innerJson.getJSONObject(i)
-				array[currentItem.optInt("id") - 1].let {
+		fun parseStudyPlaces(
+			resources: Resources,
+			places: String
+		): GenericParseResult<StudyPlaceListItem, Pair<Double, Double>> {
+			val result = parseStudyPlacesIntern(resources, places)
+			result.list.sortBy { it.title }
+			return result
+		}
+
+		fun parseStudyPlaces(
+			resources: Resources,
+			places: String,
+			occupations: String
+		): GenericParseResult<StudyPlaceListItem, Pair<Double, Double>> {
+			val result = parseStudyPlacesIntern(resources, places)
+			val json = JSONArray(occupations)
+			var currentItem: JSONObject
+			for (i in 0 until json.length()) {
+				currentItem = json.getJSONObject(i)
+				result.list[currentItem.optInt("id") - 1].let {
 					it.value = currentItem.optInt("occupiedSeats")
 					it.overline = resources.getString(
 						R.string.study_places_occupation, it.value, it.max
 					)
 				}
 			}
-			result.list = ArrayList(array.sortedBy { it.title })
-
+			result.list.sortBy { it.title }
 			return result
 		}
 	}
@@ -134,6 +151,9 @@ class StudyPlaceFragment : Fragment(), StringDisplay {
 					R.string.errors_failed_loading_from_server_message,
 					Toast.LENGTH_LONG
 				).show()
+				parsedData = parseStudyPlaces(resources, string)
+				adapter.updateItems(parsedData.list)
+				swiperefreshlayout.isRefreshing = false
 			}
 		}
 		StringLoader(WeakReference(context), callback, "${API_URL}/learningPlaceOccupations").load(
