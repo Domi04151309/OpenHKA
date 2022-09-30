@@ -114,7 +114,7 @@ class StationDetailsFragment(private var item: JSONObject) : Fragment() {
 						refreshView(root)
 					}
 
-					override fun onStringLoadingError(code: Int) {
+					override fun onStringLoadingError(code: Int, loader: StringLoader) {
 						Toast.makeText(
 							context,
 							R.string.errors_failed_loading_from_server_message,

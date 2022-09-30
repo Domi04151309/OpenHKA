@@ -148,7 +148,7 @@ class StationsFragment : Fragment(), StringDisplay {
 		checkRequests()
 	}
 
-	override fun onStringLoadingError(code: Int) {
+	override fun onStringLoadingError(code: Int, loader: StringLoader) {
 		requestCounter++
 		Toast.makeText(
 			context,

@@ -215,7 +215,6 @@ class MensaFragment : Fragment(), StringDisplay {
 	}
 
 	private fun loadAdditives() {
-		lateinit var loader: StringLoader
 		val callback = object : StringDisplay {
 			override fun onStringLoaded(string: String) {
 				MaterialAlertDialogBuilder(context)
@@ -225,7 +224,7 @@ class MensaFragment : Fragment(), StringDisplay {
 					.show()
 			}
 
-			override fun onStringLoadingError(code: Int) {
+			override fun onStringLoadingError(code: Int, loader: StringLoader) {
 				when (code) {
 					StringLoader.CODE_CACHE_MISSING -> loader.repeat(
 						StringLoader.FLAG_LOAD_SERVER
@@ -240,12 +239,12 @@ class MensaFragment : Fragment(), StringDisplay {
 				}
 			}
 		}
-		loader = StringLoader(WeakReference(context), callback, "$API_URL/canteen/v2/foodadditives")
-		loader.load(StringLoader.FLAG_LOAD_CACHE)
+		StringLoader(WeakReference(context), callback, "$API_URL/canteen/v2/foodadditives").load(
+			StringLoader.FLAG_LOAD_CACHE
+		)
 	}
 
 	private fun loadCanteens() {
-		lateinit var loader: StringLoader
 		val callback = object : StringDisplay {
 			override fun onStringLoaded(string: String) {
 				val targetId = (activity as BaseActivity).preferences.defaultPrefs
@@ -263,7 +262,7 @@ class MensaFragment : Fragment(), StringDisplay {
 				)
 			}
 
-			override fun onStringLoadingError(code: Int) {
+			override fun onStringLoadingError(code: Int, loader: StringLoader) {
 				when (code) {
 					StringLoader.CODE_CACHE_MISSING -> loader.repeat(
 						StringLoader.FLAG_LOAD_SERVER
@@ -278,8 +277,11 @@ class MensaFragment : Fragment(), StringDisplay {
 				}
 			}
 		}
-		loader = StringLoader(WeakReference(context), callback, "$API_URL/canteen/names")
-		loader.load(StringLoader.FLAG_LOAD_CACHE)
+		StringLoader(
+			WeakReference(context),
+			callback,
+			"$API_URL/canteen/names"
+		).load(StringLoader.FLAG_LOAD_CACHE)
 	}
 
 	private fun refreshMenu(flags: Int) {
@@ -305,9 +307,9 @@ class MensaFragment : Fragment(), StringDisplay {
 		swiperefreshlayout.isRefreshing = false
 	}
 
-	override fun onStringLoadingError(code: Int) {
+	override fun onStringLoadingError(code: Int, loader: StringLoader) {
 		when (code) {
-			StringLoader.CODE_CACHE_MISSING -> stringLoader.repeat(
+			StringLoader.CODE_CACHE_MISSING -> loader.repeat(
 				StringLoader.FLAG_LOAD_SERVER
 			)
 			else -> {

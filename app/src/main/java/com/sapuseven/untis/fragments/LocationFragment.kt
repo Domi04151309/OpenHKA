@@ -114,9 +114,9 @@ class LocationFragment : Fragment(), StringDisplay {
 		swiperefreshlayout.isRefreshing = false
 	}
 
-	override fun onStringLoadingError(code: Int) {
+	override fun onStringLoadingError(code: Int, loader: StringLoader) {
 		when (code) {
-			StringLoader.CODE_CACHE_MISSING -> stringLoader.repeat(
+			StringLoader.CODE_CACHE_MISSING -> loader.repeat(
 				StringLoader.FLAG_LOAD_SERVER
 			)
 			else -> {

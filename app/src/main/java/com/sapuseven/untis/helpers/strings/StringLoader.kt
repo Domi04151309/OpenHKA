@@ -44,12 +44,14 @@ class StringLoader(
 			} ?: run {
 				cache.delete()
 				stringDisplay.onStringLoadingError(
-					CODE_CACHE_MISSING
+					CODE_CACHE_MISSING,
+					this
 				)
 			}
 		} else {
 			stringDisplay.onStringLoadingError(
-				CODE_CACHE_MISSING
+				CODE_CACHE_MISSING,
+				this
 			)
 		}
 	}
@@ -65,7 +67,8 @@ class StringLoader(
 				cache.save(StringCache.CacheObject(timestamp, data))
 			}, {
 				stringDisplay.onStringLoadingError(
-					CODE_REQUEST_FAILED
+					CODE_REQUEST_FAILED,
+					this
 				)
 			})
 	}

@@ -101,7 +101,6 @@ class PeopleDetailsFragment(private val item: JSONObject) : Fragment() {
 		showInfoOrHide("faculty", root.findViewById(R.id.tvFaculty))
 
 		if (!item.isNull("room")) {
-			lateinit var loader: StringLoader
 			val callback = object : StringDisplay {
 				override fun onStringLoaded(string: String) {
 					val json = JSONArray(string)
@@ -112,7 +111,6 @@ class PeopleDetailsFragment(private val item: JSONObject) : Fragment() {
 							currentItem.optInt("id") == (item.optJSONObject("room")
 								?: JSONObject()).optInt("id")
 						) {
-							lateinit var innerLoader: StringLoader
 							val innerCallback = object : StringDisplay {
 								override fun onStringLoaded(string: String) {
 									val innerJson = JSONArray(string)
@@ -136,24 +134,27 @@ class PeopleDetailsFragment(private val item: JSONObject) : Fragment() {
 									}
 								}
 
-								override fun onStringLoadingError(code: Int) =
-									defaultOnError(innerLoader, code)
+								override fun onStringLoadingError(code: Int, loader: StringLoader) =
+									defaultOnError(code, loader)
 							}
-							innerLoader = StringLoader(
+							StringLoader(
 								WeakReference(context),
 								innerCallback,
 								"${API_URL}/buildings"
-							)
-							innerLoader.load(StringLoader.FLAG_LOAD_CACHE)
+							).load(StringLoader.FLAG_LOAD_CACHE)
 							return
 						}
 					}
 				}
 
-				override fun onStringLoadingError(code: Int) = defaultOnError(loader, code)
+				override fun onStringLoadingError(code: Int, loader: StringLoader) =
+					defaultOnError(code, loader)
 			}
-			loader = StringLoader(WeakReference(context), callback, "${API_URL}/rooms")
-			loader.load(StringLoader.FLAG_LOAD_CACHE)
+			StringLoader(
+				WeakReference(context),
+				callback,
+				"${API_URL}/rooms"
+			).load(StringLoader.FLAG_LOAD_CACHE)
 		}
 
 		return root
@@ -174,7 +175,7 @@ class PeopleDetailsFragment(private val item: JSONObject) : Fragment() {
 		else view.text = item.optString(key)
 	}
 
-	internal fun defaultOnError(loader: StringLoader, code: Int) {
+	internal fun defaultOnError(code: Int, loader: StringLoader) {
 		when (code) {
 			StringLoader.CODE_CACHE_MISSING -> loader.repeat(
 				StringLoader.FLAG_LOAD_SERVER

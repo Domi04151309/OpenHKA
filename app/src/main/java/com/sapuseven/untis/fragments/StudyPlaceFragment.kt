@@ -27,7 +27,8 @@ import java.lang.ref.WeakReference
 
 class StudyPlaceFragment : Fragment(), StringDisplay {
 	private val adapter = StudyPlaceAdapter()
-	private var parsedData: GenericParseResult<StudyPlaceListItem, Pair<Double, Double>> = GenericParseResult()
+	private var parsedData: GenericParseResult<StudyPlaceListItem, Pair<Double, Double>> =
+		GenericParseResult()
 	private lateinit var stringLoader: StringLoader
 	private lateinit var recyclerview: RecyclerView
 	private lateinit var swiperefreshlayout: SwipeRefreshLayout
@@ -35,7 +36,11 @@ class StudyPlaceFragment : Fragment(), StringDisplay {
 	companion object {
 		private const val API_URL: String = "https://www.iwi.hs-karlsruhe.de/hskampus-broker/api"
 
-		fun parseStudyPlaces(resources: Resources, places: String, occupations: String): GenericParseResult<StudyPlaceListItem, Pair<Double, Double>> {
+		fun parseStudyPlaces(
+			resources: Resources,
+			places: String,
+			occupations: String
+		): GenericParseResult<StudyPlaceListItem, Pair<Double, Double>> {
 			val result = GenericParseResult<StudyPlaceListItem, Pair<Double, Double>>()
 			val json = JSONArray(places)
 			val array = Array(json.length()) { StudyPlaceListItem(0, 0, "", "", "") }
@@ -116,7 +121,6 @@ class StudyPlaceFragment : Fragment(), StringDisplay {
 	}
 
 	override fun onStringLoaded(string: String) {
-		lateinit var loader: StringLoader
 		val callback = object : StringDisplay {
 			override fun onStringLoaded(innerString: String) {
 				parsedData = parseStudyPlaces(resources, string, innerString)
@@ -124,7 +128,7 @@ class StudyPlaceFragment : Fragment(), StringDisplay {
 				swiperefreshlayout.isRefreshing = false
 			}
 
-			override fun onStringLoadingError(code: Int) {
+			override fun onStringLoadingError(code: Int, loader: StringLoader) {
 				Toast.makeText(
 					context,
 					R.string.errors_failed_loading_from_server_message,
@@ -132,14 +136,14 @@ class StudyPlaceFragment : Fragment(), StringDisplay {
 				).show()
 			}
 		}
-		loader =
-			StringLoader(WeakReference(context), callback, "${API_URL}/learningPlaceOccupations")
-		loader.load(StringLoader.FLAG_LOAD_SERVER)
+		StringLoader(WeakReference(context), callback, "${API_URL}/learningPlaceOccupations").load(
+			StringLoader.FLAG_LOAD_SERVER
+		)
 	}
 
-	override fun onStringLoadingError(code: Int) {
+	override fun onStringLoadingError(code: Int, loader: StringLoader) {
 		when (code) {
-			StringLoader.CODE_CACHE_MISSING -> stringLoader.repeat(
+			StringLoader.CODE_CACHE_MISSING -> loader.repeat(
 				StringLoader.FLAG_LOAD_SERVER
 			)
 			else -> {
