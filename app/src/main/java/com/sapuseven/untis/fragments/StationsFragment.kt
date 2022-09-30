@@ -8,7 +8,6 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
-import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentTransaction
@@ -30,11 +29,11 @@ import java.lang.Integer.min
 import java.lang.ref.WeakReference
 
 
-//TODO: add offline support
 class StationsFragment : Fragment(), StringDisplay {
 	private val stationList = arrayListOf<ListItem>()
 	private val stationAdapter = MessageAdapter(stationList)
 	private val keyMap: MutableMap<String, JSONObject> = mutableMapOf()
+	private var fromCache: Boolean = false
 	private var favorites = setOf<String?>()
 	private var requestCounter = 0
 	private lateinit var lastRefreshed: TextView
@@ -117,6 +116,7 @@ class StationsFragment : Fragment(), StringDisplay {
 		stationList.clear()
 		swiperefreshlayout.isRefreshing = true
 		requestCounter = 0
+		fromCache = false
 		favorites = StationUtils.getFavorites((activity as BaseActivity).preferences)
 		for (station in favorites) {
 			StringLoader(
@@ -129,6 +129,9 @@ class StationsFragment : Fragment(), StringDisplay {
 
 	private fun checkRequests() {
 		if (requestCounter == favorites.size) {
+			if (fromCache) stationList.forEach {
+				it.summary = resources.getString(R.string.errors_failed_loading_from_server_message)
+			}
 			stationList.sortBy { it.title }
 			stationAdapter.notifyDataSetChanged()
 			lastRefreshed.text = resources.getString(
@@ -149,12 +152,12 @@ class StationsFragment : Fragment(), StringDisplay {
 	}
 
 	override fun onStringLoadingError(code: Int, loader: StringLoader) {
-		requestCounter++
-		Toast.makeText(
-			context,
-			R.string.errors_failed_loading_from_server_message,
-			Toast.LENGTH_LONG
-		).show()
-		checkRequests()
+		if (code == StringLoader.CODE_REQUEST_FAILED) {
+			fromCache = true
+			loader.repeat(StringLoader.FLAG_LOAD_CACHE)
+		} else {
+			requestCounter++
+			checkRequests()
+		}
 	}
 }
