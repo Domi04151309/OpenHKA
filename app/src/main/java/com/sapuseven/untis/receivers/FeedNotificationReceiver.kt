@@ -68,7 +68,7 @@ class FeedNotificationReceiver : BroadcastReceiver() {
 				if (i.title == lastTitle || i.title == lastTitleNotification) {
 					preferenceManager.defaultPrefs.edit().putString(
 						"preference_last_title_notification", messages[0].title
-					)
+					).apply()
 					break
 				}
 				val message = HtmlCompat.fromHtml(
