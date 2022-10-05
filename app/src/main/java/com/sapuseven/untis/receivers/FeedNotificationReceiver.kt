@@ -53,7 +53,12 @@ class FeedNotificationReceiver : BroadcastReceiver() {
 	) = GlobalScope.launch(Dispatchers.Main) {
 		createNotificationChannel(context)
 		val pendingIntent = PendingIntent.getActivity(
-			context, 0, Intent(context, MainActivity::class.java), 0
+			context,
+			0,
+			Intent(context, MainActivity::class.java).apply {
+				putExtra("info", true)
+			},
+			PendingIntent.FLAG_UPDATE_CURRENT
 		)
 
 		val messages = InfoCenterFragment.loadMessages(context, link)
@@ -77,7 +82,7 @@ class FeedNotificationReceiver : BroadcastReceiver() {
 				val builder = NotificationCompat.Builder(context, CHANNEL_ID_FEED)
 					.setContentTitle(i.title)
 					.setContentText(message.toString().replace('\n', ' '))
-					.setSmallIcon(R.drawable.notification_clock)
+					.setSmallIcon(R.drawable.all_infocenter)
 					.setContentIntent(pendingIntent)
 					.setStyle(NotificationCompat.BigTextStyle().bigText(message))
 

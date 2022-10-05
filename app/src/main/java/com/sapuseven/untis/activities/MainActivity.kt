@@ -70,8 +70,14 @@ class MainActivity :
 			setupActionBar()
 			setupNavDrawer()
 
-			setFragment(TimetableFragment())
+			if (intent.hasExtra("info")) openInfoCenter()
+			else setFragment(TimetableFragment())
 		}
+	}
+
+	override fun onNewIntent(intent: Intent) {
+		super.onNewIntent(intent)
+		if (intent.hasExtra("info")) openInfoCenter()
 	}
 
 	override fun onResume() {
@@ -253,6 +259,11 @@ class MainActivity :
 		}
 	}
 
+	private fun openInfoCenter() {
+		supportActionBar?.setTitle(R.string.activity_title_info_center)
+		setFragment(InfoCenterFragment())
+	}
+
 	override fun onNavigationItemSelected(item: MenuItem): Boolean {
 		when (item.itemId) {
 			R.id.nav_show_personal -> {
@@ -260,8 +271,7 @@ class MainActivity :
 				setFragment(TimetableFragment())
 			}
 			R.id.nav_infocenter -> {
-				supportActionBar?.setTitle(R.string.activity_title_info_center)
-				setFragment(InfoCenterFragment())
+				openInfoCenter()
 			}
 			R.id.nav_events -> {
 				supportActionBar?.setTitle(R.string.activity_title_events)
