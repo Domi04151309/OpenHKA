@@ -287,12 +287,18 @@
 
 		<PreferenceCategory android:title="@string/preference_notifications_feed">
 
-		<SwitchPreference
-			android:defaultValue="@bool/preference_notifications_feed_enable_default"
-			android:icon="@drawable/settings_notifications_active"
-			android:key="preference_notifications_feed_enable"
-			android:summary="@string/preference_notifications_enable_feed_desc"
-			android:title="@string/preference_notifications_enable_feed" />
+			<SwitchPreference
+				android:defaultValue="@bool/preference_notifications_feed_enable_default"
+				android:icon="@drawable/settings_notifications_active"
+				android:key="preference_notifications_feed_enable"
+				android:summary="@string/preference_notifications_enable_feed_desc"
+				android:title="@string/preference_notifications_enable_feed" />
+
+			<com.sapuseven.untis.preferences.EditIntegerPreference
+				android:defaultValue="5"
+				android:key="preference_notifications_feed_limit"
+				android:summary="@string/preference_notifications_feed_limit_desc"
+				android:title="@string/preference_notifications_feed_limit" />
 		</PreferenceCategory>
 
 		<PreferenceCategory android:title="@string/preference_notifications_timetable">

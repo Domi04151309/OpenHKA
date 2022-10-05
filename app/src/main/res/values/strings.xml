@@ -153,6 +153,8 @@
 	<string name="preference_info_libraries_desc">A list of all used libraries</string>
 	<string name="preference_marker">Time indicator</string>
 	<string name="preference_notifications_feed">Feed Notifications</string>
+	<string name="preference_notifications_feed_limit">Notification Limit</string>
+	<string name="preference_notifications_feed_limit_desc">Limit the amount of notifications per update</string>
 	<string name="preference_notifications_timetable">Timetable Notifications</string>
 	<string name="preference_notifications_clear">Clear all notifications</string>
 	<string name="preference_notifications_enable">Enable notification</string>

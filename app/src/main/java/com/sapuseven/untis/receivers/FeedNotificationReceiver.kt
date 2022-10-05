@@ -20,6 +20,7 @@ import com.sapuseven.untis.helpers.config.PreferenceUtils
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
+import java.lang.Integer.min
 
 class FeedNotificationReceiver : BroadcastReceiver() {
 	companion object {
@@ -68,26 +69,29 @@ class FeedNotificationReceiver : BroadcastReceiver() {
 		val lastTitleNotification = PreferenceUtils.getPrefString(
 			preferenceManager, "preference_last_title_notification", ""
 		)
+		val limit = PreferenceUtils.getPrefInt(
+			preferenceManager, "preference_notifications_feed_limit"
+		)
 		if (messages != null) {
-			for (i in messages) {
-				if (i.title == lastTitle || i.title == lastTitleNotification) {
+			for (i in 0 until min(limit, messages.size)) {
+				if (messages[i].title == lastTitle || messages[i].title == lastTitleNotification) {
 					preferenceManager.defaultPrefs.edit().putString(
 						"preference_last_title_notification", messages[0].title
 					).apply()
 					break
 				}
 				val message = HtmlCompat.fromHtml(
-					i.description ?: "", HtmlCompat.FROM_HTML_MODE_COMPACT
+					messages[i].description ?: "", HtmlCompat.FROM_HTML_MODE_COMPACT
 				)
 				val builder = NotificationCompat.Builder(context, CHANNEL_ID_FEED)
-					.setContentTitle(i.title)
+					.setContentTitle(messages[i].title)
 					.setContentText(message.toString().replace('\n', ' '))
 					.setSmallIcon(R.drawable.all_infocenter)
 					.setContentIntent(pendingIntent)
 					.setStyle(NotificationCompat.BigTextStyle().bigText(message))
 
 				with(NotificationManagerCompat.from(context)) {
-					notify(i.title.hashCode(), builder.build())
+					notify(messages[i].title.hashCode(), builder.build())
 				}
 			}
 		}
