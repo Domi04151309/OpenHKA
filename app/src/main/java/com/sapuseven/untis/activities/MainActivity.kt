@@ -260,6 +260,7 @@ class MainActivity :
 	}
 
 	private fun openInfoCenter() {
+		navigationview_main.setCheckedItem(R.id.nav_infocenter)
 		supportActionBar?.setTitle(R.string.activity_title_info_center)
 		setFragment(InfoCenterFragment())
 	}

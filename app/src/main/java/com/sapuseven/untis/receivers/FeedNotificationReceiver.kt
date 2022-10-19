@@ -59,7 +59,7 @@ class FeedNotificationReceiver : BroadcastReceiver() {
 			Intent(context, MainActivity::class.java).apply {
 				putExtra("info", true)
 			},
-			PendingIntent.FLAG_UPDATE_CURRENT
+			PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE
 		)
 
 		val messages = InfoCenterFragment.loadMessages(context, link)
