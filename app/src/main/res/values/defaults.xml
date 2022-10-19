@@ -32,7 +32,7 @@
 	<integer name="preference_background_past_default">0x40808080</integer>
 	<integer name="preference_marker_default">0xFFFFFFFF</integer>
 	<integer name="preference_notifications_before_first_time_default">30</integer>
-	<integer name="preference_notifications_feed_limit_default">5</integer>
+	<integer name="preference_notifications_feed_limit_default">4</integer>
 	<integer name="preference_timetable_item_padding_overlap_default">4</integer>
 	<integer name="preference_timetable_item_padding_default">4</integer>
 	<integer name="preference_timetable_item_corner_radius_default">4</integer>
