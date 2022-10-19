@@ -3,6 +3,7 @@ package com.sapuseven.untis.activities
 import android.app.Activity
 import android.content.Intent
 import android.graphics.Color
+import android.net.Uri
 import android.os.Bundle
 import android.view.MenuItem
 import android.view.View
@@ -42,6 +43,7 @@ class MainActivity :
 		private const val REQUEST_CODE_LOGINDATAINPUT_ADD = 3
 		private const val REQUEST_CODE_LOGINDATAINPUT_EDIT = 4
 		private const val REQUEST_CODE_ERRORS = 5
+		private const val REQUEST_CODE_FRESHMAN = 6
 	}
 
 	private val linkDatabase = LinkDatabase.createInstance(this)
@@ -271,6 +273,11 @@ class MainActivity :
 				setDefaultActionBar()
 				setFragment(TimetableFragment())
 			}
+			R.id.nav_freshman_help -> {
+				startActivityForResult(Intent(Intent.ACTION_VIEW).apply {
+					data = Uri.parse("https://ersti.hskampus.de/")
+				}, REQUEST_CODE_FRESHMAN)
+			}
 			R.id.nav_infocenter -> {
 				openInfoCenter()
 			}
@@ -325,7 +332,7 @@ class MainActivity :
 		super.onActivityResult(requestCode, resultCode, intent)
 
 		when (requestCode) {
-			REQUEST_CODE_SETTINGS -> recreate()
+			REQUEST_CODE_SETTINGS, REQUEST_CODE_FRESHMAN -> recreate()
 			REQUEST_CODE_LOGINDATAINPUT_ADD ->
 				if (resultCode == Activity.RESULT_OK)
 					recreate()

@@ -8,6 +8,11 @@
 			android:title="@string/all_personal_timetable"/>
 
 		<item
+			android:id="@+id/nav_freshman_help"
+			android:icon="@drawable/all_freshman"
+			android:title="@string/activity_title_freshman_help" />
+
+		<item
 			android:id="@+id/nav_infocenter"
 			android:icon="@drawable/all_infocenter"
 			android:title="@string/activity_title_info_center" />
