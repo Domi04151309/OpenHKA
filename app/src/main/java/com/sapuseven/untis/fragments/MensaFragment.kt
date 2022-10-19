@@ -176,13 +176,6 @@ class MensaFragment : Fragment(), StringDisplay {
 
 		loadCanteens()
 
-		dropdownMensa.addTextChangedListener {
-			(activity as BaseActivity).preferences.defaultPrefs.edit().putInt(
-				PREFERENCE_MENSA_ID, idMap[it.toString()] ?: DEFAULT_ID
-			).apply()
-			refreshParameters(it.toString())
-		}
-
 		textViewDate = root.findViewById(R.id.textview_date)
 		textViewDate.setOnClickListener {
 			if (dateOffset == 0) {
@@ -250,7 +243,10 @@ class MensaFragment : Fragment(), StringDisplay {
 				val targetId = (activity as BaseActivity).preferences.defaultPrefs
 					.getInt(PREFERENCE_MENSA_ID, DEFAULT_ID)
 				val canteens = parseCanteens(string) { currentId, currentTitle ->
-					if (currentId == targetId) dropdownMensa.setText(currentTitle, false)
+					if (currentId == targetId) {
+						dropdownMensa.setText(currentTitle, false)
+						refreshParameters(currentId)
+					}
 				}
 				idMap = canteens.map
 				dropdownMensa.setAdapter(
@@ -260,6 +256,12 @@ class MensaFragment : Fragment(), StringDisplay {
 						canteens.list
 					)
 				)
+				dropdownMensa.addTextChangedListener {
+					(activity as BaseActivity).preferences.defaultPrefs.edit().putInt(
+						PREFERENCE_MENSA_ID, idMap[it.toString()] ?: DEFAULT_ID
+					).apply()
+					refreshParameters(it.toString())
+				}
 			}
 
 			override fun onStringLoadingError(code: Int, loader: StringLoader) {
@@ -289,16 +291,19 @@ class MensaFragment : Fragment(), StringDisplay {
 		stringLoader.load(flags)
 	}
 
-	private fun refreshParameters(canteen: String) {
-		val currentID = idMap[canteen] ?: DEFAULT_ID
+	private fun refreshParameters(canteen: Int) {
 		val date = SimpleDateFormat("yyyy-MM-dd", Locale.US)
 			.format(System.currentTimeMillis() + dateOffset * 86400000)
 		stringLoader = StringLoader(
 			WeakReference(context),
 			this,
-			"$API_URL/canteen/v2/$currentID/$date"
+			"$API_URL/canteen/v2/$canteen/$date"
 		)
 		refreshMenu(StringLoader.FLAG_LOAD_CACHE)
+	}
+
+	private fun refreshParameters(canteen: String) {
+		refreshParameters(idMap[canteen] ?: DEFAULT_ID)
 	}
 
 	override fun onStringLoaded(string: String) {
