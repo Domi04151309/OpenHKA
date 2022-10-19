@@ -141,6 +141,7 @@
     <string name="preference_dialog_colors_reset_title">Farben zurücksetzen?</string>
     <string name="preference_double_tap_to_exit">Zurück-Button zweimal antippen zum Beenden</string>
     <string name="preference_flinging_enable">Schnelles Scrollen aktivieren</string>
+    <string name="preference_freshman_show">Ersti Hilfe anzeigen</string>
     <string name="preference_info_app_version">App-Version</string>
     <string name="preference_info_app_version_desc">%1$s (%2$d)</string>
     <string name="preference_info_contributors">Mitwirkende</string>

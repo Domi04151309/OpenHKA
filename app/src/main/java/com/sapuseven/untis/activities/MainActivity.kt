@@ -145,6 +145,12 @@ class MainActivity :
 			closeDrawer()
 			addProfile()
 		}
+
+		navigationview_main.menu.findItem(R.id.nav_freshman_help).isVisible =
+			PreferenceUtils.getPrefBool(
+				preferences,
+				"preference_freshman_show"
+			)
 	}
 
 	private fun toggleProfileDropdown(

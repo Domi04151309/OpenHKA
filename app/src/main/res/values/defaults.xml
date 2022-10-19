@@ -16,6 +16,7 @@
 	<bool name="preference_notifications_rooms_default">true</bool>
 	<bool name="preference_double_tap_to_exit_default">true</bool>
 	<bool name="preference_fling_enable_default">false</bool>
+	<bool name="preference_freshman_show_default">true</bool>
 	<bool name="preference_week_snap_to_days_default">false</bool>
 	<bool name="preference_automute_enable_default">false</bool>
 	<bool name="preference_automute_cancelled_lessons_default">true</bool>
