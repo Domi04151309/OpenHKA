@@ -11,8 +11,8 @@ class WearMessageService : WearableListenerService() {
 		private const val UNTIS_SUCCESS = "/untis_success"
 	}
 
-	override fun onMessageReceived(messageEvent: MessageEvent?) {
-		if (messageEvent?.path == UNTIS_SUCCESS) {
+	override fun onMessageReceived(messageEvent: MessageEvent) {
+		if (messageEvent.path == UNTIS_SUCCESS) {
 			val message = messageEvent.data[0]
 			val messageIntent = Intent("LOGIN_SUCCESS")
 			messageIntent.putExtra("message", message)

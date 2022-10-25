@@ -9,7 +9,7 @@ import org.joda.time.DateTimeZone
 class Period(component: Component, timeZone: DateTimeZone) {
 
 	private val properties = component.properties
-	private val unformattedTitle = properties.optProperty("SUMMARY").trim() ?: ""
+	private val unformattedTitle = properties.optProperty("SUMMARY").trim()
 
 	val startDate: DateTime = stringToDate(properties.optProperty("DTSTART"), timeZone)
 	val endDate: DateTime = stringToDate(properties.optProperty("DTEND"), timeZone)

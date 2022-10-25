@@ -84,7 +84,7 @@ class MainActivity :
 
 	override fun onResume() {
 		super.onResume()
-		refreshMessages(profileLink, navigationview_main)
+		refreshMessages(profileLink)
 	}
 
 	override fun onErrorLogFound() {
@@ -192,7 +192,7 @@ class MainActivity :
 		}
 	}
 
-	private fun refreshMessages(link: LinkDatabase.Link, navigationView: NavigationView) =
+	private fun refreshMessages(link: LinkDatabase.Link) =
 		GlobalScope.launch(Dispatchers.Main) {
 			InfoCenterFragment.loadMessages(this@MainActivity, link)?.let {
 				setInfoCenterDot(
