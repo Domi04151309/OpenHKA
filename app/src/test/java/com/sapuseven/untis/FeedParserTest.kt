@@ -1,7 +1,6 @@
 package com.sapuseven.untis
 
 import com.sapuseven.untis.fragments.InfoCenterFragment
-import com.sapuseven.untis.fragments.LocationFragment
 import org.junit.Assert
 import org.junit.Test
 import org.junit.runner.RunWith

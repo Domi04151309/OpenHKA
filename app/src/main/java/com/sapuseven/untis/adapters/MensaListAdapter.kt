@@ -8,7 +8,6 @@ import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.sapuseven.untis.R
 import com.sapuseven.untis.data.lists.MensaListItem
-import com.sapuseven.untis.data.lists.StudyPlaceListItem
 import java.text.DecimalFormat
 import java.text.DecimalFormatSymbols
 import java.util.*

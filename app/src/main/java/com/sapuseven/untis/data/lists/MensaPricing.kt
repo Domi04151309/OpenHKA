@@ -1,6 +1,5 @@
 package com.sapuseven.untis.data.lists
 
-import android.content.Context
 import android.content.res.Resources
 import com.sapuseven.untis.R
 
