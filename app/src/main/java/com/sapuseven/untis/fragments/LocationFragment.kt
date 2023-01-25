@@ -1,6 +1,7 @@
 package com.sapuseven.untis.fragments
 
 import android.content.Intent
+import android.content.res.Resources
 import android.net.Uri
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -33,7 +34,7 @@ class LocationFragment : Fragment(), StringDisplay {
 	companion object {
 		private const val API_URL: String = "https://www.iwi.hs-karlsruhe.de/iwii/REST"
 
-		fun parseLocations(input: String): GenericParseResult<ListItem, Pair<Double, Double>> {
+		fun parseLocations(resources: Resources, input: String): GenericParseResult<ListItem, Pair<Double, Double>> {
 			val result = GenericParseResult<ListItem, Pair<Double, Double>>()
 			val json = JSONArray(input)
 			var departments: JSONArray
@@ -45,7 +46,10 @@ class LocationFragment : Fragment(), StringDisplay {
 				if (departments.length() > 0) result.list.add(
 					ListItem(
 						"",
-						currentBuilding.optString("name")
+						resources.getString(
+							R.string.locations_building,
+							currentBuilding.optString("name")
+						)
 					)
 				)
 				for (j in 0 until departments.length()) {
@@ -109,7 +113,7 @@ class LocationFragment : Fragment(), StringDisplay {
 	}
 
 	override fun onStringLoaded(string: String) {
-		parsedData = parseLocations(string)
+		parsedData = parseLocations(resources, string)
 		adapter.updateItems(parsedData.list)
 		swiperefreshlayout.isRefreshing = false
 	}

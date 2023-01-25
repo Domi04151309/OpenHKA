@@ -84,6 +84,7 @@
 	<string name="all_details">Details</string>
 	<string name="all_search">Search</string>
 	<string name="people_locate">Locate</string>
+	<string name="locations_building">Building %1$s</string>
 
 	<string name="mensa_meal_summary">Additives: %1$s</string>
 	<string name="mensa_meal_price">%1$s €</string>

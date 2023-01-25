@@ -59,6 +59,7 @@
     <string name="links_website">Website</string>
     <string name="loading">Wird geladen</string>
     <string name="loading_failed">Ladevorgang fehlgeschlagen</string>
+    <string name="locations_building">%1$s-Gebäude</string>
     <string name="logindatainput_connecting">Verbindung wird hergestellt…</string>
     <string name="logindatainput_data_loaded">Daten erfolgreich geladen.</string>
     <string name="logindatainput_delete">Profil löschen</string>
