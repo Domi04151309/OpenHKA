@@ -33,8 +33,10 @@ class MensaFragment : Fragment(), StringDisplay {
 	private val adapter = MensaListAdapter()
 	private var dateOffset = 0
 	private var idMap: MutableMap<String, Int> = mutableMapOf()
+	private val tabOffsetMap: MutableMap<String, Int> = mutableMapOf()
 	private var parsedData: GenericParseResult<MensaListItem, MensaPricing> = GenericParseResult()
 	private lateinit var stringLoader: StringLoader
+	private lateinit var tabLayout: TabLayout
 	private lateinit var recyclerview: RecyclerView
 	private lateinit var swiperefreshlayout: SwipeRefreshLayout
 	private lateinit var dropdownMensa: AutoCompleteTextView
@@ -173,10 +175,46 @@ class MensaFragment : Fragment(), StringDisplay {
 			adapter.notifyDataSetChanged()
 		}
 
+		tabLayout = root.findViewById(R.id.tab_layout_date)
+		tabLayout.addOnTabSelectedListener(object : TabLayout.OnTabSelectedListener {
+			override fun onTabSelected(tab: TabLayout.Tab?) {
+				dateOffset = tabOffsetMap[tab?.text ?: throw IllegalStateException()]
+					?: dateOffset
+				refreshParameters(dropdownMensa.text.toString())
+			}
+
+			override fun onTabUnselected(tab: TabLayout.Tab?) {}
+			override fun onTabReselected(tab: TabLayout.Tab?) {}
+		})
+
 		loadCanteens()
 
-		val tabLayout: TabLayout = root.findViewById(R.id.tab_layout_date)
-		val tabOffsetMap: MutableMap<String, Int> = mutableMapOf()
+		recyclerview.layoutManager = LinearLayoutManager(context)
+		recyclerview.adapter = adapter
+		swiperefreshlayout.setOnRefreshListener { refreshMenu(StringLoader.FLAG_LOAD_SERVER) }
+
+		return root
+	}
+
+	override fun onStart() {
+		super.onStart()
+		refreshTabs()
+	}
+
+	override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
+		super.onCreateOptionsMenu(menu, inflater)
+		inflater.inflate(R.menu.activity_mensa_menu, menu)
+	}
+
+	override fun onOptionsItemSelected(item: MenuItem): Boolean {
+		return if (item.itemId == R.id.nav_additives) {
+			loadAdditives()
+			true
+		} else false
+	}
+
+	private fun refreshTabs() {
+		tabLayout.removeAllTabs()
 		for (i in 0 until 7) {
 			val c = Calendar.getInstance().apply {
 				add(Calendar.DATE, i)
@@ -192,34 +230,6 @@ class MensaFragment : Fragment(), StringDisplay {
 				text = date
 			})
 		}
-		tabLayout.addOnTabSelectedListener(object : TabLayout.OnTabSelectedListener {
-			override fun onTabSelected(tab: TabLayout.Tab?) {
-				dateOffset = tabOffsetMap[tab?.text ?: throw IllegalStateException()]
-					?: dateOffset
-				refreshParameters(dropdownMensa.text.toString())
-			}
-
-			override fun onTabUnselected(tab: TabLayout.Tab?) {}
-			override fun onTabReselected(tab: TabLayout.Tab?) {}
-		})
-
-		recyclerview.layoutManager = LinearLayoutManager(context)
-		recyclerview.adapter = adapter
-		swiperefreshlayout.setOnRefreshListener { refreshMenu(StringLoader.FLAG_LOAD_SERVER) }
-
-		return root
-	}
-
-	override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
-		super.onCreateOptionsMenu(menu, inflater)
-		inflater.inflate(R.menu.activity_mensa_menu, menu)
-	}
-
-	override fun onOptionsItemSelected(item: MenuItem): Boolean {
-		return if (item.itemId == R.id.nav_additives) {
-			loadAdditives()
-			true
-		} else false
 	}
 
 	private fun loadAdditives() {
