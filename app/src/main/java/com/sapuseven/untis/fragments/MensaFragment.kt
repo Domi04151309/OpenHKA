@@ -114,7 +114,8 @@ class MensaFragment : Fragment(), StringDisplay {
 									R.string.mensa_meal_summary,
 									it.join(", ").replace("\"", "")
 								),
-								null
+								null,
+								getIcon(currentMeal)
 							).apply {
 								price = result.map[title]?.getPriceFromLevel(
 									resources,
@@ -126,6 +127,18 @@ class MensaFragment : Fragment(), StringDisplay {
 				}
 			}
 			return result
+		}
+
+		private fun getIcon(json: JSONObject): Int {
+			return when {
+				json.optBoolean("bio") -> R.drawable.mensa_green_circle
+				json.optBoolean("cow") || json.optBoolean("cowAw") -> R.drawable.mensa_cow
+				json.optBoolean("pork") -> R.drawable.mensa_pig
+				json.optBoolean("fish") -> R.drawable.mensa_fish
+				json.optBoolean("veg") -> R.drawable.mensa_carrot
+				json.optBoolean("vegan") -> R.drawable.mensa_seedling
+				else -> R.drawable.mensa_general
+			}
 		}
 	}
 

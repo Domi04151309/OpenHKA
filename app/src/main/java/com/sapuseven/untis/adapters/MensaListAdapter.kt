@@ -4,6 +4,7 @@ import android.text.method.LinkMovementMethod
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.ImageView
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.sapuseven.untis.R
@@ -27,6 +28,7 @@ class MensaListAdapter : RecyclerView.Adapter<MensaListAdapter.ViewHolder>() {
 	override fun getItemCount(): Int = items.size
 
 	override fun onBindViewHolder(holder: ViewHolder, position: Int) {
+		holder.ivIcon.setImageResource(items[position].icon ?: android.R.color.transparent)
 		holder.tvSubject.text = items[position].title
 		holder.tvBody.text = items[position].summary
 		holder.tvBody.movementMethod = LinkMovementMethod.getInstance()
@@ -47,6 +49,7 @@ class MensaListAdapter : RecyclerView.Adapter<MensaListAdapter.ViewHolder>() {
 	}
 
 	class ViewHolder(rootView: View) : RecyclerView.ViewHolder(rootView) {
+		val ivIcon: ImageView = rootView.findViewById(R.id.imageview_itemmessage_icon)
 		val tvSubject: TextView = rootView.findViewById(R.id.textview_itemmessage_subject)
 		val tvBody: TextView = rootView.findViewById(R.id.textview_itemmessage_body)
 		val tvPrice: TextView = rootView.findViewById(R.id.textview_itemmessage_price)
