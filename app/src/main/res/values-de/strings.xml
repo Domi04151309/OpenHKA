@@ -33,8 +33,6 @@
     <string name="all_search">Suchen</string>
     <string name="all_subjects">Fächer</string>
     <string name="all_success">erfolgreich</string>
-    <string name="all_today">Heute</string>
-    <string name="all_tomorrow">Morgen</string>
     <string name="app_desc">Ein mobiler Client für das IWI HKA-System</string>
     <string name="errors_button_dismiss">Alle verwerfen</string>
     <string name="errors_button_report">Alle melden</string>

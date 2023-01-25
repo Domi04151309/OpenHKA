@@ -5,7 +5,6 @@ import android.os.Bundle
 import android.view.*
 import android.widget.ArrayAdapter
 import android.widget.AutoCompleteTextView
-import android.widget.TextView
 import android.widget.Toast
 import androidx.core.widget.addTextChangedListener
 import androidx.fragment.app.Fragment
@@ -13,6 +12,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
+import com.google.android.material.tabs.TabLayout
 import com.google.android.material.textfield.TextInputLayout
 import com.sapuseven.untis.R
 import com.sapuseven.untis.activities.BaseActivity
@@ -37,7 +37,6 @@ class MensaFragment : Fragment(), StringDisplay {
 	private lateinit var stringLoader: StringLoader
 	private lateinit var recyclerview: RecyclerView
 	private lateinit var swiperefreshlayout: SwipeRefreshLayout
-	private lateinit var textViewDate: TextView
 	private lateinit var dropdownMensa: AutoCompleteTextView
 	private lateinit var dropdownPricing: AutoCompleteTextView
 
@@ -176,17 +175,33 @@ class MensaFragment : Fragment(), StringDisplay {
 
 		loadCanteens()
 
-		textViewDate = root.findViewById(R.id.textview_date)
-		textViewDate.setOnClickListener {
-			if (dateOffset == 0) {
-				dateOffset++
-				textViewDate.text = resources.getString(R.string.all_tomorrow)
-			} else if (dateOffset == 1) {
-				dateOffset--
-				textViewDate.text = resources.getString(R.string.all_today)
+		val tabLayout: TabLayout = root.findViewById(R.id.tab_layout_date)
+		val tabOffsetMap: MutableMap<String, Int> = mutableMapOf()
+		for (i in 0 until 7) {
+			val c = Calendar.getInstance().apply {
+				add(Calendar.DATE, i)
 			}
-			refreshParameters(dropdownMensa.text.toString())
+			if (
+				c.get(Calendar.DAY_OF_WEEK) == Calendar.SATURDAY
+				|| c.get(Calendar.DAY_OF_WEEK) == Calendar.SUNDAY
+			) continue
+
+			val date = SimpleDateFormat("E", Locale.getDefault()).format(c.timeInMillis)
+			tabOffsetMap[date] = i
+			tabLayout.addTab(tabLayout.newTab().apply {
+				text = date
+			})
 		}
+		tabLayout.addOnTabSelectedListener(object : TabLayout.OnTabSelectedListener {
+			override fun onTabSelected(tab: TabLayout.Tab?) {
+				dateOffset = tabOffsetMap[tab?.text ?: throw IllegalStateException()]
+					?: dateOffset
+				refreshParameters(dropdownMensa.text.toString())
+			}
+
+			override fun onTabUnselected(tab: TabLayout.Tab?) {}
+			override fun onTabReselected(tab: TabLayout.Tab?) {}
+		})
 
 		recyclerview.layoutManager = LinearLayoutManager(context)
 		recyclerview.adapter = adapter
