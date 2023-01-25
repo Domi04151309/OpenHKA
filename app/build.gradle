@@ -91,7 +91,7 @@ dependencies {
 	implementation 'com.google.android.gms:play-services-wearable:18.0.0'
 
 	testImplementation 'junit:junit:4.13.2'
-	testImplementation 'org.robolectric:robolectric:4.7'
+	testImplementation 'org.robolectric:robolectric:4.9.2'
 
 	implementation project(':weekview')
 }

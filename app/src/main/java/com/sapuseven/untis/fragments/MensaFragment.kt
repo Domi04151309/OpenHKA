@@ -43,7 +43,8 @@ class MensaFragment : Fragment(), StringDisplay {
 	private lateinit var dropdownPricing: AutoCompleteTextView
 
 	companion object {
-		private const val API_URL: String = "https://www.iwi.hs-karlsruhe.de/iwii/REST"
+		private const val API_URL: String = "https://www.iwi.hs-karlsruhe.de/hskampus-broker/api"
+		private const val ALT_API_URL: String = "https://www.iwi.hs-karlsruhe.de/iwii/REST"
 		const val PREFERENCE_MENSA_ID: String = "preference_mensa_id"
 		const val DEFAULT_ID: Int = 1
 		const val PREFERENCE_MENSA_PRICING_LEVEL: String = "preference_mensa_pricing_level"
@@ -71,7 +72,7 @@ class MensaFragment : Fragment(), StringDisplay {
 			var currentId: Int
 			for (i in 0 until json.length()) {
 				currentItem = json.getJSONObject(i)
-				currentTitle = currentItem.optString("name").replace("Mensa ", "")
+				currentTitle = currentItem.optString("name")
 				currentId = currentItem.optInt("id")
 				result.list.add(currentTitle)
 				result.map[currentTitle] = currentId
@@ -86,28 +87,29 @@ class MensaFragment : Fragment(), StringDisplay {
 			pricingLevel: String
 		): GenericParseResult<MensaListItem, MensaPricing> {
 			val result = GenericParseResult<MensaListItem, MensaPricing>()
-			val json = JSONObject(input)
-			val mealGroups = json.optJSONArray("mealGroups") ?: JSONArray()
+			val json = JSONArray(input).optJSONObject(0) ?: JSONObject()
+			val lines = json.optJSONArray("lines") ?: JSONArray()
 			var meals: JSONArray
 			var currentGroup: JSONObject
 			var currentMeal: JSONObject
-			for (i in 0 until mealGroups.length()) {
-				currentGroup = mealGroups.getJSONObject(i)
-				result.list.add(MensaListItem("", currentGroup.optString("title"), null))
+			for (i in 0 until lines.length()) {
+				currentGroup = lines.getJSONObject(i)
+				if (currentGroup.optBoolean("closed")) continue
+				result.list.add(MensaListItem("", currentGroup.optString("name"), null))
 				meals = currentGroup.optJSONArray("meals") ?: JSONArray()
 				for (j in 0 until meals.length()) {
 					currentMeal = meals.getJSONObject(j)
-					result.map[currentMeal.optString("name")] = MensaPricing(
-						currentMeal.optDouble("priceStudent"),
-						currentMeal.optDouble("priceGuest"),
-						currentMeal.optDouble("priceEmployee"),
-						currentMeal.optDouble("pricePupil")
+					result.map[currentMeal.optString("meal")] = MensaPricing(
+						currentMeal.optDouble("price1"),
+						currentMeal.optDouble("price2"),
+						currentMeal.optDouble("price3"),
+						currentMeal.optDouble("price4")
 					)
-					(currentMeal.optJSONArray("foodAdditiveNumbers") ?: JSONArray()).let {
+					JSONArray(currentMeal.optString("additives")).let {
 						result.list.add(
 							MensaListItem(
-								currentMeal.optString("name"),
-								if (it.length() == 0) ""
+								currentMeal.optString("meal"),
+								if (it.length() == 0 || it.optString(0) == "") ""
 								else resources.getString(
 									R.string.mensa_meal_summary,
 									it.join(", ").replace("\"", "")
@@ -257,7 +259,7 @@ class MensaFragment : Fragment(), StringDisplay {
 				}
 			}
 		}
-		StringLoader(WeakReference(context), callback, "$API_URL/canteen/v2/foodadditives").load(
+		StringLoader(WeakReference(context), callback, "$ALT_API_URL/canteen/v2/foodadditives").load(
 			StringLoader.FLAG_LOAD_CACHE
 		)
 	}
@@ -307,7 +309,7 @@ class MensaFragment : Fragment(), StringDisplay {
 		StringLoader(
 			WeakReference(context),
 			callback,
-			"$API_URL/canteen/names"
+			"$API_URL/canteen"
 		).load(StringLoader.FLAG_LOAD_CACHE)
 	}
 
@@ -322,7 +324,7 @@ class MensaFragment : Fragment(), StringDisplay {
 		stringLoader = StringLoader(
 			WeakReference(context),
 			this,
-			"$API_URL/canteen/v2/$canteen/$date"
+			"$API_URL/canteen/$canteen/date/$date"
 		)
 		refreshMenu(StringLoader.FLAG_LOAD_CACHE)
 	}

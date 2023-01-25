@@ -24,19 +24,19 @@ class MensaParserTest {
 
 	@Test
 	fun parseCanteens() {
-		val file = Helpers.getFileContents("/iwii/REST/canteen/names.json")
+		val file = Helpers.getFileContents("/hskampus-broker/api/canteen.json")
 		val result = MensaFragment.parseCanteens(file)
 
 		var num = 0
-		Assert.assertEquals("Am Adenauerring", result.list[num])
+		Assert.assertEquals("Adenauerring", result.list[num])
 
 		num = 1
-		Assert.assertEquals("Moltkestraße", result.list[num])
+		Assert.assertEquals("Moltke", result.list[num])
 	}
 
 	@Test
 	fun parseMenu() {
-		val file = Helpers.getFileContents("/iwii/REST/canteen/2/2022-09-26.json")
+		val file = Helpers.getFileContents("/hskampus-broker/api/canteen/2/date/2023-01-25.json")
 
 		val result = MensaFragment.parseMenu(
 			RuntimeEnvironment.getApplication().applicationContext.resources,
@@ -50,8 +50,8 @@ class MensaParserTest {
 		Assert.assertEquals(null, result.list[num].price)
 
 		num = 1
-		Assert.assertEquals("Pommes", result.list[num].title)
-		Assert.assertEquals("Additives: 97", result.list[num].summary)
+		Assert.assertEquals("Schnitzel Bar Puten und Schweineschnitzel je 100 g in Selbstbedienung", result.list[num].title)
+		Assert.assertEquals("Additives: Ge, We", result.list[num].summary)
 		Assert.assertEquals(1.05, result.list[num].price)
 	}
 }
