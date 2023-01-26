@@ -31,4 +31,31 @@
 		<item>on</item>
 		<item>off</item>
 	</string-array>
+
+	<string-array name="profile_names">
+		<item>Silly Gorilla</item>
+		<item>Lazy Elephant</item>
+		<item>Eager Lion</item>
+		<item>Friendly Elephant</item>
+		<item>Silly Tiger</item>
+		<item>Eager Gorilla</item>
+		<item>Friendly Gorilla</item>
+		<item>Eager Elephant</item>
+		<item>Lazy Gorilla</item>
+		<item>Friendly Lion</item>
+		<item>Hungry Elephant</item>
+		<item>Silly Elephant</item>
+		<item>Lazy Tiger</item>
+		<item>Eager Tiger</item>
+		<item>Hungry Gorilla</item>
+		<item>Friendly Tiger</item>
+		<item>Hungry Lion</item>
+		<item>Lazy Lion</item>
+		<item>Hungry Tiger</item>
+		<item>Silly Lion</item>
+		<item>Eager Bear</item>
+		<item>Friendly Bear</item>
+		<item>Lazy Bear</item>
+		<item>Hungry Bear</item>
+	</string-array>
 </resources>

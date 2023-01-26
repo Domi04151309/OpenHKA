@@ -29,11 +29,8 @@ class ProfileListAdapter(
 	}
 
 	override fun onBindViewHolder(holder: ViewHolder, position: Int) {
-		val item = dataset[position]
-		holder.tvName.text = item.id.toString() +
-				' ' +
-				item.iCalUrl.substring(item.iCalUrl.lastIndexOf('/') + 1)
-					.replace(".ics", "")
+		val names = holder.tvName.resources.getStringArray(R.array.profile_names)
+		holder.tvName.text = names[position % names.size]
 	}
 
 	override fun getItemCount() = dataset.size

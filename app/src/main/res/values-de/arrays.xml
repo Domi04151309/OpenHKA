@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string-array name="profile_names">
+        <item>Witziger Gorilla</item>
+        <item>Fauler Elefant</item>
+        <item>Ehrgeiziger Löwe</item>
+        <item>Freundlicher Elefant</item>
+        <item>Witziger Tiger</item>
+        <item>Ehrgeiziger Gorilla</item>
+        <item>Freundlicher Gorilla</item>
+        <item>Ehrgeiziger Elefant</item>
+        <item>Fauler Gorilla</item>
+        <item>Freundlicher Löwe</item>
+        <item>Hungriger Elefant</item>
+        <item>Witziger Elefant</item>
+        <item>Fauler Tiger</item>
+        <item>Ehrgeiziger Tiger</item>
+        <item>Hungriger Gorilla</item>
+        <item>Freundlicher Tiger</item>
+        <item>Hungriger Löwe</item>
+        <item>Fauler Löwe</item>
+        <item>Hungriger Tiger</item>
+        <item>Witziger Löwe</item>
+        <item>Ehrgeiziger Bär</item>
+        <item>Freundlicher Bär</item>
+        <item>Fauler Bär</item>
+        <item>Hungriger Bär</item>
+    </string-array>
+</resources>
