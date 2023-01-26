@@ -13,7 +13,7 @@
 		android:id="@+id/imageview_profiles_portrait"
 		android:layout_width="40dp"
 		android:layout_height="40dp"
-		app:srcCompat="@drawable/all_profile" />
+		app:srcCompat="@drawable/ic_profile" />
 
 	<TextView
 		android:id="@+id/textview_profiles_name"

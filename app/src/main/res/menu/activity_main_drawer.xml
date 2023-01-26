@@ -4,52 +4,52 @@
 
 		<item
 			android:id="@+id/nav_show_personal"
-			android:icon="@drawable/all_personal"
+			android:icon="@drawable/ic_person"
 			android:title="@string/all_personal_timetable"/>
 
 		<item
 			android:id="@+id/nav_freshman_help"
-			android:icon="@drawable/all_freshman"
+			android:icon="@drawable/ic_help_center"
 			android:title="@string/activity_title_freshman_help" />
 
 		<item
 			android:id="@+id/nav_infocenter"
-			android:icon="@drawable/all_infocenter"
+			android:icon="@drawable/ic_book"
 			android:title="@string/activity_title_info_center" />
 
 		<item
 			android:id="@+id/nav_events"
-			android:icon="@drawable/all_calendar"
+			android:icon="@drawable/ic_calendar"
 			android:title="@string/activity_title_events" />
 
 		<item
 			android:id="@+id/nav_people"
-			android:icon="@drawable/all_people"
+			android:icon="@drawable/ic_group"
 			android:title="@string/activity_title_people" />
 
 		<item
 			android:id="@+id/nav_locations"
-			android:icon="@drawable/all_location"
+			android:icon="@drawable/ic_location"
 			android:title="@string/activity_title_locations" />
 
 		<item
 			android:id="@+id/nav_study_places"
-			android:icon="@drawable/all_study_place"
+			android:icon="@drawable/ic_local_library"
 			android:title="@string/activity_title_study_places" />
 
 		<item
 			android:id="@+id/nav_mensa"
-			android:icon="@drawable/all_mensa"
+			android:icon="@drawable/ic_food_beverage"
 			android:title="@string/activity_title_mensa" />
 
 		<item
 			android:id="@+id/nav_stations"
-			android:icon="@drawable/all_station"
+			android:icon="@drawable/ic_train"
 			android:title="@string/activity_title_stations" />
 
 		<item
 			android:id="@+id/nav_links"
-			android:icon="@drawable/all_list"
+			android:icon="@drawable/ic_sort"
 			android:title="@string/activity_title_links" />
 	</group>
 
@@ -57,7 +57,7 @@
 
 		<item
 			android:id="@+id/nav_settings"
-			android:icon="@drawable/all_settings"
+			android:icon="@drawable/ic_settings"
 			android:title="@string/activity_title_settings" />
 	</group>
 </menu>

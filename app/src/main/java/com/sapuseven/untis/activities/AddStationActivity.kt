@@ -79,6 +79,7 @@ class AddStationActivity : BaseActivity(), StringDisplay {
 	override fun onCreate(savedInstanceState: Bundle?) {
 		super.onCreate(savedInstanceState)
 		setContentView(R.layout.fragment_infocenter)
+		supportActionBar?.setHomeAsUpIndicator(R.drawable.ic_arrow_back)
 
 		stringLoader = StringLoader(
 			WeakReference(this),

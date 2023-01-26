@@ -58,7 +58,7 @@
 			android:id="@+id/tvMail"
 			android:layout_width="match_parent"
 			android:layout_height="wrap_content"
-			app:drawableStartCompat="@drawable/all_mail"
+			app:drawableStartCompat="@drawable/ic_mail"
 			android:textIsSelectable="true" />
 
 		<TextView
@@ -66,7 +66,7 @@
 			android:id="@+id/tvPhone"
 			android:layout_width="match_parent"
 			android:layout_height="wrap_content"
-			app:drawableStartCompat="@drawable/all_phone"
+			app:drawableStartCompat="@drawable/ic_call"
 			android:textIsSelectable="true" />
 
 		<TextView
@@ -74,7 +74,7 @@
 			android:id="@+id/tvConsultationHours"
 			android:layout_width="match_parent"
 			android:layout_height="wrap_content"
-			app:drawableStartCompat="@drawable/all_calendar"
+			app:drawableStartCompat="@drawable/ic_calendar"
 			android:textIsSelectable="false" />
 
 		<TextView
@@ -82,7 +82,7 @@
 			android:id="@+id/tvRoom"
 			android:layout_width="match_parent"
 			android:layout_height="wrap_content"
-			app:drawableStartCompat="@drawable/all_rooms"
+			app:drawableStartCompat="@drawable/ic_view_quilt"
 			android:textIsSelectable="false"
 			android:visibility="gone" />
 
@@ -91,7 +91,7 @@
 			android:id="@+id/tvRemark"
 			android:layout_width="match_parent"
 			android:layout_height="wrap_content"
-			app:drawableStartCompat="@drawable/all_info"
+			app:drawableStartCompat="@drawable/ic_info"
 			android:textIsSelectable="false" />
 
 		<TextView
@@ -99,7 +99,7 @@
 			android:id="@+id/tvFaculty"
 			android:layout_width="match_parent"
 			android:layout_height="wrap_content"
-			app:drawableStartCompat="@drawable/all_info"
+			app:drawableStartCompat="@drawable/ic_info"
 			android:textIsSelectable="false" />
 	</LinearLayout>
 </ScrollView>

@@ -24,7 +24,7 @@
 				android:layout_marginBottom="24dp"
 				android:contentDescription="@null"
 				android:scaleType="centerCrop"
-				app:srcCompat="@drawable/locomotive_color" />
+				app:srcCompat="@drawable/ic_locomotive_color" />
 
 			<TextView
 				android:id="@+id/name"

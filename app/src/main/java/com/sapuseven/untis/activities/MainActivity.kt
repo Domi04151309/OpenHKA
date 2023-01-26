@@ -207,7 +207,7 @@ class MainActivity :
 
 	internal fun setInfoCenterDot(hasDot: Boolean) {
 		navigationview_main.menu.findItem(R.id.nav_infocenter).setIcon(
-			if (hasDot) R.drawable.all_infocenter_dot else R.drawable.all_infocenter
+			if (hasDot) R.drawable.ic_book_dot else R.drawable.ic_book
 		)
 	}
 
@@ -240,6 +240,7 @@ class MainActivity :
 		)
 		drawer_layout.addDrawerListener(toggle)
 		toggle.syncState()
+		toolbar_main.setNavigationIcon(R.drawable.ic_menu)
 		window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS)
 		window.statusBarColor = Color.TRANSPARENT
 
@@ -252,7 +253,6 @@ class MainActivity :
 					GravityCompat.START
 				)
 				toolbar_main.setNavigationOnClickListener { onBackPressed() }
-				// TODO: Set actionBar title to match fragment
 			} else {
 				supportActionBar?.setDisplayHomeAsUpEnabled(false)
 				toggle.isDrawerIndicatorEnabled = true
@@ -262,7 +262,6 @@ class MainActivity :
 					GravityCompat.START
 				)
 				toolbar_main.setNavigationOnClickListener { openDrawer() }
-				// TODO: Set actionBar title to default
 			}
 		}
 	}
@@ -370,7 +369,7 @@ class MainActivity :
 	}
 
 	internal fun setFullscreenDialogActionBar(res: Int) {
-		supportActionBar?.setHomeAsUpIndicator(R.drawable.all_close)
+		supportActionBar?.setHomeAsUpIndicator(R.drawable.ic_close)
 		supportActionBar?.setTitle(res)
 	}
 

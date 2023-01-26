@@ -3,6 +3,6 @@
 	android:opacity="opaque">
 	<item android:drawable="?attr/colorPrimary" />
 	<item
-		android:drawable="@drawable/app_splash_icon"
+		android:drawable="@drawable/ic_launcher_white_big"
 		android:gravity="center" />
 </layer-list>

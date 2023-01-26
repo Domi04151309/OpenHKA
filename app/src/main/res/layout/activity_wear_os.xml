@@ -24,20 +24,20 @@
             <ImageView
                 android:layout_width="@dimen/size_wear_icons"
                 android:layout_height="match_parent"
-                app:srcCompat="@drawable/settings_wear_phone"
+                app:srcCompat="@drawable/ic_smartphone"
                 android:contentDescription="@null" />
 
             <ImageView
                 android:id="@+id/status"
                 android:layout_width="@dimen/size_wear_icons"
                 android:layout_height="match_parent"
-                app:srcCompat="@drawable/settings_wear_connecting"
+                app:srcCompat="@drawable/ic_compare_arrows"
                 android:contentDescription="@string/preference_wear_os_support" />
 
             <ImageView
                 android:layout_width="@dimen/size_wear_icons"
                 android:layout_height="match_parent"
-                app:srcCompat="@drawable/settings_wear_watch"
+                app:srcCompat="@drawable/ic_watch"
                 android:contentDescription="@null" />
         </LinearLayout>
 

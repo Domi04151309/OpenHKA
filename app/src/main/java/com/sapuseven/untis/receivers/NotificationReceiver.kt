@@ -70,7 +70,7 @@ class NotificationReceiver : BroadcastReceiver() {
 			val builder = NotificationCompat.Builder(context, CHANNEL_ID_BREAKINFO)
 				.setContentTitle(title)
 				.setContentText(message)
-				.setSmallIcon(R.drawable.notification_clock)
+				.setSmallIcon(R.drawable.ic_schedule)
 				.setContentIntent(pendingIntent)
 				.setStyle(NotificationCompat.BigTextStyle().bigText(longMessage))
 				.setAutoCancel(false)

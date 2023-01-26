@@ -40,7 +40,7 @@
 			app:timeColumnTextColor="?android:textColorSecondary"
 			app:timeColumnTextSize="12sp"
 			app:todayHeaderTextColor="?attr/colorPrimary"
-			app:topLeftCornerDrawable="@drawable/all_calendar_adjusted"
+			app:topLeftCornerDrawable="@drawable/ic_calendar_adjusted"
 			app:topLeftCornerPadding="4dp" />
 
 	</com.sapuseven.untis.views.WeekViewSwipeRefreshLayout>

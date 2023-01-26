@@ -86,7 +86,7 @@ class FeedNotificationReceiver : BroadcastReceiver() {
 				val builder = NotificationCompat.Builder(context, CHANNEL_ID_FEED)
 					.setContentTitle(messages[i].title)
 					.setContentText(message.toString().replace('\n', ' '))
-					.setSmallIcon(R.drawable.all_infocenter)
+					.setSmallIcon(R.drawable.ic_book)
 					.setContentIntent(pendingIntent)
 					.setStyle(NotificationCompat.BigTextStyle().bigText(message))
 

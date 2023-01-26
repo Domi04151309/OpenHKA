@@ -79,6 +79,7 @@ class SettingsActivity : BaseActivity(), PreferenceFragmentCompat.OnPreferenceSt
 
 	private fun setupActionBar() {
 		supportActionBar?.setDisplayHomeAsUpEnabled(true)
+		supportActionBar?.setHomeAsUpIndicator(R.drawable.ic_arrow_back)
 	}
 
 	override fun onPreferenceStartScreen(

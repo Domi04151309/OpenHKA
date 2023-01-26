@@ -38,7 +38,7 @@
 				android:layout_marginTop="16dp"
 				android:layout_marginEnd="16dp"
 				app:endIconMode="custom"
-				app:endIconDrawable="@drawable/all_list"
+				app:endIconDrawable="@drawable/ic_sort"
 				app:endIconContentDescription="@string/link_input_select"
 				android:hint="@string/link_input_rss_link">
 
@@ -59,7 +59,7 @@
 				android:layout_marginTop="16dp"
 				android:layout_marginEnd="16dp"
 				app:endIconMode="custom"
-				app:endIconDrawable="@drawable/all_list"
+				app:endIconDrawable="@drawable/ic_sort"
 				app:endIconContentDescription="@string/link_input_select"
 				android:hint="@string/link_input_ical_link">
 
@@ -132,7 +132,7 @@
 			android:layout_height="wrap_content"
 			android:layout_alignParentEnd="true"
 			android:contentDescription="@string/all_ok"
-			app:srcCompat="@drawable/all_check"
+			app:srcCompat="@drawable/ic_check"
 			app:tint="@android:color/white" />
 	</RelativeLayout>
 </merge>

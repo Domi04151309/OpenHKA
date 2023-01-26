@@ -22,12 +22,12 @@ class WearOSActivity : BaseActivity() {
 	private val receiver = object : BroadcastReceiver() {
 		override fun onReceive(c: Context, intent: Intent) {
 			if (intent.getByteExtra("message", 0x00) == SUCCESS) {
-				statusImg.setImageResource(R.drawable.all_check)
+				statusImg.setImageResource(R.drawable.ic_check)
 				title.text = resources.getString(R.string.preference_wear_os_support_success)
 				summary.text =
 					resources.getString(R.string.preference_wear_os_support_success_desc)
 			} else {
-				statusImg.setImageResource(R.drawable.all_failed)
+				statusImg.setImageResource(R.drawable.ic_close_red)
 				title.text = resources.getString(R.string.preference_wear_os_support_error)
 				summary.text =
 					resources.getString(R.string.preference_wear_os_support_error_desc)
@@ -42,6 +42,7 @@ class WearOSActivity : BaseActivity() {
 	override fun onCreate(savedInstanceState: Bundle?) {
 		super.onCreate(savedInstanceState)
 		setContentView(R.layout.activity_wear_os)
+		supportActionBar?.setHomeAsUpIndicator(R.drawable.ic_arrow_back)
 		statusImg = findViewById(R.id.status)
 		title = findViewById(R.id.title)
 		summary = findViewById(R.id.description)

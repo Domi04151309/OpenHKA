@@ -21,7 +21,7 @@
 			android:layout_marginTop="48dp"
 			android:layout_marginBottom="8dp"
 			android:contentDescription="@string/main_drawer_image_logo"
-			app:srcCompat="@drawable/mainactivitydrawer_headericon" />
+			app:srcCompat="@drawable/ic_launcher_white" />
 
 		<androidx.constraintlayout.widget.ConstraintLayout
 			android:id="@+id/constraintlayout_mainactivitydrawer_dropdown"
@@ -62,7 +62,7 @@
 				app:layout_constraintBottom_toBottomOf="parent"
 				app:layout_constraintEnd_toEndOf="parent"
 				app:layout_constraintTop_toTopOf="parent"
-				app:srcCompat="@drawable/mainactivitydrawer_dropdown" />
+				app:srcCompat="@drawable/ic_arrow_drop_down_white" />
 		</androidx.constraintlayout.widget.ConstraintLayout>
 
 	</LinearLayout>

@@ -36,5 +36,5 @@
 		android:layout_height="wrap_content"
 		android:layout_gravity="center_vertical"
 		android:contentDescription="@null"
-		app:srcCompat="@drawable/all_check" />
+		app:srcCompat="@drawable/ic_check" />
 </LinearLayout>

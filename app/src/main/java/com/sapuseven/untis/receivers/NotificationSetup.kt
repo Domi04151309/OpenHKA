@@ -108,7 +108,7 @@ class NotificationSetup : LessonEventSetup() {
 		val builder = NotificationCompat.Builder(context, NotificationReceiver.CHANNEL_ID_BREAKINFO)
 				.setContentTitle(context.getString(R.string.notifications_text_error_title))
 				.setContentText(context.getString(R.string.notifications_text_error_message))
-				.setSmallIcon(R.drawable.notification_error)
+				.setSmallIcon(R.drawable.ic_error)
 				.setAutoCancel(true)
 				.setCategory(NotificationCompat.CATEGORY_ERROR)
 

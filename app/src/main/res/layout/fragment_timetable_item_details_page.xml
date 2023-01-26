@@ -17,8 +17,7 @@
 			android:layout_marginTop="24dp"
 			android:layout_marginBottom="8dp"
 			android:contentDescription="@null"
-			app:tint="?attr/colorAccent"
-			app:srcCompat="@drawable/all_subject" />
+			app:srcCompat="@drawable/ic_books_color" />
 
 		<TextView
 			android:id="@+id/title"
@@ -49,7 +48,7 @@
 			android:id="@+id/tvRooms"
 			android:layout_width="match_parent"
 			android:layout_height="wrap_content"
-			app:drawableStartCompat="@drawable/all_rooms"
+			app:drawableStartCompat="@drawable/ic_view_quilt"
 			android:textIsSelectable="false" />
 
 		<TextView
@@ -57,7 +56,7 @@
 			android:id="@+id/tvInfo"
 			android:layout_width="match_parent"
 			android:layout_height="wrap_content"
-			app:drawableStartCompat="@drawable/all_info"
+			app:drawableStartCompat="@drawable/ic_info"
 			android:textIsSelectable="true" />
 	</LinearLayout>
 </ScrollView>
