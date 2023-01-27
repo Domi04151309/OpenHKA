@@ -23,6 +23,7 @@ import com.sapuseven.untis.BuildConfig
 import com.sapuseven.untis.R
 import com.sapuseven.untis.dialogs.AlertPreferenceDialog
 import com.sapuseven.untis.dialogs.WeekRangePickerPreferenceDialog
+import com.sapuseven.untis.helpers.AuthenticationHelper
 import com.sapuseven.untis.helpers.SerializationUtils.getJSON
 import com.sapuseven.untis.models.github.GithubUser
 import com.sapuseven.untis.preferences.AlertPreference
@@ -54,7 +55,7 @@ class SettingsActivity : BaseActivity(), PreferenceFragmentCompat.OnPreferenceSt
 			// ie. not after orientation changes
 			val fragment =
 				supportFragmentManager.findFragmentByTag(PreferencesFragment.FRAGMENT_TAG)
-					?: PreferencesFragment()
+					?: PreferencesFragment(preferences)
 			val args = Bundle()
 			profileId?.let { args.putLong(EXTRA_LONG_PROFILE_ID, it) }
 			fragment.arguments = args
@@ -86,7 +87,7 @@ class SettingsActivity : BaseActivity(), PreferenceFragmentCompat.OnPreferenceSt
 		preferenceFragmentCompat: PreferenceFragmentCompat,
 		preferenceScreen: PreferenceScreen
 	): Boolean {
-		val fragment = PreferencesFragment()
+		val fragment = PreferencesFragment(preferences)
 		val args = Bundle()
 		args.putString(PreferenceFragmentCompat.ARG_PREFERENCE_ROOT, preferenceScreen.key)
 		profileId?.let { args.putLong(EXTRA_LONG_PROFILE_ID, it) }
@@ -114,7 +115,9 @@ class SettingsActivity : BaseActivity(), PreferenceFragmentCompat.OnPreferenceSt
 		}
 	}
 
-	class PreferencesFragment : PreferenceFragmentCompat() {
+	class PreferencesFragment(
+		private val sapuManager: com.sapuseven.untis.helpers.config.PreferenceManager
+	) : PreferenceFragmentCompat() {
 		companion object {
 			const val FRAGMENT_TAG = "preference_fragment"
 			const val DIALOG_FRAGMENT_TAG = "preference_dialog_fragment"
@@ -216,6 +219,29 @@ class SettingsActivity : BaseActivity(), PreferenceFragmentCompat.OnPreferenceSt
 						findPreference<Preference>("preference_notifications_clear")?.setOnPreferenceClickListener {
 							clearNotifications()
 							true
+						}
+					}
+					"preferences_authentication" -> {
+						findPreference<Preference>("preference_authentication")?.apply {
+							val auth = AuthenticationHelper(sapuManager)
+							updateAuthPreference(auth, this)
+							setSummary(R.string.preference_authentication_desc)
+							setOnPreferenceClickListener {
+								if (auth.isLoggedIn()) {
+									MaterialAlertDialogBuilder(context)
+										.setTitle(R.string.preference_authentication_logout)
+										.setMessage(R.string.preference_authentication_logout_question)
+										.setPositiveButton(R.string.preference_authentication_logout) { _, _ ->
+											auth.logout()
+											updateAuthPreference(auth, it)
+										}
+										.setNegativeButton(R.string.all_cancel) { _, _ -> }
+										.show()
+								} else auth.loginDialog {
+									updateAuthPreference(auth, it)
+								}
+								true
+							}
 						}
 					}
 					"preferences_info" -> {
@@ -343,6 +369,13 @@ class SettingsActivity : BaseActivity(), PreferenceFragmentCompat.OnPreferenceSt
 
 		private fun clearNotifications() =
 			(context?.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager).cancelAll()
+
+		private fun updateAuthPreference(auth: AuthenticationHelper, preference: Preference) {
+			preference.setTitle(
+				if (auth.isLoggedIn()) R.string.preference_authentication_logout
+				else R.string.preference_authentication_login
+			)
+		}
 
 		override fun onDisplayPreferenceDialog(preference: Preference) {
 			fragmentManager?.let { manager ->
