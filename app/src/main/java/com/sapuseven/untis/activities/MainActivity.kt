@@ -73,6 +73,7 @@ class MainActivity :
 			setupNavDrawer()
 
 			if (intent.hasExtra("info")) openInfoCenter()
+			else if (intent.hasExtra("grades")) openGrades()
 			else setFragment(TimetableFragment())
 		}
 	}
@@ -80,6 +81,7 @@ class MainActivity :
 	override fun onNewIntent(intent: Intent) {
 		super.onNewIntent(intent)
 		if (intent.hasExtra("info")) openInfoCenter()
+		else if (intent.hasExtra("grades")) openGrades()
 	}
 
 	override fun onResume() {
@@ -272,6 +274,12 @@ class MainActivity :
 		setFragment(InfoCenterFragment())
 	}
 
+	private fun openGrades() {
+		navigationview_main.setCheckedItem(R.id.nav_grades)
+		supportActionBar?.setTitle(R.string.activity_title_grades)
+		setFragment(GradesFragment())
+	}
+
 	override fun onNavigationItemSelected(item: MenuItem): Boolean {
 		when (item.itemId) {
 			R.id.nav_show_personal -> {
@@ -311,8 +319,7 @@ class MainActivity :
 				setFragment(StationsFragment())
 			}
 			R.id.nav_grades -> {
-				supportActionBar?.setTitle(R.string.activity_title_grades)
-				setFragment(GradesFragment())
+				openGrades()
 			}
 			R.id.nav_links -> {
 				supportActionBar?.setTitle(R.string.activity_title_links)

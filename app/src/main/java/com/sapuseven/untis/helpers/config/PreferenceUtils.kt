@@ -11,6 +11,10 @@ object PreferenceUtils {
 			manager.defaultPrefs.getInt(key, res.getInteger(res.getIdentifier(key + "_default", "integer", manager.context.packageName)))
 	}
 
+	fun getPrefInt(manager: PreferenceManager, key: String, default: Int): Int {
+		return manager.defaultPrefs.getInt(key, default)
+	}
+
 	fun getPrefBool(manager: PreferenceManager, key: String): Boolean {
 		val res = manager.context.resources
 

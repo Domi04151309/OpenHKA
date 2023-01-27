@@ -7,12 +7,12 @@ import org.joda.time.Instant
 import java.lang.ref.WeakReference
 
 
-class StringLoaderSync(
-	private val context: WeakReference<Context>,
-	private val link: String
+open class StringLoaderSync(
+	protected val context: WeakReference<Context>,
+	protected val link: String
 ) {
 
-	private val cacheName = link.filter { it.isLetterOrDigit() }
+	protected val cacheName = link.filter { it.isLetterOrDigit() }
 
 	suspend fun load(): String? {
 		var result = loadFromServer()
@@ -34,7 +34,7 @@ class StringLoaderSync(
 		}
 	}
 
-	private suspend fun loadFromServer(): String? {
+	protected open suspend fun loadFromServer(): String? {
 		val cache = StringCache(context, cacheName)
 		return link.httpGet()
 			.awaitStringResult()

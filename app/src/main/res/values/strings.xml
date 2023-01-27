@@ -150,6 +150,7 @@
 	<string name="preference_info_libraries">Libraries</string>
 	<string name="preference_info_libraries_desc">A list of all used libraries</string>
 	<string name="preference_marker">Time indicator</string>
+	<string name="preference_notifications_grades">Grade Notifications</string>
 	<string name="preference_notifications_feed">Feed Notifications</string>
 	<string name="preference_notifications_feed_limit">Notification Limit</string>
 	<string name="preference_notifications_feed_limit_desc">Limit the amount of notifications per update</string>
@@ -157,8 +158,10 @@
 	<string name="preference_notifications_clear">Clear all notifications</string>
 	<string name="preference_notifications_enable">Enable notification</string>
 	<string name="preference_notifications_enable_feed">Enable feed notifications</string>
+	<string name="preference_notifications_enable_grades">Enable grade notifications</string>
 	<string name="preference_notifications_enable_desc">Displays a notification with information about the next lesson while you have break.</string>
 	<string name="preference_notifications_enable_feed_desc">Displays notifications for new feed entries</string>
+	<string name="preference_notifications_enable_grades_desc">Displays notifications for new grades</string>
 	<string name="preference_notifications_first_lesson">Notification before first lesson</string>
 	<string name="preference_notifications_first_lesson_desc">Show a notification right before lessons start</string>
 	<string name="preference_notifications_first_lesson_time">Notification time</string>
@@ -224,6 +227,7 @@
 	<string name="notifications_channel_backgrounderrors_desc">Shows error messages of background tasks</string>
 	<string name="notifications_channel_feed">News</string>
 	<string name="notifications_channel_feed_desc">Shows information about the news</string>
+	<string name="notifications_text_grades">There are new grades available!</string>
 	<string name="notifications_text_error_title">Failed to load timetable</string>
 	<string name="notifications_text_error_message">You won\'t get any notifications today.</string>
 	<string name="notifications_text_title">Break until %1$s</string>
