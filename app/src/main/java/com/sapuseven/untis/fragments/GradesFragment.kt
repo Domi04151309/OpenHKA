@@ -1,8 +1,5 @@
 package com.sapuseven.untis.fragments
 
-import android.content.Intent
-import android.content.res.Resources
-import android.net.Uri
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -14,19 +11,24 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 import com.sapuseven.untis.R
+import com.sapuseven.untis.activities.BaseActivity
 import com.sapuseven.untis.adapters.MessageAdapter
 import com.sapuseven.untis.data.GenericParseResult
 import com.sapuseven.untis.data.lists.ListItem
+import com.sapuseven.untis.helpers.AuthenticationHelper
 import com.sapuseven.untis.helpers.strings.StringLoader
+import com.sapuseven.untis.helpers.strings.StringLoaderAuth
 import com.sapuseven.untis.interfaces.StringDisplay
 import org.json.JSONArray
 import org.json.JSONObject
 import java.lang.ref.WeakReference
+import java.util.*
 
 
 class GradesFragment : Fragment(), StringDisplay {
 	private val adapter = MessageAdapter()
-	private var parsedData: GenericParseResult<ListItem, Pair<Double, Double>> = GenericParseResult()
+	private var parsedData: GenericParseResult<ListItem, Pair<String, String>> =
+		GenericParseResult()
 	private lateinit var stringLoader: StringLoader
 	private lateinit var recyclerview: RecyclerView
 	private lateinit var swiperefreshlayout: SwipeRefreshLayout
@@ -34,37 +36,48 @@ class GradesFragment : Fragment(), StringDisplay {
 	companion object {
 		private const val API_URL: String = "https://www.iwi.hs-karlsruhe.de/iwii/REST"
 
-		fun parseLocations(resources: Resources, input: String): GenericParseResult<ListItem, Pair<Double, Double>> {
-			val result = GenericParseResult<ListItem, Pair<Double, Double>>()
+		fun parseGrades(input: String): GenericParseResult<ListItem, Pair<String, String>> {
+			val result = GenericParseResult<ListItem, Pair<String, String>>()
 			val json = JSONArray(input)
-			var departments: JSONArray
-			var currentBuilding: JSONObject
-			var currentDepartment: String
+			val semesterMap = TreeMap<Int, Pair<String, TreeMap<String, ListItem>>>()
+			var currentDegree: JSONArray
+			var currentExam: JSONObject
+			var currentExamName: String
+			var currentSemester: String
+			var currentSemesterId: Int
 			for (i in 0 until json.length()) {
-				currentBuilding = json.getJSONObject(i)
-				departments = currentBuilding.optJSONArray("departments") ?: JSONArray()
-				if (departments.length() > 0) result.list.add(
-					ListItem(
-						"",
-						resources.getString(
-							R.string.locations_building,
-							currentBuilding.optString("name")
+				currentDegree = json.getJSONObject(i).optJSONArray("grades") ?: JSONArray()
+				for (j in 0 until currentDegree.length()) {
+					currentExam = currentDegree.getJSONObject(j)
+					currentExamName = currentExam.optString("examName")
+					currentSemester = currentExam.optString("examSemester")
+					currentSemesterId = currentExam.optInt("idExamSemester")
+					if (!semesterMap.containsKey(currentSemesterId)) semesterMap[currentSemesterId] =
+						Pair(currentSemester, TreeMap())
+					semesterMap[currentSemesterId]?.second?.set(
+						currentExamName, ListItem(
+							currentExamName,
+							currentExam.optDouble("grade").let {
+								return@let if (it == 0.0) currentExam.optString("comment")
+								else (it / 100).toString()
+							}
 						)
 					)
-				)
-				for (j in 0 until departments.length()) {
-					currentDepartment = departments.getJSONObject(j).optString("name")
-					result.list.add(
-						ListItem(
-							currentDepartment,
-							""
-						)
-					)
-					result.map[currentDepartment] = Pair(
-						currentBuilding.optDouble("latitude"),
-						currentBuilding.optDouble("longitude")
+					result.map[currentExamName] = Pair(
+						currentExam.optString("examNumber"),
+						currentSemester
 					)
 				}
+			}
+			for (key in semesterMap.descendingKeySet()) {
+				result.list.add(
+					ListItem(
+						"",
+						semesterMap[key]?.first ?: throw IllegalStateException()
+					)
+				)
+				for ((_, exam) in semesterMap[key]?.second
+					?: throw IllegalStateException()) result.list.add(exam)
 			}
 			return result
 		}
@@ -81,39 +94,47 @@ class GradesFragment : Fragment(), StringDisplay {
 			false
 		)
 
-		stringLoader = StringLoader(WeakReference(context), this, "${API_URL}/buildings/v2/all")
+		val auth = AuthenticationHelper((activity as BaseActivity).preferences)
+		if (!auth.isLoggedIn()) {
+			auth.loginDialog {
+				onCreateView(inflater, container, savedInstanceState)
+			}
+			return null
+		}
+
+		stringLoader = StringLoaderAuth(
+			WeakReference(context),
+			this,
+			"${API_URL}/grades/all",
+			auth.get() ?: throw IllegalStateException()
+		)
 		recyclerview = root.findViewById(R.id.recyclerview_infocenter)
 		swiperefreshlayout = root.findViewById(R.id.swiperefreshlayout_infocenter)
 
 		recyclerview.layoutManager = LinearLayoutManager(context)
 		recyclerview.adapter = adapter
-		swiperefreshlayout.setOnRefreshListener { refreshLocations(StringLoader.FLAG_LOAD_SERVER) }
+		swiperefreshlayout.setOnRefreshListener { refreshGrades(StringLoader.FLAG_LOAD_SERVER) }
 
-		refreshLocations(StringLoader.FLAG_LOAD_CACHE)
+		refreshGrades(StringLoader.FLAG_LOAD_CACHE)
 
 		adapter.onClickListener = View.OnClickListener {
 			val key = it.findViewById<TextView>(R.id.textview_itemmessage_subject).text.toString()
 			if (key.isNotEmpty()) {
-				val mapIntent = Intent(
-					Intent.ACTION_VIEW, Uri.parse(
-						"geo:0,0?q=${parsedData.map[key]?.first},${parsedData.map[key]?.second}"
-					)
-				)
-				mapIntent.setPackage("com.google.android.apps.maps")
-				startActivity(mapIntent)
+				//TODO: add click behavior
+				parsedData.map[key]
 			}
 		}
 
 		return root
 	}
 
-	private fun refreshLocations(flags: Int) {
+	private fun refreshGrades(flags: Int) {
 		swiperefreshlayout.isRefreshing = true
 		stringLoader.load(flags)
 	}
 
 	override fun onStringLoaded(string: String) {
-		parsedData = parseLocations(resources, string)
+		parsedData = parseGrades(string)
 		adapter.updateItems(parsedData.list)
 		swiperefreshlayout.isRefreshing = false
 	}
