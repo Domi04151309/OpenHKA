@@ -1,6 +1,5 @@
 package com.sapuseven.untis.adapters
 
-import android.text.method.LinkMovementMethod
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -44,7 +43,6 @@ class PeopleAdapter(
 		holder.tvOverline.text = items[position].overline
 		holder.tvSubject.text = items[position].title
 		holder.tvBody.text = items[position].summary
-		holder.tvBody.movementMethod = LinkMovementMethod.getInstance()
 
 		holder.tvOverline.visibility =
 			if (items[position].overline.isEmpty()) View.GONE else View.VISIBLE

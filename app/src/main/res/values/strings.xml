@@ -7,8 +7,6 @@
 	<string name="all_disabled">Disabled</string>
 	<string name="all_help">Help</string>
 	<string name="all_privacy_policy">Privacy Policy</string>
-	<string name="all_success">success</string>
-	<string name="all_failed">failed</string>
 	<string name="all_subjects">Subjects</string>
 	<string name="all_rooms">Rooms</string>
 	<string name="all_personal_timetable">Personal Timetable</string>
@@ -72,8 +70,6 @@
 	<string name="link_input_skip">Skip Links</string>
 
 	<string name="link_input_intro">Welcome to Open HKA! Please enter two valid links below to get started!</string>
-	<string name="logindatainput_connecting">Connecting…</string>
-	<string name="logindatainput_data_loaded">Data loaded.</string>
 	<string name="logindatainput_delete">Delete profile</string>
 	<string name="link_input_error_field_empty">This field cannot be empty!</string>
 	<string name="link_input_error_invalid_url">Must be a valid URL!</string>

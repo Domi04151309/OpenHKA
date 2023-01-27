@@ -1,6 +1,5 @@
 package com.sapuseven.untis.adapters
 
-import android.text.method.LinkMovementMethod
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -31,7 +30,6 @@ class MensaListAdapter : RecyclerView.Adapter<MensaListAdapter.ViewHolder>() {
 		holder.ivIcon.setImageResource(items[position].icon ?: android.R.color.transparent)
 		holder.tvSubject.text = items[position].title
 		holder.tvBody.text = items[position].summary
-		holder.tvBody.movementMethod = LinkMovementMethod.getInstance()
 
 		holder.tvPrice.text =
 			if (items[position].price == null) ""

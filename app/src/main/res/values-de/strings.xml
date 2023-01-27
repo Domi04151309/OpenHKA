@@ -20,7 +20,6 @@
     <string name="all_disabled">Deaktiviert</string>
     <string name="all_enabled">Aktiviert</string>
     <string name="all_error">Fehler</string>
-    <string name="all_failed">fehlgeschlagen</string>
     <string name="all_help">Hilfe</string>
     <string name="all_lesson_cancelled">%1$s (entfällt)</string>
     <string name="all_lesson_details">Stundendetails</string>
@@ -33,7 +32,6 @@
     <string name="all_rooms">Räume</string>
     <string name="all_search">Suchen</string>
     <string name="all_subjects">Fächer</string>
-    <string name="all_success">erfolgreich</string>
     <string name="app_desc">Ein mobiler Client für das IWI HKA-System</string>
     <string name="errors_button_dismiss">Alle verwerfen</string>
     <string name="errors_button_report">Alle melden</string>
@@ -59,8 +57,6 @@
     <string name="loading">Wird geladen</string>
     <string name="loading_failed">Ladevorgang fehlgeschlagen</string>
     <string name="locations_building">%1$s-Gebäude</string>
-    <string name="logindatainput_connecting">Verbindung wird hergestellt…</string>
-    <string name="logindatainput_data_loaded">Daten erfolgreich geladen.</string>
     <string name="logindatainput_delete">Profil löschen</string>
     <string name="logindatainput_title_add">Profil hinzufügen</string>
     <string name="logindatainput_title_edit">Profil bearbeiten</string>

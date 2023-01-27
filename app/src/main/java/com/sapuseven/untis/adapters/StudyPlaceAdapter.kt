@@ -1,6 +1,5 @@
 package com.sapuseven.untis.adapters
 
-import android.text.method.LinkMovementMethod
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -29,7 +28,6 @@ class StudyPlaceAdapter : RecyclerView.Adapter<StudyPlaceAdapter.ViewHolder>() {
 		holder.tvOverline.text = items[position].overline
 		holder.tvSubject.text = items[position].title
 		holder.tvBody.text = items[position].summary
-		holder.tvBody.movementMethod = LinkMovementMethod.getInstance()
 	}
 
 	internal fun updateItems(newItems: ArrayList<StudyPlaceListItem>) {
