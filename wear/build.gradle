@@ -35,6 +35,7 @@ android {
             excludes += ['org/apache/commons/codec/language/bm/*.txt']
         }
     }
+    namespace 'com.sapuseven.untis'
 }
 
 dependencies {
