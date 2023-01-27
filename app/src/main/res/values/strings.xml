@@ -262,6 +262,7 @@
 	<string name="library_recyclerview" translatable="false">Android Support RecyclerView V7</string>
 	<string name="library_robolectric" translatable="false">Robolectric</string>
 	<string name="library_rssparser" translatable="false">Rssparser</string>
+	<string name="library_security_crypto_ktx" translatable="false">AndroidX Security Kotlin Extensions</string>
 	<string name="library_swiperefreshlayout" translatable="false">Android Support Library Custom View</string>
 	<string name="library_weekview" translatable="false">WeekView</string>
 
