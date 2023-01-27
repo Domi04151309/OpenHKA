@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout
-	xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+	xmlns:app="http://schemas.android.com/apk/res-auto"
 	android:layout_width="match_parent"
 	android:layout_height="wrap_content"
 	android:orientation="horizontal"
@@ -31,11 +31,25 @@
 			android:textIsSelectable="false" />
 	</LinearLayout>
 
-	<TextView
-		android:id="@+id/textview_itemmessage_grade"
-		android:layout_width="wrap_content"
-		android:layout_height="wrap_content"
-		android:textAppearance="@style/TextAppearance.MaterialComponents.Body1"
-		android:textColor="?android:attr/textColorSecondary"
-		android:textIsSelectable="false" />
+	<FrameLayout
+		android:id="@+id/framelayout_itemmessage_grade"
+		android:layout_width="24dp"
+		android:layout_height="24dp"
+		android:layout_gravity="center_vertical">
+
+		<ImageView
+			android:layout_width="match_parent"
+			android:layout_height="match_parent"
+			app:srcCompat="@drawable/ic_circle"
+			android:contentDescription="@null" />
+
+		<TextView
+			android:id="@+id/textview_itemmessage_grade"
+			android:layout_width="wrap_content"
+			android:layout_height="wrap_content"
+			android:layout_gravity="center"
+			android:textAppearance="@style/TextAppearance.MaterialComponents.Body2"
+			android:textColor="@android:color/white"
+			android:textIsSelectable="false" />
+	</FrameLayout>
 </LinearLayout>
