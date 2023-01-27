@@ -292,8 +292,15 @@ class SettingsActivity : BaseActivity(), PreferenceFragmentCompat.OnPreferenceSt
 									"https://api.github.com/repos/sapuseven/betteruntis/contributors"
 										.httpGet()
 										.awaitStringResult()
-										.fold({ data ->
-											showContributorList(true, data)
+										.fold({ original ->
+											"https://api.github.com/repos/domi04151309/openhka/contributors"
+												.httpGet()
+												.awaitStringResult()
+												.fold({ data ->
+													showContributorList(true, original, data)
+												}, {
+													showContributorList(false)
+												})
 										}, {
 											showContributorList(false)
 										})
