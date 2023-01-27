@@ -11,10 +11,10 @@ import org.joda.time.Instant
 import java.lang.ref.WeakReference
 
 
-class StringLoader(
-	private val context: WeakReference<Context>,
-	private val stringDisplay: StringDisplay,
-	private val link: String
+open class StringLoader(
+	protected val context: WeakReference<Context>,
+	protected val stringDisplay: StringDisplay,
+	protected val link: String
 ) {
 	companion object {
 		const val FLAG_LOAD_CACHE: Int = 0b00000001
@@ -24,7 +24,7 @@ class StringLoader(
 		const val CODE_REQUEST_FAILED: Int = 2
 	}
 
-	private val cacheName = link.filter { it.isLetterOrDigit() }
+	protected val cacheName = link.filter { it.isLetterOrDigit() }
 
 	fun load(flags: Int = 0) =
 		GlobalScope.launch(Dispatchers.Main) {
@@ -56,7 +56,7 @@ class StringLoader(
 		}
 	}
 
-	private suspend fun loadFromServer() {
+	protected open suspend fun loadFromServer() {
 		val cache = StringCache(context, cacheName)
 
 		link.httpGet()
