@@ -445,6 +445,9 @@
 					android:title="@string/library_recyclerview" />
 				<Preference
 					android:icon="@drawable/ic_extension"
+					android:title="@string/library_security_crypto_ktx" />
+				<Preference
+					android:icon="@drawable/ic_extension"
 					android:title="@string/library_commons_codec" />
 				<Preference
 					android:icon="@drawable/ic_extension"
