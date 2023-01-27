@@ -3,6 +3,7 @@ package com.sapuseven.untis.adapters
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.FrameLayout
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.sapuseven.untis.R
@@ -28,7 +29,7 @@ class GradeListAdapter : RecyclerView.Adapter<GradeListAdapter.ViewHolder>() {
 
 		holder.tvBody.visibility =
 			if (items[position].summary.isEmpty()) View.GONE else View.VISIBLE
-		holder.tvGrade.visibility =
+		holder.flGrade.visibility =
 			if (items[position].grade.isEmpty()) View.GONE else View.VISIBLE
 	}
 
@@ -40,6 +41,7 @@ class GradeListAdapter : RecyclerView.Adapter<GradeListAdapter.ViewHolder>() {
 	class ViewHolder(rootView: View) : RecyclerView.ViewHolder(rootView) {
 		val tvSubject: TextView = rootView.findViewById(R.id.textview_itemmessage_subject)
 		val tvBody: TextView = rootView.findViewById(R.id.textview_itemmessage_body)
+		val flGrade: FrameLayout = rootView.findViewById(R.id.framelayout_itemmessage_grade)
 		val tvGrade: TextView = rootView.findViewById(R.id.textview_itemmessage_grade)
 	}
 }
