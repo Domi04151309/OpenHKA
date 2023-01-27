@@ -122,7 +122,8 @@ class GradesFragment : Fragment(), StringDisplay {
 		adapter.onClickListener = View.OnClickListener {
 			val key = it.findViewById<TextView>(R.id.textview_itemmessage_subject).text.toString()
 			if (key.isNotEmpty()) {
-				//TODO: add click behavior
+				//TODO: add statistics
+				//Not yet implemented because the API crashes spectacularly after requesting
 				parsedData.map[key]
 			}
 		}
