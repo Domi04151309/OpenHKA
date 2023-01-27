@@ -12,9 +12,9 @@ import androidx.recyclerview.widget.RecyclerView
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 import com.sapuseven.untis.R
 import com.sapuseven.untis.activities.BaseActivity
-import com.sapuseven.untis.adapters.MessageAdapter
+import com.sapuseven.untis.adapters.GradeListAdapter
 import com.sapuseven.untis.data.GenericParseResult
-import com.sapuseven.untis.data.lists.ListItem
+import com.sapuseven.untis.data.lists.GradeListItem
 import com.sapuseven.untis.helpers.AuthenticationHelper
 import com.sapuseven.untis.helpers.strings.StringLoader
 import com.sapuseven.untis.helpers.strings.StringLoaderAuth
@@ -26,8 +26,8 @@ import java.util.*
 
 
 class GradesFragment : Fragment(), StringDisplay {
-	private val adapter = MessageAdapter()
-	private var parsedData: GenericParseResult<ListItem, Pair<String, String>> =
+	private val adapter = GradeListAdapter()
+	private var parsedData: GenericParseResult<GradeListItem, Pair<String, String>> =
 		GenericParseResult()
 	private lateinit var stringLoader: StringLoader
 	private lateinit var recyclerview: RecyclerView
@@ -36,10 +36,10 @@ class GradesFragment : Fragment(), StringDisplay {
 	companion object {
 		private const val API_URL: String = "https://www.iwi.hs-karlsruhe.de/iwii/REST"
 
-		fun parseGrades(input: String): GenericParseResult<ListItem, Pair<String, String>> {
-			val result = GenericParseResult<ListItem, Pair<String, String>>()
+		fun parseGrades(input: String): GenericParseResult<GradeListItem, Pair<String, String>> {
+			val result = GenericParseResult<GradeListItem, Pair<String, String>>()
 			val json = JSONArray(input)
-			val semesterMap = TreeMap<Int, Pair<String, TreeMap<String, ListItem>>>()
+			val semesterMap = TreeMap<Int, Pair<String, TreeMap<String, GradeListItem>>>()
 			var currentDegree: JSONArray
 			var currentExam: JSONObject
 			var currentExamName: String
@@ -55,8 +55,9 @@ class GradesFragment : Fragment(), StringDisplay {
 					if (!semesterMap.containsKey(currentSemesterId)) semesterMap[currentSemesterId] =
 						Pair(currentSemester, TreeMap())
 					semesterMap[currentSemesterId]?.second?.set(
-						currentExamName, ListItem(
+						currentExamName, GradeListItem(
 							currentExamName,
+							"",
 							currentExam.optDouble("grade").let {
 								return@let if (it == 0.0) currentExam.optString("comment")
 								else (it / 100).toString()
@@ -71,9 +72,10 @@ class GradesFragment : Fragment(), StringDisplay {
 			}
 			for (key in semesterMap.descendingKeySet()) {
 				result.list.add(
-					ListItem(
+					GradeListItem(
 						"",
-						semesterMap[key]?.first ?: throw IllegalStateException()
+						semesterMap[key]?.first ?: throw IllegalStateException(),
+						""
 					)
 				)
 				for ((_, exam) in semesterMap[key]?.second
