@@ -1,24 +1,30 @@
 package com.sapuseven.untis.helpers
 
 import android.content.SharedPreferences
+import android.view.LayoutInflater
+import android.widget.EditText
 import androidx.security.crypto.EncryptedSharedPreferences
 import androidx.security.crypto.MasterKey
+import com.google.android.material.dialog.MaterialAlertDialogBuilder
+import com.sapuseven.untis.R
 import com.sapuseven.untis.helpers.config.PreferenceManager
 
-class AuthorizationHelper(preferenceManager: PreferenceManager) {
+class AuthenticationHelper(preferenceManager: PreferenceManager) {
 
 	companion object {
 		private const val KEY_USERNAME = "username"
 		private const val KEY_PASSWORD = "password"
 	}
 
+	private val context = preferenceManager.context
+
 	private val masterKeyAlias = MasterKey.Builder(
-		preferenceManager.context,
+		context,
 		MasterKey.DEFAULT_MASTER_KEY_ALIAS
 	).setKeyScheme(MasterKey.KeyScheme.AES256_GCM).build()
 
 	private val _prefs: SharedPreferences = EncryptedSharedPreferences.create(
-		preferenceManager.context,
+		context,
 		"preferences_${preferenceManager.currentProfileId()}",
 		masterKeyAlias,
 		EncryptedSharedPreferences.PrefKeyEncryptionScheme.AES256_SIV,
@@ -34,7 +40,27 @@ class AuthorizationHelper(preferenceManager: PreferenceManager) {
 		)
 	}
 
-	fun login(username: String, password: String) {
+	fun loginDialog(callback: () -> Unit) {
+		val dialogView = LayoutInflater.from(context).inflate(
+			R.layout.dialog_authentication,
+			null,
+			false
+		)
+		MaterialAlertDialogBuilder(context)
+			.setTitle(R.string.preference_authentication_login)
+			.setView(dialogView)
+			.setPositiveButton(R.string.all_ok) { _, _ ->
+				login(
+					dialogView.findViewById<EditText>(R.id.username).text.toString(),
+					dialogView.findViewById<EditText>(R.id.password).text.toString()
+				)
+				callback()
+			}
+			.setNegativeButton(R.string.all_cancel) { _, _ -> }
+			.show()
+	}
+
+	private fun login(username: String, password: String) {
 		_prefs.edit().putString(KEY_USERNAME, username).putString(KEY_PASSWORD, password).apply()
 	}
 

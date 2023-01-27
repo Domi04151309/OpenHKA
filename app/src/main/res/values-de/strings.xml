@@ -105,6 +105,13 @@
     <string name="preferences_notifications">Benachrichtigungen</string>
     <string name="preferences_styling">Anpassung</string>
     <string name="preferences_timetable">Stundenplan</string>
+    <string name="preference_authentication">Authentifizierung</string>
+    <string name="preference_authentication_desc">Aktiviert Funktionen wie das Anzeigen von Noten</string>
+    <string name="preference_authentication_login">Anmelden</string>
+    <string name="preference_authentication_logout">Abmelden</string>
+    <string name="preference_authentication_logout_question">Möchtest du sich wirklich abmelden?</string>
+    <string name="preference_authentication_password">Passwort</string>
+    <string name="preference_authentication_username">Nutzername</string>
     <string name="preference_automute_cancelled_lessons">Auch in entfallenen Stunden stumm schalten</string>
     <string name="preference_automute_enable">Automatisches Stummschalten</string>
     <string name="preference_automute_enable_summary">Aktiviert während jeder Stunde automatisch den „Bitte nicht stören“-Modus</string>

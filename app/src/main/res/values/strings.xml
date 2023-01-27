@@ -208,6 +208,13 @@
 	<string name="preference_week_display_length_summary">Set to 0 to use week length</string>
 	<string name="preference_week_snap_to_days">Snap to days</string>
 	<string name="preference_week_snap_to_days_summary">instead of weeks</string>
+	<string name="preference_authentication">Authentication</string>
+	<string name="preference_authentication_desc">Enables functionality like viewing grades</string>
+	<string name="preference_authentication_login">Login</string>
+	<string name="preference_authentication_logout">Logout</string>
+	<string name="preference_authentication_logout_question">Are you sure you want to log out?</string>
+	<string name="preference_authentication_password">Password</string>
+	<string name="preference_authentication_username">Username</string>
 	<string name="preferences_connectivity">Connectivity</string>
 	<string name="preferences_general">General</string>
 	<string name="preferences_infos">About</string>
