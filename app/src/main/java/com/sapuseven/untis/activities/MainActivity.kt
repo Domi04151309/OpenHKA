@@ -310,6 +310,10 @@ class MainActivity :
 				supportActionBar?.setTitle(R.string.activity_title_stations)
 				setFragment(StationsFragment())
 			}
+			R.id.nav_grades -> {
+				supportActionBar?.setTitle(R.string.activity_title_grades)
+				setFragment(GradesFragment())
+			}
 			R.id.nav_links -> {
 				supportActionBar?.setTitle(R.string.activity_title_links)
 				setFragment(LinksFragment())
