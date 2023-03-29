@@ -39,7 +39,7 @@ class GradesFragment : Fragment(), StringDisplay {
 		fun parseGrades(input: String): GenericParseResult<GradeListItem, Pair<String, String>> {
 			val result = GenericParseResult<GradeListItem, Pair<String, String>>()
 			val json = JSONArray(input)
-			val semesterMap = TreeMap<Int, Pair<String, TreeMap<String, GradeListItem>>>()
+			val semesterMap = TreeMap<Int, Pair<String, Pair<TreeMap<String, GradeListItem>, TreeMap<String, GradeListItem>>>>()
 			var currentDegree: JSONArray
 			var currentExam: JSONObject
 			var currentExamName: String
@@ -53,17 +53,26 @@ class GradesFragment : Fragment(), StringDisplay {
 					currentSemester = currentExam.optString("examSemester")
 					currentSemesterId = currentExam.optInt("idExamSemester")
 					if (!semesterMap.containsKey(currentSemesterId)) semesterMap[currentSemesterId] =
-						Pair(currentSemester, TreeMap())
-					semesterMap[currentSemesterId]?.second?.set(
-						currentExamName, GradeListItem(
-							currentExamName,
-							"",
-							currentExam.optDouble("grade").let {
-								return@let if (it == 0.0) currentExam.optString("comment")
-								else (it / 100).toString()
-							}
-						)
-					)
+						Pair(currentSemester, Pair(TreeMap(), TreeMap()))
+					currentExam.optDouble("grade").let { grade ->
+						if (grade == 0.0) {
+							semesterMap[currentSemesterId]?.second?.second?.set(
+								currentExamName, GradeListItem(
+									currentExamName,
+									"",
+									currentExam.optString("comment")
+								)
+							)
+						} else {
+							semesterMap[currentSemesterId]?.second?.first?.set(
+								currentExamName, GradeListItem(
+									currentExamName,
+									"",
+									(grade / 100).toString()
+								)
+							)
+						}
+					}
 					result.map[currentExamName] = Pair(
 						currentExam.optString("examNumber"),
 						currentSemester
@@ -78,7 +87,9 @@ class GradesFragment : Fragment(), StringDisplay {
 						""
 					)
 				)
-				for ((_, exam) in semesterMap[key]?.second
+				for ((_, exam) in semesterMap[key]?.second?.first
+					?: throw IllegalStateException()) result.list.add(exam)
+				for ((_, exam) in semesterMap[key]?.second?.second
 					?: throw IllegalStateException()) result.list.add(exam)
 			}
 			return result
