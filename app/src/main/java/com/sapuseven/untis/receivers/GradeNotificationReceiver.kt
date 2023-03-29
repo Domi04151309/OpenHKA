@@ -86,8 +86,8 @@ class GradeNotificationReceiver : BroadcastReceiver() {
 
 	private fun createNotificationChannel(context: Context) {
 		if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-			val name = context.getString(R.string.notifications_channel_feed)
-			val descriptionText = context.getString(R.string.activity_title_grades)
+			val name = context.getString(R.string.notifications_channel_grades)
+			val descriptionText = context.getString(R.string.notifications_channel_grades_desc)
 			val importance = NotificationManager.IMPORTANCE_DEFAULT
 			val channel = NotificationChannel(CHANNEL_ID_GRADES, name, importance).apply {
 				description = descriptionText

@@ -227,6 +227,8 @@
 	<string name="notifications_channel_backgrounderrors_desc">Shows error messages of background tasks</string>
 	<string name="notifications_channel_feed">News</string>
 	<string name="notifications_channel_feed_desc">Shows information about the news</string>
+	<string name="notifications_channel_grades">Grades</string>
+	<string name="notifications_channel_grades_desc">Shows information about grades</string>
 	<string name="notifications_text_grades">There are new grades available!</string>
 	<string name="notifications_text_error_title">Failed to load timetable</string>
 	<string name="notifications_text_error_message">You won\'t get any notifications today.</string>
