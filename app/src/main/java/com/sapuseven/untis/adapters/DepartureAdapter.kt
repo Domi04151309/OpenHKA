@@ -9,9 +9,9 @@ import androidx.recyclerview.widget.RecyclerView
 import com.sapuseven.untis.R
 import com.sapuseven.untis.data.lists.DepartureListItem
 
-class DepartureAdapter(
-	private val items: ArrayList<DepartureListItem>
-) : RecyclerView.Adapter<DepartureAdapter.ViewHolder>() {
+class DepartureAdapter : RecyclerView.Adapter<DepartureAdapter.ViewHolder>() {
+
+	private var items: ArrayList<DepartureListItem> = arrayListOf()
 
 	override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder = ViewHolder(
 		LayoutInflater.from(parent.context).inflate(R.layout.item_departure, parent, false)
@@ -24,6 +24,11 @@ class DepartureAdapter(
 		holder.tvSubject.text = items[position].title
 		holder.tvBody.text = items[position].summary
 		holder.ivLow.visibility = if (items[position].lowFloor) View.VISIBLE else View.GONE
+	}
+
+	internal fun updateItems(newItems: ArrayList<DepartureListItem>) {
+		items = newItems
+		notifyDataSetChanged()
 	}
 
 	class ViewHolder(rootView: View) : RecyclerView.ViewHolder(rootView) {

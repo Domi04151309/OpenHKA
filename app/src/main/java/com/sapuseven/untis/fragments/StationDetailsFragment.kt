@@ -12,6 +12,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
+import com.google.android.material.tabs.TabLayout
 import com.sapuseven.untis.R
 import com.sapuseven.untis.activities.BaseActivity
 import com.sapuseven.untis.activities.MainActivity
@@ -24,9 +25,15 @@ import org.json.JSONArray
 import org.json.JSONObject
 import java.lang.ref.WeakReference
 import java.text.SimpleDateFormat
+import java.util.*
+import kotlin.collections.ArrayList
 
 class StationDetailsFragment(private var item: JSONObject) : Fragment() {
 
+	private val adapter = DepartureAdapter()
+	private var parsedDepartures = TreeMap<String, ArrayList<DepartureListItem>>()
+	private lateinit var tabLayout: TabLayout
+	private lateinit var recyclerview: RecyclerView
 	private lateinit var swiperefreshlayout: SwipeRefreshLayout
 
 	override fun onCreate(savedInstanceState: Bundle?) {
@@ -128,34 +135,50 @@ class StationDetailsFragment(private var item: JSONObject) : Fragment() {
 					?: JSONObject()).optString("stateless")
 			).load(StringLoader.FLAG_LOAD_SERVER)
 		}
+
+		tabLayout = root.findViewById(R.id.tab_layout_platform)
+		tabLayout.addOnTabSelectedListener(object : TabLayout.OnTabSelectedListener {
+			override fun onTabSelected(tab: TabLayout.Tab?) {
+				parsedDepartures[tab?.text]?.let { adapter.updateItems(it) }
+			}
+
+			override fun onTabUnselected(tab: TabLayout.Tab?) {}
+			override fun onTabReselected(tab: TabLayout.Tab?) {}
+		})
+		
+		recyclerview = root.findViewById(R.id.recyclerview)
+		recyclerview.isNestedScrollingEnabled = false
+		recyclerview.layoutManager = LinearLayoutManager(context)
+		recyclerview.adapter = adapter
+
 		refreshView(root)
 
 		return root
 	}
 
-	private fun refreshView(root: View) {
-		root.findViewById<TextView>(R.id.name).text =
-			(((item.optJSONObject("dm") ?: JSONObject()).optJSONObject("points")
-				?: JSONObject()).optJSONObject("point") ?: JSONObject()).optString("name")
+	private fun refreshTabs(tabs: Array<String>) {
+		tabLayout.removeAllTabs()
+		for (i in tabs) {
+			tabLayout.addTab(tabLayout.newTab().apply {
+				text = i
+			})
+		}
+	}
 
-		root.findViewById<TextView>(R.id.last_refresh).text = resources.getString(
-			R.string.main_last_refreshed,
-			DateFormat.getTimeFormat(context).format(
-				SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss").parse(
-					((item.optJSONArray("parameters")
-						?: JSONArray()).optJSONObject(4)).optString("value")
-				) ?: ""
-			)
-		)
-
+	private fun parseDepartures() {
+		parsedDepartures = TreeMap<String, ArrayList<DepartureListItem>>()
 		val departures = item.optJSONArray("departureList") ?: JSONArray()
-		val parsedDepartures = ArrayList<DepartureListItem>(departures.length())
 		var currentItem: JSONObject
 		var currentLine: JSONObject
+		var currentPlatform: String
 		for (i in 0 until departures.length()) {
 			currentItem = departures.getJSONObject(i)
 			currentLine = currentItem.optJSONObject("servingLine") ?: JSONObject()
-			parsedDepartures.add(
+			currentPlatform = currentItem.optString("platform")
+			if (!parsedDepartures.containsKey(currentPlatform))
+				parsedDepartures[currentPlatform] = ArrayList()
+
+			parsedDepartures[currentPlatform]?.add(
 				DepartureListItem(
 					currentLine.optString("direction"),
 					resources.getString(
@@ -169,11 +192,26 @@ class StationDetailsFragment(private var item: JSONObject) : Fragment() {
 				)
 			)
 		}
+	}
 
-		val recyclerview = root.findViewById<RecyclerView>(R.id.recyclerview)
-		recyclerview.isNestedScrollingEnabled = false
-		recyclerview.layoutManager = LinearLayoutManager(context)
-		recyclerview.adapter = DepartureAdapter(parsedDepartures)
+	private fun refreshView(root: View) {
+		root.findViewById<TextView>(R.id.name).text =
+			(((item.optJSONObject("dm") ?: JSONObject()).optJSONObject("points")
+				?: JSONObject()).optJSONObject("point") ?: JSONObject()).optString("name")
+
+		root.findViewById<TextView>(R.id.last_refresh).text = resources.getString(
+			R.string.main_last_refreshed,
+			DateFormat.getTimeFormat(context).format(
+				SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss", Locale.US).parse(
+					((item.optJSONArray("parameters")
+						?: JSONArray()).optJSONObject(4)).optString("value")
+				) ?: ""
+			)
+		)
+
+		parseDepartures()
+		refreshTabs(parsedDepartures.keys.toTypedArray())
+		parsedDepartures[parsedDepartures.keys.first()]?.let { adapter.updateItems(it) }
 		swiperefreshlayout.isRefreshing = false
 	}
 
