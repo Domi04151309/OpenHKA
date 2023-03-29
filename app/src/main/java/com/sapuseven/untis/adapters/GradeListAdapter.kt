@@ -29,7 +29,7 @@ class GradeListAdapter : RecyclerView.Adapter<GradeListAdapter.ViewHolder>() {
 
 		holder.tvBody.visibility =
 			if (items[position].summary.isEmpty()) View.GONE else View.VISIBLE
-		holder.flGrade.visibility =
+		holder.tvGrade.visibility =
 			if (items[position].grade.isEmpty()) View.GONE else View.VISIBLE
 	}
 
@@ -41,7 +41,6 @@ class GradeListAdapter : RecyclerView.Adapter<GradeListAdapter.ViewHolder>() {
 	class ViewHolder(rootView: View) : RecyclerView.ViewHolder(rootView) {
 		val tvSubject: TextView = rootView.findViewById(R.id.textview_itemmessage_subject)
 		val tvBody: TextView = rootView.findViewById(R.id.textview_itemmessage_body)
-		val flGrade: FrameLayout = rootView.findViewById(R.id.framelayout_itemmessage_grade)
 		val tvGrade: TextView = rootView.findViewById(R.id.textview_itemmessage_grade)
 	}
 }

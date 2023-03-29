@@ -13,6 +13,7 @@
 	<dimen name="textsize_listitem_line1">16sp</dimen>
 	<dimen name="textsize_listitem_line2">14sp</dimen>
 	<dimen name="width_main_leftsidebar">38dp</dimen>
+	<dimen name="pill_padding">8dp</dimen>
 
 	<dimen name="size_wear_icons">72dp</dimen>
 </resources>
