@@ -218,7 +218,7 @@
     <string name="preference_week_snap_to_days">Tageweise scrollen</string>
     <string name="preference_week_snap_to_days_summary">statt wochenweise</string>
     <string name="stations_add">Haltestellen hinzufügen</string>
-    <string name="stations_departure_short_summary">%1$s %2$s in %3$s min</string>
+    <string name="stations_departure_short_summary">%1$s in %2$s min</string>
     <string name="stations_departure_summary">in %1$s Minuten von Gleis %2$s</string>
     <string name="stations_remove_favorite">Haltestelle entfernen</string>
     <string name="stations_remove_favorite_button">Entfernen</string>

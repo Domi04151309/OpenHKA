@@ -64,7 +64,6 @@ class StationsFragment : Fragment(), StringDisplay {
 				parsedDepartures[i] = DepartureListItem(
 					resources.getString(
 						R.string.stations_departure_short_summary,
-						currentLine.optString("number"),
 						currentLine.optString("direction"),
 						currentItem.optString("countdown")
 					),
