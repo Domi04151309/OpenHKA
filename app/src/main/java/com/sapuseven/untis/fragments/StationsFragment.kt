@@ -19,7 +19,10 @@ import com.sapuseven.untis.R
 import com.sapuseven.untis.activities.AddStationActivity
 import com.sapuseven.untis.activities.BaseActivity
 import com.sapuseven.untis.adapters.MessageAdapter
+import com.sapuseven.untis.adapters.StationAdapter
+import com.sapuseven.untis.data.lists.DepartureListItem
 import com.sapuseven.untis.data.lists.ListItem
+import com.sapuseven.untis.data.lists.StationItem
 import com.sapuseven.untis.helpers.StationUtils
 import com.sapuseven.untis.helpers.strings.StringLoader
 import com.sapuseven.untis.interfaces.StringDisplay
@@ -30,8 +33,8 @@ import java.lang.ref.WeakReference
 
 
 class StationsFragment : Fragment(), StringDisplay {
-	private val stationList = arrayListOf<ListItem>()
-	private val stationAdapter = MessageAdapter(stationList)
+	private val stationList = arrayListOf<StationItem>()
+	private val stationAdapter = StationAdapter(stationList)
 	private val keyMap: MutableMap<String, JSONObject> = mutableMapOf()
 	private var fromCache: Boolean = false
 	private var favorites = setOf<String?>()
@@ -45,26 +48,30 @@ class StationsFragment : Fragment(), StringDisplay {
 			"https://kvv.de/tunnelEfaDirect.php?outputFormat=JSON&coordOutputFormat=WGS84[dd.ddddd]&action=XSLT_DM_REQUEST&mode=direct&type_dm=stop&useRealtime=1&name_dm="
 		private const val FRAGMENT_TAG_STATION: String = "com.sapuseven.untis.fragments.station"
 
-		fun parseStation(resources: Resources, input: String): Pair<ListItem, JSONObject> {
+		fun parseStation(resources: Resources, input: String): Pair<StationItem, JSONObject> {
 			val json = JSONObject(input)
 			val stop = (((json.optJSONObject("dm") ?: JSONObject()).optJSONObject("points")
 				?: JSONObject()).optJSONObject("point") ?: JSONObject())
 			val title = stop.optString("name")
 			val departures = json.optJSONArray("departureList") ?: JSONArray()
-			val parsedDepartures = Array(min(departures.length(), 5)) { "" }
+			val parsedDepartures =
+				Array(min(departures.length(), 5)) { DepartureListItem("") }
 			var currentItem: JSONObject
 			var currentLine: JSONObject
 			for (i in parsedDepartures.indices) {
 				currentItem = departures.getJSONObject(i)
 				currentLine = currentItem.optJSONObject("servingLine") ?: JSONObject()
-				parsedDepartures[i] = resources.getString(
-					R.string.stations_departure_short_summary,
-					currentLine.optString("number"),
-					currentLine.optString("direction"),
-					currentItem.optString("countdown")
+				parsedDepartures[i] = DepartureListItem(
+					resources.getString(
+						R.string.stations_departure_short_summary,
+						currentLine.optString("number"),
+						currentLine.optString("direction"),
+						currentItem.optString("countdown")
+					),
+					line = currentLine.optString("number")
 				)
 			}
-			return Pair(ListItem(title, parsedDepartures.joinToString("\n")), json)
+			return Pair(StationItem(title, parsedDepartures), json)
 		}
 	}
 
@@ -130,7 +137,11 @@ class StationsFragment : Fragment(), StringDisplay {
 	private fun checkRequests() {
 		if (requestCounter == favorites.size) {
 			if (fromCache) stationList.forEach {
-				it.summary = resources.getString(R.string.errors_failed_loading_from_server_message)
+				it.departures = arrayOf(
+					DepartureListItem(
+						resources.getString(R.string.errors_failed_loading_from_server_message)
+					)
+				)
 			}
 			stationList.sortBy { it.title }
 			stationAdapter.notifyDataSetChanged()
