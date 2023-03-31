@@ -1,5 +1,31 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+	<string-array name="preference_launch_screens">
+		<item>@string/all_personal_timetable</item>
+		<item>@string/activity_title_info_center</item>
+		<item>@string/activity_title_events</item>
+		<item>@string/activity_title_people</item>
+		<item>@string/activity_title_locations</item>
+		<item>@string/activity_title_study_places</item>
+		<item>@string/activity_title_mensa</item>
+		<item>@string/activity_title_stations</item>
+		<item>@string/activity_title_grades</item>
+		<item>@string/activity_title_links</item>
+	</string-array>
+
+	<string-array name="preference_launch_screens_values" translatable="false">
+		<item>timetable</item>
+		<item>info_center</item>
+		<item>events</item>
+		<item>people</item>
+		<item>locations</item>
+		<item>study_places</item>
+		<item>mensa</item>
+		<item>stations</item>
+		<item>grades</item>
+		<item>links</item>
+	</string-array>
+
 	<string-array name="preference_themes">
 		<item>@string/preference_theme_stock</item>
 		<item>@string/preference_theme_untis</item>

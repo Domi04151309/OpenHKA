@@ -74,7 +74,18 @@ class MainActivity :
 
 			if (intent.hasExtra("info")) openInfoCenter()
 			else if (intent.hasExtra("grades")) openGrades()
-			else setFragment(TimetableFragment())
+			else when (PreferenceUtils.getPrefString(preferences, "preference_launch_screen")) {
+				"timetable" -> openPersonalTimetable()
+				"info_center" -> openInfoCenter()
+				"events" -> openEvents()
+				"people" -> openPeople()
+				"locations" -> openLocations()
+				"study_places" -> openStudyPlaces()
+				"mensa" -> openMensa()
+				"stations" -> openStations()
+				"grades" -> openGrades()
+				"links" -> openLinks()
+			}
 		}
 	}
 
@@ -268,63 +279,89 @@ class MainActivity :
 		}
 	}
 
-	private fun openInfoCenter() {
-		navigationview_main.setCheckedItem(R.id.nav_infocenter)
-		supportActionBar?.setTitle(R.string.activity_title_info_center)
-		setFragment(InfoCenterFragment())
+	private fun openMenuItem(itemId: Int, stringId: Int, fragment: Fragment) {
+		navigationview_main.setCheckedItem(itemId)
+		supportActionBar?.setTitle(stringId)
+		setFragment(fragment)
 	}
 
-	private fun openGrades() {
-		navigationview_main.setCheckedItem(R.id.nav_grades)
-		supportActionBar?.setTitle(R.string.activity_title_grades)
-		setFragment(GradesFragment())
-	}
+	private fun openPersonalTimetable() = openMenuItem(
+		R.id.nav_show_personal,
+		R.string.app_name,
+		TimetableFragment()
+	)
+
+	private fun openInfoCenter() = openMenuItem(
+		R.id.nav_infocenter,
+		R.string.activity_title_info_center,
+		InfoCenterFragment()
+	)
+
+	private fun openEvents() = openMenuItem(
+		R.id.nav_events,
+		R.string.activity_title_events,
+		EventFragment()
+	)
+
+	private fun openPeople() = openMenuItem(
+		R.id.nav_people,
+		R.string.activity_title_people,
+		PeopleFragment()
+	)
+
+	private fun openLocations() = openMenuItem(
+		R.id.nav_locations,
+		R.string.activity_title_locations,
+		LocationFragment()
+	)
+
+	private fun openStudyPlaces() = openMenuItem(
+		R.id.nav_study_places,
+		R.string.activity_title_study_places,
+		StudyPlaceFragment()
+	)
+
+	private fun openMensa() = openMenuItem(
+		R.id.nav_mensa,
+		R.string.activity_title_mensa,
+		MensaFragment()
+	)
+
+	private fun openStations() = openMenuItem(
+		R.id.nav_stations,
+		R.string.activity_title_stations,
+		StationsFragment()
+	)
+
+	private fun openGrades() = openMenuItem(
+		R.id.nav_grades,
+		R.string.activity_title_grades,
+		GradesFragment()
+	)
+
+	private fun openLinks() = openMenuItem(
+		R.id.nav_links,
+		R.string.activity_title_links,
+		LinksFragment()
+	)
 
 	override fun onNavigationItemSelected(item: MenuItem): Boolean {
 		when (item.itemId) {
-			R.id.nav_show_personal -> {
-				setDefaultActionBar()
-				setFragment(TimetableFragment())
-			}
+			R.id.nav_show_personal -> openPersonalTimetable()
 			R.id.nav_freshman_help -> {
 				startActivityForResult(Intent(Intent.ACTION_VIEW).apply {
 					data = Uri.parse("https://ersti.hskampus.de/")
 				}, REQUEST_CODE_FRESHMAN)
 			}
-			R.id.nav_infocenter -> {
-				openInfoCenter()
-			}
-			R.id.nav_events -> {
-				supportActionBar?.setTitle(R.string.activity_title_events)
-				setFragment(EventFragment())
-			}
-			R.id.nav_people -> {
-				supportActionBar?.setTitle(R.string.activity_title_people)
-				setFragment(PeopleFragment())
-			}
-			R.id.nav_locations -> {
-				supportActionBar?.setTitle(R.string.activity_title_locations)
-				setFragment(LocationFragment())
-			}
-			R.id.nav_study_places -> {
-				supportActionBar?.setTitle(R.string.activity_title_study_places)
-				setFragment(StudyPlaceFragment())
-			}
-			R.id.nav_mensa -> {
-				supportActionBar?.setTitle(R.string.activity_title_mensa)
-				setFragment(MensaFragment())
-			}
-			R.id.nav_stations -> {
-				supportActionBar?.setTitle(R.string.activity_title_stations)
-				setFragment(StationsFragment())
-			}
-			R.id.nav_grades -> {
-				openGrades()
-			}
-			R.id.nav_links -> {
-				supportActionBar?.setTitle(R.string.activity_title_links)
-				setFragment(LinksFragment())
-			}
+			R.id.nav_infocenter -> openInfoCenter()
+			R.id.nav_events -> openEvents()
+			R.id.nav_people -> openPeople()
+			R.id.nav_locations -> openLocations()
+			R.id.nav_study_places -> openStudyPlaces()
+			R.id.nav_mensa -> openMensa()
+			R.id.nav_stations -> openStations()
+			R.id.nav_grades -> openGrades()
+			R.id.nav_links -> openLinks()
 			R.id.nav_settings -> {
 				val i = Intent(this, SettingsActivity::class.java)
 				i.putExtra(SettingsActivity.EXTRA_LONG_PROFILE_ID, profileId)

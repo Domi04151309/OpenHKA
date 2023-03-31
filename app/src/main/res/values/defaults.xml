@@ -42,6 +42,7 @@
 	<integer name="preference_timetable_lesson_info_font_size_default">10</integer>
 	<integer name="preference_automute_minimum_break_length_default">0</integer>
 
+	<string name="preference_launch_screen_default">timetable</string>
 	<string name="preference_theme_default">default</string>
 	<string name="preference_dark_theme_default">off</string>
 </resources>

@@ -8,6 +8,13 @@
 		android:title="@string/preferences_general">
 
 		<PreferenceCategory android:title="@string/preference_category_general_behaviour">
+			<ListPreference
+				android:defaultValue="@string/preference_launch_screen_default"
+				android:entries="@array/preference_launch_screens"
+				android:entryValues="@array/preference_launch_screens_values"
+				android:key="preference_launch_screen"
+				android:title="@string/preference_launch_screen" />
+
 			<SwitchPreference
 				android:defaultValue="@bool/preference_double_tap_to_exit_default"
 				android:key="preference_double_tap_to_exit"

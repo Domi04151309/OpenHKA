@@ -149,6 +149,7 @@
 	<string name="preference_info_license_desc" translatable="false">GPL-3.0</string>
 	<string name="preference_info_libraries">Libraries</string>
 	<string name="preference_info_libraries_desc">A list of all used libraries</string>
+	<string name="preference_launch_screen">Launch screen</string>
 	<string name="preference_marker">Time indicator</string>
 	<string name="preference_notifications_grades">Grade Notifications</string>
 	<string name="preference_notifications_feed">Feed Notifications</string>
