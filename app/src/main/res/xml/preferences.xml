@@ -400,6 +400,12 @@
 		android:title="@string/preference_authentication">
 
 		<Preference
+			android:icon="@drawable/ic_person"
+			android:key="preference_authentication_info"
+			android:summary="@string/loading"
+			android:title="@string/loading" />
+
+		<Preference
 			android:key="preference_authentication"
 			android:title="@string/loading" />
 

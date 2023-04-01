@@ -25,6 +25,7 @@ import com.sapuseven.untis.dialogs.AlertPreferenceDialog
 import com.sapuseven.untis.dialogs.WeekRangePickerPreferenceDialog
 import com.sapuseven.untis.helpers.AuthenticationHelper
 import com.sapuseven.untis.helpers.SerializationUtils.getJSON
+import com.sapuseven.untis.helpers.strings.StringLoaderSyncAuth
 import com.sapuseven.untis.models.github.GithubUser
 import com.sapuseven.untis.preferences.AlertPreference
 import com.sapuseven.untis.preferences.WeekRangePickerPreference
@@ -32,6 +33,8 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
 import kotlinx.serialization.decodeFromString
+import org.json.JSONObject
+import java.lang.ref.WeakReference
 import kotlin.math.min
 
 class SettingsActivity : BaseActivity(), PreferenceFragmentCompat.OnPreferenceStartScreenCallback {
@@ -40,6 +43,7 @@ class SettingsActivity : BaseActivity(), PreferenceFragmentCompat.OnPreferenceSt
 	companion object {
 		const val EXTRA_LONG_PROFILE_ID = "com.sapuseven.untis.activities.profileId"
 		private const val REPOSITORY_URL_GITHUB = "https://github.com/Domi04151309/OpenHKA"
+		private const val API_URL: String = "https://www.iwi.hs-karlsruhe.de/iwii/REST"
 	}
 
 	override fun onCreate(savedInstanceState: Bundle?) {
@@ -222,9 +226,11 @@ class SettingsActivity : BaseActivity(), PreferenceFragmentCompat.OnPreferenceSt
 						}
 					}
 					"preferences_authentication" -> {
+						val authInfo = findPreference<Preference>("preference_authentication_info")
+							?: throw IllegalStateException()
 						findPreference<Preference>("preference_authentication")?.apply {
 							val auth = AuthenticationHelper(sapuManager)
-							updateAuthPreference(auth, this)
+							updateAuthPreference(auth, authInfo, this)
 							setSummary(R.string.preference_authentication_desc)
 							setOnPreferenceClickListener {
 								if (auth.isLoggedIn()) {
@@ -233,12 +239,12 @@ class SettingsActivity : BaseActivity(), PreferenceFragmentCompat.OnPreferenceSt
 										.setMessage(R.string.preference_authentication_logout_question)
 										.setPositiveButton(R.string.preference_authentication_logout) { _, _ ->
 											auth.logout()
-											updateAuthPreference(auth, it)
+											updateAuthPreference(auth, authInfo, it)
 										}
 										.setNegativeButton(R.string.all_cancel) { _, _ -> }
 										.show()
 								} else auth.loginDialog {
-									updateAuthPreference(auth, it)
+									updateAuthPreference(auth, authInfo, it)
 								}
 								true
 							}
@@ -377,11 +383,31 @@ class SettingsActivity : BaseActivity(), PreferenceFragmentCompat.OnPreferenceSt
 		private fun clearNotifications() =
 			(context?.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager).cancelAll()
 
-		private fun updateAuthPreference(auth: AuthenticationHelper, preference: Preference) {
-			preference.setTitle(
-				if (auth.isLoggedIn()) R.string.preference_authentication_logout
-				else R.string.preference_authentication_login
-			)
+		private fun updateAuthPreference(
+			auth: AuthenticationHelper,
+			infoPreference: Preference,
+			loginPreference: Preference
+		) = GlobalScope.launch(Dispatchers.Main) {
+			if (auth.isLoggedIn()) {
+				val accountInfo = JSONObject(
+					StringLoaderSyncAuth(
+						WeakReference(context),
+						"$API_URL/credential/v2/info",
+						auth.get() ?: throw IllegalStateException()
+					).load() ?: "{}"
+				)
+
+				infoPreference.title =
+					accountInfo.optString("firstName") + ' ' + accountInfo.optString("lastName")
+				infoPreference.summary =
+					(accountInfo.optJSONObject("student")
+						?: JSONObject()).optString("courseOfStudiesName")
+				loginPreference.setTitle(R.string.preference_authentication_logout)
+			} else {
+				infoPreference.setTitle(R.string.unknown)
+				infoPreference.setSummary(R.string.unknown)
+				loginPreference.setTitle(R.string.preference_authentication_login)
+			}
 		}
 
 		override fun onDisplayPreferenceDialog(preference: Preference) {

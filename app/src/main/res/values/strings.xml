@@ -246,6 +246,7 @@
 
 	<string name="loading">Loading</string>
 	<string name="loading_failed">Loading failed</string>
+	<string name="unknown">Unknown</string>
 
 	<string name="library_appcompat" translatable="false">Android AppCompat Library V7</string>
 	<string name="library_backport_util_concurrent" translatable="false">Backport of JSR 166</string>

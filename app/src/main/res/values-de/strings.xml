@@ -226,6 +226,7 @@
     <string name="stations_remove_favorite_summary">Möchtest du diese Haltestelle aus deinen Favoriten entfernen?</string>
     <string name="study_places_occupation">%1$d / %2$d belegt</string>
     <string name="study_places_occupation_unknown">Belegung unbekannt</string>
+    <string name="unknown">Unbekannt</string>
     <string name="widget_configuration">Widget-Konfiguration</string>
     <string name="widget_daily_messages">Tagesnachrichten</string>
     <string name="widget_mensa">Mensa</string>
