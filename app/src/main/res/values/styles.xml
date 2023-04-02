@@ -1,6 +1,6 @@
 <resources xmlns:tools="http://schemas.android.com/tools">
 
-	<style name="AppTheme" parent="Theme.MaterialComponents.DayNight.DarkActionBar">
+	<style name="AppTheme" parent="Theme.Material3.DayNight">
 		<item name="colorPrimary">@color/colorPrimary</item>
 		<item name="colorPrimaryDark">@color/colorPrimaryDark</item>
 		<item name="colorAccent">@color/colorAccent</item>
@@ -8,8 +8,8 @@
 		<item name="colorDivider">@color/colorDivider</item>
 		<item name="colorOnPrimary">@android:color/white</item>
 		<item name="actionBarBackground">?attr/colorPrimary</item>
-		<item name="actionBarStyle">@style/Widget.MaterialComponents.ActionBar.Primary</item>
-		<item name="actionBarTheme">@style/ThemeOverlay.MaterialComponents.Dark.ActionBar</item>
+		<item name="actionBarStyle">@style/Widget.Material3.ActionBar.Solid</item>
+		<item name="actionBarTheme">@style/ThemeOverlay.Material3.Dark.ActionBar</item>
 		<item name="materialAlertDialogTheme">@style/ThemeOverlay.MaterialAlertDialog.Rounded</item>
 		<item name="android:dialogTheme">@style/ThemeOverlay.MaterialAlertDialog.Rounded</item>
 		<item name="android:alertDialogTheme">@style/ThemeOverlay.MaterialAlertDialog.Rounded</item>
@@ -17,12 +17,12 @@
 		<item name="android:windowAnimationStyle">@style/WindowFadeTransition</item>
 	</style>
 
-	<style name="ThemeOverlay.MaterialAlertDialog.Rounded" parent="ThemeOverlay.MaterialComponents.MaterialAlertDialog">
+	<style name="ThemeOverlay.MaterialAlertDialog.Rounded" parent="ThemeOverlay.Material3.MaterialAlertDialog">
 		<item name="alertDialogStyle">@style/MaterialAlertDialog.Rounded</item>
-		<item name="materialAlertDialogTitleTextStyle">@style/MaterialDialog.MaterialComponents.Title.Text</item>
+		<item name="materialAlertDialogTitleTextStyle">@style/MaterialDialog.Material3.Title.Text</item>
 	</style>
 
-	<style name="MaterialAlertDialog.Rounded" parent="MaterialAlertDialog.MaterialComponents">
+	<style name="MaterialAlertDialog.Rounded" parent="MaterialAlertDialog.Material3">
 		<item name="shapeAppearance">@style/ShapeAppearance.MaterialAlertDialog.Rounded</item>
 	</style>
 
@@ -30,11 +30,11 @@
 		<item name="cornerSize">@dimen/radius_dialog_corner_rounded</item>
 	</style>
 
-	<style name="MaterialDialog.MaterialComponents.Title.Text" parent="@style/MaterialAlertDialog.MaterialComponents.Title.Text">
-		<item name="android:textAppearance">@style/TextAppearance.MaterialComponents.Title</item>
+	<style name="MaterialDialog.Material3.Title.Text" parent="@style/MaterialAlertDialog.Material3.Title.Text">
+		<item name="android:textAppearance">@style/TextAppearance.Material3.Title</item>
 	</style>
 	
-	<style name="TextAppearance.MaterialComponents.Title" parent="">
+	<style name="TextAppearance.Material3.Title" parent="">
 		<item name="android:textSize">20sp</item>
 		<item name="android:textStyle">bold</item>
 		<item name="android:textColor">?android:attr/textColorPrimary</item>
@@ -45,7 +45,7 @@
 		<item name="windowNoTitle">true</item>
 	</style>
 
-	<style name="AppTheme.PopupOverlay" parent="ThemeOverlay.MaterialComponents.Light" />
+	<style name="AppTheme.PopupOverlay" parent="ThemeOverlay.Material3.Light" />
 
 	<style name="AppTheme.Launcher">
 		<item name="android:windowBackground">@drawable/app_splash</item>
@@ -104,11 +104,11 @@
 		<item name="actionBarStyle">@style/PixelActionBarStyle</item>
 	</style>
 
-	<style name="PixelActionBarTheme" parent="ThemeOverlay.MaterialComponents.ActionBar">
+	<style name="PixelActionBarTheme" parent="ThemeOverlay.Material3.ActionBar">
 		<item name="colorControlNormal">?android:attr/textColorSecondary</item>
 	</style>
 
-	<style name="PixelActionBarStyle" parent="Widget.MaterialComponents.ActionBar.Primary">
+	<style name="PixelActionBarStyle" parent="Widget.Material3.ActionBar.Solid">
 		<item name="background">?attr/actionBarBackground</item>
 	</style>
 

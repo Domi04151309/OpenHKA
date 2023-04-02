@@ -34,7 +34,7 @@
 			android:id="@+id/textview_itemmessage_overline"
 			android:layout_width="match_parent"
 			android:layout_height="wrap_content"
-			android:textAppearance="@style/TextAppearance.MaterialComponents.Overline"
+			android:textAppearance="@style/TextAppearance.Material3.LabelMedium"
 			android:textColor="?android:attr/textColorSecondary"
 			android:textIsSelectable="false" />
 
@@ -42,7 +42,7 @@
 			android:id="@+id/textview_itemmessage_subject"
 			android:layout_width="match_parent"
 			android:layout_height="wrap_content"
-			android:textAppearance="@style/TextAppearance.MaterialComponents.Body1"
+			android:textAppearance="@style/TextAppearance.Material3.BodyLarge"
 			android:textColor="?android:attr/textColorPrimary"
 			android:textIsSelectable="false" />
 
@@ -50,7 +50,7 @@
 			android:id="@+id/textview_itemmessage_body"
 			android:layout_width="match_parent"
 			android:layout_height="wrap_content"
-			android:textAppearance="@style/TextAppearance.MaterialComponents.Caption"
+			android:textAppearance="@style/TextAppearance.Material3.BodySmall"
 			android:textColor="?android:attr/textColorSecondary"
 			android:textIsSelectable="false" />
 	</LinearLayout>

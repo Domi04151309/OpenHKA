@@ -12,7 +12,7 @@
 		android:layout_gravity="center_vertical"
 		android:layout_weight="1"
 		android:layout_marginEnd="@dimen/margin_listitem_text"
-		android:textAppearance="@style/TextAppearance.MaterialComponents.Body2"
+		android:textAppearance="@style/TextAppearance.Material3.BodyMedium"
 		android:textColor="?android:attr/textColorSecondary"
 		android:textIsSelectable="false" />
 
@@ -23,7 +23,7 @@
 		android:paddingHorizontal="@dimen/pill_padding"
 		android:gravity="center"
 		android:layout_gravity="center_vertical"
-		android:textAppearance="@style/TextAppearance.MaterialComponents.Body2"
+		android:textAppearance="@style/TextAppearance.Material3.BodyMedium"
 		android:textColor="@android:color/white"
 		android:background="@drawable/pill"
 		android:textIsSelectable="false" />

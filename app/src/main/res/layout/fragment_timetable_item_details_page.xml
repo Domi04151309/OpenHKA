@@ -24,7 +24,7 @@
 			android:layout_width="match_parent"
 			android:layout_height="wrap_content"
 			android:paddingHorizontal="24dp"
-			android:textAppearance="@style/TextAppearance.MaterialComponents.Subtitle1"
+			android:textAppearance="@style/TextAppearance.Material3.TitleMedium"
 			android:gravity="center"/>
 
 		<TextView
@@ -32,7 +32,7 @@
 			android:layout_width="match_parent"
 			android:layout_height="wrap_content"
 			android:paddingHorizontal="24dp"
-			android:textAppearance="@style/TextAppearance.MaterialComponents.Caption"
+			android:textAppearance="@style/TextAppearance.Material3.BodySmall"
 			android:gravity="center"/>
 
 		<View

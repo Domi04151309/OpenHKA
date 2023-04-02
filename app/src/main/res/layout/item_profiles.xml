@@ -22,7 +22,7 @@
 		android:layout_weight="1"
 		android:layout_gravity="center_vertical"
 		android:layout_marginStart="@dimen/margin_listitem_text"
-		android:textAppearance="@style/TextAppearance.MaterialComponents.Body1"
+		android:textAppearance="@style/TextAppearance.Material3.BodyLarge"
 		android:textColor="?android:attr/textColorPrimary"
 		android:lines="1" />
 </LinearLayout>
