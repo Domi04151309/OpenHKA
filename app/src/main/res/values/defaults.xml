@@ -44,5 +44,5 @@
 
 	<string name="preference_launch_screen_default">timetable</string>
 	<string name="preference_theme_default">default</string>
-	<string name="preference_dark_theme_default">off</string>
+	<string name="preference_dark_theme_default">auto</string>
 </resources>

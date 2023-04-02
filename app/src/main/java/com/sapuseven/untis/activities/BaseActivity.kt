@@ -112,7 +112,7 @@ open class BaseActivity : AppCompatActivity() {
 		}
 		delegate.localNightMode = when (PreferenceUtils.getPrefString(preferences, "preference_dark_theme", currentDarkTheme)) {
 			"on" -> AppCompatDelegate.MODE_NIGHT_YES
-			"auto" -> AppCompatDelegate.MODE_NIGHT_AUTO_BATTERY
+			"auto" -> AppCompatDelegate.MODE_NIGHT_FOLLOW_SYSTEM
 			else -> AppCompatDelegate.MODE_NIGHT_NO
 		}
 	}
