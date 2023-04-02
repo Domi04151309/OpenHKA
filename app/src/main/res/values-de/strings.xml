@@ -71,7 +71,6 @@
     <string name="main_dialog_delete_profile_message">Bist du sicher, dass du das Profil möchtest?</string>
     <string name="main_dialog_delete_profile_title">Profil löschen?</string>
     <string name="main_drawer_close">Navigationsleiste schließen</string>
-    <string name="main_drawer_image_logo">Open HKA Logo</string>
     <string name="main_drawer_open">Navigationsleiste öffnen</string>
     <string name="main_last_refreshed">Zuletzt aktualisiert: %1$s</string>
     <string name="main_last_refreshed_never">nie</string>
