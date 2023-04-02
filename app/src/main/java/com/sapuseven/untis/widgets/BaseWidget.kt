@@ -95,12 +95,12 @@ open class BaseWidget : AppWidgetProvider() {
 			val primaryColor =
 				when (context.getSharedPreferences("preferences_${link.id}", Context.MODE_PRIVATE)
 					.getString("preference_theme", null)) {
-					"untis" -> R.color.colorPrimaryThemeUntis
-					"blue" -> R.color.colorPrimaryThemeBlue
-					"green" -> R.color.colorPrimaryThemeGreen
-					"pink" -> R.color.colorPrimaryThemePink
-					"cyan" -> R.color.colorPrimaryThemeCyan
-					else -> R.color.colorPrimary
+					"untis" -> R.color.theme_untis_light_primary
+					"blue" -> R.color.theme_blue_light_primary
+					"green" -> R.color.theme_green_light_primary
+					"pink" -> R.color.theme_pink_light_primary
+					"cyan" -> R.color.theme_cyan_light_primary
+					else -> R.color.theme_default_light_primary
 				}
 			remoteViews.setInt(
 				R.id.linearlayout_base_widget_top_bar,
