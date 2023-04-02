@@ -59,7 +59,7 @@ class SettingsActivity : BaseActivity(), PreferenceFragmentCompat.OnPreferenceSt
 			// ie. not after orientation changes
 			val fragment =
 				supportFragmentManager.findFragmentByTag(PreferencesFragment.FRAGMENT_TAG)
-					?: PreferencesFragment(preferences)
+					?: PreferencesFragment()
 			val args = Bundle()
 			profileId?.let { args.putLong(EXTRA_LONG_PROFILE_ID, it) }
 			fragment.arguments = args
@@ -91,7 +91,7 @@ class SettingsActivity : BaseActivity(), PreferenceFragmentCompat.OnPreferenceSt
 		preferenceFragmentCompat: PreferenceFragmentCompat,
 		preferenceScreen: PreferenceScreen
 	): Boolean {
-		val fragment = PreferencesFragment(preferences)
+		val fragment = PreferencesFragment()
 		val args = Bundle()
 		args.putString(PreferenceFragmentCompat.ARG_PREFERENCE_ROOT, preferenceScreen.key)
 		profileId?.let { args.putLong(EXTRA_LONG_PROFILE_ID, it) }
@@ -119,9 +119,8 @@ class SettingsActivity : BaseActivity(), PreferenceFragmentCompat.OnPreferenceSt
 		}
 	}
 
-	class PreferencesFragment(
-		private val sapuManager: com.sapuseven.untis.helpers.config.PreferenceManager
-	) : PreferenceFragmentCompat() {
+	class PreferencesFragment : PreferenceFragmentCompat() {
+
 		companion object {
 			const val FRAGMENT_TAG = "preference_fragment"
 			const val DIALOG_FRAGMENT_TAG = "preference_dialog_fragment"
@@ -229,7 +228,7 @@ class SettingsActivity : BaseActivity(), PreferenceFragmentCompat.OnPreferenceSt
 						val authInfo = findPreference<Preference>("preference_authentication_info")
 							?: throw IllegalStateException()
 						findPreference<Preference>("preference_authentication")?.apply {
-							val auth = AuthenticationHelper(sapuManager)
+							val auth = AuthenticationHelper((requireActivity() as BaseActivity).preferences)
 							updateAuthPreference(auth, authInfo, this)
 							setSummary(R.string.preference_authentication_desc)
 							setOnPreferenceClickListener {
