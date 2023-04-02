@@ -8,12 +8,14 @@ import android.net.Uri
 import android.os.Bundle
 import android.view.View
 import android.webkit.URLUtil
+import android.widget.Button
 import android.widget.EditText
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
+import com.google.android.material.floatingactionbutton.FloatingActionButton
+import com.google.android.material.textfield.TextInputLayout
 import com.sapuseven.untis.R
 import com.sapuseven.untis.data.databases.LinkDatabase
 import com.sapuseven.untis.helpers.config.PreferenceManager
-import kotlinx.android.synthetic.main.activity_link_input.*
 
 
 class LinkInputActivity : BaseActivity() {
@@ -37,6 +39,10 @@ class LinkInputActivity : BaseActivity() {
 
 	private lateinit var linkDatabase: LinkDatabase
 
+	private lateinit var buttonLinkInputDone: FloatingActionButton
+	private lateinit var editTextLinkInputRss: EditText
+	private lateinit var editTextLinkInputICal: EditText
+
 	override fun onCreate(savedInstanceState: Bundle?) {
 		if (intent.hasExtra(EXTRA_LONG_PROFILE_ID)) {
 			existingLinkId = intent.getLongExtra(EXTRA_LONG_PROFILE_ID, 0)
@@ -45,6 +51,10 @@ class LinkInputActivity : BaseActivity() {
 
 		super.onCreate(savedInstanceState)
 		setContentView(R.layout.activity_link_input)
+
+		buttonLinkInputDone = findViewById(R.id.button_link_input_done)
+		editTextLinkInputRss = findViewById(R.id.edittext_link_input_rss)
+		editTextLinkInputICal = findViewById(R.id.edittext_link_input_ical)
 
 		linkDatabase = LinkDatabase.createInstance(this)
 		existingLinkId?.let { id ->
@@ -61,32 +71,32 @@ class LinkInputActivity : BaseActivity() {
 		title =
 			getString(if (existingLinkId == null) R.string.logindatainput_title_add else R.string.logindatainput_title_edit)
 
-		button_link_input_done?.setOnClickListener {
+		buttonLinkInputDone.setOnClickListener {
 			validate()?.requestFocus() ?: run { loadData() }
 		}
 
-		button_link_input_privacy_policy?.setOnClickListener {
+		findViewById<Button>(R.id.button_link_input_privacy_policy).setOnClickListener {
 			startActivity(Intent(Intent.ACTION_VIEW).setData(Uri.parse(PRIVACY_POLICY_URL)))
 		}
 
-		button_link_input_help?.setOnClickListener {
+		findViewById<Button>(R.id.button_link_input_help).setOnClickListener {
 			startActivity(Intent(Intent.ACTION_VIEW).setData(Uri.parse(HELP_URL)))
 		}
 
-		button_link_input_skip?.setOnClickListener {
-			edittext_link_input_rss?.setText(NO_LINK_FEED)
-			edittext_link_input_ical?.setText(NO_LINK_ICAL)
+		findViewById<Button>(R.id.button_link_input_skip).setOnClickListener {
+			editTextLinkInputRss.setText(NO_LINK_FEED)
+			editTextLinkInputICal.setText(NO_LINK_ICAL)
 			validate()?.requestFocus() ?: run { loadData() }
 		}
 
-		textinputlayout_link_input_rss.setEndIconOnClickListener {
+		findViewById<TextInputLayout>(R.id.textinputlayout_link_input_rss).setEndIconOnClickListener {
 			startActivityForResult(
 				Intent(this, FeedLinkChooserActivity::class.java),
 				REQUEST_CODE_FEED_LIST
 			)
 		}
 
-		textinputlayout_link_input_ical.setEndIconOnClickListener {
+		findViewById<TextInputLayout>(R.id.textinputlayout_link_input_ical).setEndIconOnClickListener {
 			startActivityForResult(
 				Intent(this, ICalLinkChooserActivity::class.java),
 				REQUEST_CODE_ICAL_LIST
@@ -94,9 +104,9 @@ class LinkInputActivity : BaseActivity() {
 		}
 
 		existingLink?.let { link ->
-			button_link_input_delete?.visibility = View.VISIBLE
-			button_link_input_delete?.setOnClickListener {
-				deleteProfile(link)
+			findViewById<FloatingActionButton>(R.id.button_link_input_delete).let { button ->
+				button.visibility = View.VISIBLE
+				button.setOnClickListener { deleteProfile(link) }
 			}
 		}
 
@@ -106,34 +116,34 @@ class LinkInputActivity : BaseActivity() {
 	}
 
 	private fun validate(): EditText? {
-		if (edittext_link_input_rss?.text?.isEmpty() == true) {
-			edittext_link_input_rss.error =
+		if (editTextLinkInputRss.text?.isEmpty() == true) {
+			editTextLinkInputRss.error =
 				getString(R.string.link_input_error_field_empty)
-			return edittext_link_input_rss
+			return editTextLinkInputRss
 		}
-		if (!URLUtil.isValidUrl(edittext_link_input_rss.text.toString())) {
-			edittext_link_input_rss.error =
+		if (!URLUtil.isValidUrl(editTextLinkInputRss.text.toString())) {
+			editTextLinkInputRss.error =
 				getString(R.string.link_input_error_invalid_url)
-			return edittext_link_input_rss
+			return editTextLinkInputRss
 		}
-		if (edittext_link_input_ical?.text?.isEmpty() == true) {
-			edittext_link_input_ical.error =
+		if (editTextLinkInputICal.text?.isEmpty() == true) {
+			editTextLinkInputICal.error =
 				getString(R.string.link_input_error_field_empty)
-			return edittext_link_input_ical
+			return editTextLinkInputICal
 		}
-		if (!URLUtil.isValidUrl(edittext_link_input_ical.text.toString())) {
-			edittext_link_input_ical.error =
+		if (!URLUtil.isValidUrl(editTextLinkInputICal.text.toString())) {
+			editTextLinkInputICal.error =
 				getString(R.string.link_input_error_invalid_url)
-			return edittext_link_input_ical
+			return editTextLinkInputICal
 		}
 		return null
 	}
 
 	private fun focusFirstFreeField() {
 		when {
-			edittext_link_input_rss?.text?.isEmpty() == true -> edittext_link_input_rss as EditText
-			edittext_link_input_ical?.text?.isEmpty() == true -> edittext_link_input_ical as EditText
-			else -> edittext_link_input_rss as EditText
+			editTextLinkInputRss.text?.isEmpty() == true -> editTextLinkInputRss as EditText
+			editTextLinkInputICal.text?.isEmpty() == true -> editTextLinkInputICal as EditText
+			else -> editTextLinkInputRss as EditText
 		}.requestFocus()
 	}
 
@@ -153,23 +163,23 @@ class LinkInputActivity : BaseActivity() {
 		val editor = prefs.edit()
 		editor.putString(
 			"edittext_link_input_rss",
-			edittext_link_input_rss?.text.toString()
+			editTextLinkInputRss.text.toString()
 		)
 		editor.putString(
 			"edittext_link_input_ical",
-			edittext_link_input_ical?.text.toString()
+			editTextLinkInputICal.text.toString()
 		)
 		editor.apply()
 	}
 
 	private fun restoreInput(prefs: SharedPreferences) {
-		edittext_link_input_rss?.setText(
+		editTextLinkInputRss.setText(
 			prefs.getString(
 				"edittext_link_input_rss",
 				""
 			)
 		)
-		edittext_link_input_ical?.setText(
+		editTextLinkInputICal.setText(
 			prefs.getString(
 				"edittext_link_input_ical",
 				""
@@ -178,8 +188,8 @@ class LinkInputActivity : BaseActivity() {
 	}
 
 	private fun restoreInput(link: LinkDatabase.Link) {
-		edittext_link_input_rss?.setText(link.rssUrl)
-		edittext_link_input_ical?.setText(link.iCalUrl)
+		editTextLinkInputRss.setText(link.rssUrl)
+		editTextLinkInputICal.setText(link.iCalUrl)
 	}
 
 	private fun loadData() {
@@ -190,8 +200,8 @@ class LinkInputActivity : BaseActivity() {
 	private fun sendRequest() {
 		val link = LinkDatabase.Link(
 			existingLinkId,
-			edittext_link_input_rss?.text.toString(),
-			edittext_link_input_ical?.text.toString()
+			editTextLinkInputRss.text.toString(),
+			editTextLinkInputICal.text.toString()
 		)
 
 		val linkId =
@@ -230,9 +240,9 @@ class LinkInputActivity : BaseActivity() {
 	override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
 		super.onActivityResult(requestCode, resultCode, data)
 		if (requestCode == REQUEST_CODE_FEED_LIST && resultCode == RESULT_OK) {
-			edittext_link_input_rss.setText(data?.getStringExtra("link"))
+			editTextLinkInputRss.setText(data?.getStringExtra("link"))
 		} else if (requestCode == REQUEST_CODE_ICAL_LIST && resultCode == RESULT_OK) {
-			edittext_link_input_ical.setText(data?.getStringExtra("link"))
+			editTextLinkInputICal.setText(data?.getStringExtra("link"))
 		}
 	}
 
@@ -242,8 +252,8 @@ class LinkInputActivity : BaseActivity() {
 	}
 
 	private fun setElementsEnabled(enabled: Boolean) {
-		edittext_link_input_rss?.isEnabled = enabled
-		edittext_link_input_ical?.isEnabled = enabled
-		button_link_input_done?.isEnabled = enabled
+		editTextLinkInputRss.isEnabled = enabled
+		editTextLinkInputICal.isEnabled = enabled
+		buttonLinkInputDone.isEnabled = enabled
 	}
 }

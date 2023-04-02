@@ -12,6 +12,7 @@ import android.view.WindowManager
 import android.widget.ImageView
 import android.widget.LinearLayout
 import androidx.appcompat.app.ActionBarDrawerToggle
+import androidx.appcompat.widget.Toolbar
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.view.GravityCompat
 import androidx.drawerlayout.widget.DrawerLayout
@@ -28,7 +29,6 @@ import com.sapuseven.untis.fragments.*
 import com.sapuseven.untis.helpers.config.PreferenceUtils
 import com.sapuseven.untis.receivers.NotificationSetup.Companion.EXTRA_BOOLEAN_MANUAL
 import com.sapuseven.untis.receivers.StartupReceiver
-import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
@@ -52,6 +52,10 @@ class MainActivity :
 	internal lateinit var profileLink: LinkDatabase.Link
 	private lateinit var profileListAdapter: ProfileListAdapter
 
+	private lateinit var drawerLayout: DrawerLayout
+	private lateinit var navigationViewMain: NavigationView
+	private lateinit var contentMain: View
+
 	override fun onCreate(savedInstanceState: Bundle?) {
 		hasOwnToolbar = true
 
@@ -63,6 +67,10 @@ class MainActivity :
 		setupNotifications()
 
 		setContentView(R.layout.activity_main)
+
+		drawerLayout = findViewById(R.id.drawer_layout)
+		navigationViewMain = findViewById(R.id.navigationview_main)
+		contentMain = findViewById(R.id.content_main)
 
 		if (checkForCrashes()) {
 			startActivityForResult(Intent(this, ErrorsActivity::class.java).apply {
@@ -104,7 +112,7 @@ class MainActivity :
 	override fun onErrorLogFound() {
 		// TODO: Extract string resources
 		if (PreferenceUtils.getPrefBool(preferences, "preference_additional_error_messages"))
-			Snackbar.make(content_main, "Some errors have been found.", Snackbar.LENGTH_INDEFINITE)
+			Snackbar.make(contentMain, "Some errors have been found.", Snackbar.LENGTH_INDEFINITE)
 				.setAction("Show") {
 					startActivity(Intent(this, ErrorsActivity::class.java))
 				}
@@ -124,10 +132,10 @@ class MainActivity :
 	}
 
 	private fun setupNavDrawer() {
-		navigationview_main.setNavigationItemSelectedListener(this)
-		navigationview_main.setCheckedItem(R.id.nav_show_personal)
+		navigationViewMain.setNavigationItemSelectedListener(this)
+		navigationViewMain.setCheckedItem(R.id.nav_show_personal)
 
-		val header = navigationview_main.getHeaderView(0)
+		val header = navigationViewMain.getHeaderView(0)
 		val dropdown =
 			header.findViewById<ConstraintLayout>(R.id.constraintlayout_mainactivitydrawer_dropdown)
 		val dropdownView =
@@ -160,7 +168,7 @@ class MainActivity :
 			addProfile()
 		}
 
-		navigationview_main.menu.findItem(R.id.nav_freshman_help).isVisible =
+		navigationViewMain.menu.findItem(R.id.nav_freshman_help).isVisible =
 			PreferenceUtils.getPrefBool(
 				preferences,
 				"preference_freshman_show"
@@ -220,7 +228,7 @@ class MainActivity :
 		}
 
 	internal fun setInfoCenterDot(hasDot: Boolean) {
-		navigationview_main.menu.findItem(R.id.nav_infocenter).setIcon(
+		navigationViewMain.menu.findItem(R.id.nav_infocenter).setIcon(
 			if (hasDot) R.drawable.ic_book_dot else R.drawable.ic_book
 		)
 	}
@@ -244,17 +252,18 @@ class MainActivity :
 	}
 
 	private fun setupActionBar() {
-		setSupportActionBar(toolbar_main)
+		val toolbarMain = findViewById<Toolbar>(R.id.toolbar_main)
+		setSupportActionBar(toolbarMain)
 		val toggle = ActionBarDrawerToggle(
 			this,
-			drawer_layout,
-			toolbar_main,
+			drawerLayout,
+			toolbarMain,
 			R.string.main_drawer_open,
 			R.string.main_drawer_close
 		)
-		drawer_layout.addDrawerListener(toggle)
+		drawerLayout.addDrawerListener(toggle)
 		toggle.syncState()
-		toolbar_main.setNavigationIcon(R.drawable.ic_menu)
+		toolbarMain.setNavigationIcon(R.drawable.ic_menu)
 		window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS)
 		window.statusBarColor = Color.TRANSPARENT
 
@@ -262,26 +271,26 @@ class MainActivity :
 			if (supportFragmentManager.backStackEntryCount > 0) {
 				toggle.isDrawerIndicatorEnabled = false
 				supportActionBar?.setDisplayHomeAsUpEnabled(true)
-				drawer_layout.setDrawerLockMode(
+				drawerLayout.setDrawerLockMode(
 					DrawerLayout.LOCK_MODE_LOCKED_CLOSED,
 					GravityCompat.START
 				)
-				toolbar_main.setNavigationOnClickListener { onBackPressed() }
+				toolbarMain.setNavigationOnClickListener { onBackPressed() }
 			} else {
 				supportActionBar?.setDisplayHomeAsUpEnabled(false)
 				toggle.isDrawerIndicatorEnabled = true
 				toggle.syncState()
-				drawer_layout.setDrawerLockMode(
+				drawerLayout.setDrawerLockMode(
 					DrawerLayout.LOCK_MODE_UNLOCKED,
 					GravityCompat.START
 				)
-				toolbar_main.setNavigationOnClickListener { openDrawer() }
+				toolbarMain.setNavigationOnClickListener { openDrawer() }
 			}
 		}
 	}
 
 	private fun openMenuItem(itemId: Int, stringId: Int, fragment: Fragment) {
-		navigationview_main.setCheckedItem(itemId)
+		navigationViewMain.setCheckedItem(itemId)
 		supportActionBar?.setTitle(stringId)
 		setFragment(fragment)
 	}
@@ -385,7 +394,7 @@ class MainActivity :
 		for (fragment in supportFragmentManager.fragments) {
 			supportFragmentManager.beginTransaction().remove(fragment!!).commit()
 		}
-		navigationview_main?.setCheckedItem(R.id.nav_show_personal)
+		navigationViewMain.setCheckedItem(R.id.nav_show_personal)
 		super.recreate()
 	}
 
@@ -405,8 +414,8 @@ class MainActivity :
 	}
 
 	override fun onBackPressed() {
-		if (drawer_layout.isDrawerOpen(GravityCompat.START)) {
-			closeDrawer(drawer_layout)
+		if (drawerLayout.isDrawerOpen(GravityCompat.START)) {
+			closeDrawer()
 		} else if (supportFragmentManager.backStackEntryCount > 0) {
 			super.onBackPressed()
 		} else if (System.currentTimeMillis() - 2000 > lastBackPress && PreferenceUtils.getPrefBool(
@@ -415,7 +424,7 @@ class MainActivity :
 			)
 		) {
 			Snackbar.make(
-				content_main,
+				contentMain,
 				R.string.main_press_back_double, 2000
 			).show()
 			lastBackPress = System.currentTimeMillis()
@@ -441,9 +450,9 @@ class MainActivity :
 		}
 	}
 
-	private fun openDrawer(drawer: DrawerLayout = drawer_layout) =
+	private fun openDrawer(drawer: DrawerLayout = drawerLayout) =
 		drawer.openDrawer(GravityCompat.START)
 
-	private fun closeDrawer(drawer: DrawerLayout = drawer_layout) =
+	private fun closeDrawer(drawer: DrawerLayout = drawerLayout) =
 		drawer.closeDrawer(GravityCompat.START)
 }
