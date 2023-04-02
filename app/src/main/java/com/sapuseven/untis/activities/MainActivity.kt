@@ -394,7 +394,6 @@ class MainActivity :
 		for (fragment in supportFragmentManager.fragments) {
 			supportFragmentManager.beginTransaction().remove(fragment!!).commit()
 		}
-		navigationViewMain.setCheckedItem(R.id.nav_show_personal)
 		super.recreate()
 	}
 
