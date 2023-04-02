@@ -9,9 +9,11 @@ import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
+import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.sapuseven.untis.R
 import com.sapuseven.untis.activities.BaseActivity
 import com.sapuseven.untis.adapters.JobAdapter
+import com.sapuseven.untis.data.JobOfferType
 import com.sapuseven.untis.data.lists.JobItem
 import com.sapuseven.untis.helpers.AuthenticationHelper
 import com.sapuseven.untis.helpers.strings.StringLoader
@@ -31,7 +33,7 @@ class JobsFragment : Fragment(), StringDisplay {
 
 	companion object {
 		private const val API_URL: String = "https://www.iwi.hs-karlsruhe.de/iwii/REST"
-		private const val OFFER_TYPE = "internship" //TODO: replace this
+		private val DEFAULT_TYPE = JobOfferType.INTERNSHIP
 
 		fun parseJobs(input: String): ArrayList<JobItem> {
 			val result = arrayListOf<JobItem>()
@@ -74,7 +76,7 @@ class JobsFragment : Fragment(), StringDisplay {
 		stringLoader = StringLoaderAuth(
 			WeakReference(context),
 			this,
-			"${API_URL}/joboffer/v2/offers/$OFFER_TYPE/0/-1",
+			"${API_URL}/joboffer/v2/offers/${DEFAULT_TYPE.value}/0/-1",
 			auth.get() ?: throw IllegalStateException()
 		)
 		recyclerview = root.findViewById(R.id.recyclerview_jobs)
@@ -84,7 +86,26 @@ class JobsFragment : Fragment(), StringDisplay {
 		recyclerview.adapter = adapter
 		swiperefreshlayout.setOnRefreshListener { refreshJobs(StringLoader.FLAG_LOAD_SERVER) }
 
-		refreshJobs(StringLoader.FLAG_LOAD_CACHE)
+		refreshJobs(StringLoader.FLAG_LOAD_SERVER)
+
+		root.findViewById<BottomNavigationView>(R.id.bottomnavigationview_jobs)
+			.setOnNavigationItemSelectedListener {
+				val type = when (it.itemId) {
+					R.id.item_jobs_internship -> JobOfferType.INTERNSHIP
+					R.id.item_jobs_joboffer -> JobOfferType.JOB_OFFER
+					R.id.item_jobs_workingstudent -> JobOfferType.WORKING_STUDENT
+					R.id.item_jobs_thesis -> JobOfferType.THESIS
+					else -> DEFAULT_TYPE
+				}
+				stringLoader = StringLoaderAuth(
+					WeakReference(context),
+					this,
+					"${API_URL}/joboffer/v2/offers/${type.value}/0/-1",
+					auth.get() ?: throw IllegalStateException()
+				)
+				refreshJobs(StringLoader.FLAG_LOAD_SERVER)
+				true
+			}
 
 		return root
 	}
