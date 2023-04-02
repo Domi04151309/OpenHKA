@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <item
+        android:id="@+id/item_jobs_internship"
+        android:icon="@drawable/ic_calendar"
+        android:title="@string/jobs_internship" />
+    <item
+        android:id="@+id/item_jobs_joboffer"
+        android:icon="@drawable/ic_work"
+        android:title="@string/jobs_joboffer" />
+    <item
+        android:id="@+id/item_jobs_workingstudent"
+        android:icon="@drawable/ic_person"
+        android:title="@string/jobs_workingstudent" />
+    <item
+        android:id="@+id/item_jobs_thesis"
+        android:icon="@drawable/ic_school"
+        android:title="@string/jobs_thesis" />
+</menu>

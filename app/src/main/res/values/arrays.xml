@@ -10,6 +10,7 @@
 		<item>@string/activity_title_mensa</item>
 		<item>@string/activity_title_stations</item>
 		<item>@string/activity_title_grades</item>
+		<item>@string/activity_title_jobs</item>
 		<item>@string/activity_title_links</item>
 	</string-array>
 
@@ -23,6 +24,7 @@
 		<item>mensa</item>
 		<item>stations</item>
 		<item>grades</item>
+		<item>jobs</item>
 		<item>links</item>
 	</string-array>
 
