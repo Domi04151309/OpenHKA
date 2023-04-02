@@ -2,13 +2,11 @@ package com.sapuseven.untis.activities
 
 import android.app.Activity
 import android.content.Intent
-import android.graphics.Color
 import android.net.Uri
 import android.os.Bundle
 import android.view.MenuItem
 import android.view.View
 import android.view.ViewGroup
-import android.view.WindowManager
 import android.widget.ImageView
 import android.widget.LinearLayout
 import androidx.appcompat.app.ActionBarDrawerToggle
@@ -264,8 +262,6 @@ class MainActivity :
 		drawerLayout.addDrawerListener(toggle)
 		toggle.syncState()
 		toolbarMain.setNavigationIcon(R.drawable.ic_menu)
-		window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS)
-		window.statusBarColor = Color.TRANSPARENT
 
 		supportFragmentManager.addOnBackStackChangedListener {
 			if (supportFragmentManager.backStackEntryCount > 0) {

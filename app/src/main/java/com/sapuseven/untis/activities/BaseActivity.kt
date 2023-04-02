@@ -10,6 +10,7 @@ import android.util.TypedValue
 import androidx.annotation.AttrRes
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.app.AppCompatDelegate
+import com.google.android.material.elevation.SurfaceColors
 import com.sapuseven.untis.R
 import com.sapuseven.untis.helpers.ErrorLogger
 import com.sapuseven.untis.helpers.config.PreferenceManager
@@ -35,6 +36,7 @@ open class BaseActivity : AppCompatActivity() {
 		currentDarkTheme = PreferenceUtils.getPrefString(preferences, "preference_dark_theme")
 		setAppTheme(hasOwnToolbar)
 		super.onCreate(savedInstanceState)
+		window.statusBarColor = SurfaceColors.SURFACE_2.getColor(this)
 	}
 
 	/**
