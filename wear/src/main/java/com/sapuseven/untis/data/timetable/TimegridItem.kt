@@ -24,6 +24,7 @@ class TimegridItem(
 			endTime,
 			color,
 			pastColor,
+			textColor,
 			this,
 			hasIndicator
 		)

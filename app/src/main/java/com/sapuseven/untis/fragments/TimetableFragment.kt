@@ -135,6 +135,10 @@ class TimetableFragment : Fragment(),
 		}
 	}
 
+	private fun colorOn(color: Int): Int {
+		return if (ColorUtils.calculateLuminance(color) < 0.5) Color.WHITE else Color.BLACK
+	}
+
 	private fun loadTimetable(
 		forceRefresh: Boolean = false
 	) {
@@ -256,11 +260,6 @@ class TimetableFragment : Fragment(),
 				"preference_timetable_lesson_info_font_size"
 			).toFloat(), requireContext()
 		)
-		weekView.eventTextColor = if (PreferenceUtils.getPrefBool(
-				activity.preferences,
-				"preference_timetable_item_text_light"
-			)
-		) Color.WHITE else Color.BLACK
 		weekView.pastBackgroundColor =
 			PreferenceUtils.getPrefInt(
 				activity.preferences,
@@ -339,66 +338,74 @@ class TimetableFragment : Fragment(),
 	}
 
 	private fun colorItems(items: List<TimegridItem>) {
-		val regularColor = PreferenceUtils.getPrefInt(
-			activity.preferences,
-			"preference_background_regular"
-		)
-		val cancelledColor =
-			PreferenceUtils.getPrefInt(
-				activity.preferences,
-				"preference_background_cancelled"
-			)
-		val irregularColor =
-			PreferenceUtils.getPrefInt(
-				activity.preferences,
-				"preference_background_irregular"
-			)
-
-		val regularPastColor =
-			PreferenceUtils.getPrefInt(
-				activity.preferences,
-				"preference_background_regular_past"
-			)
-		val cancelledPastColor =
-			PreferenceUtils.getPrefInt(
-				activity.preferences,
-				"preference_background_cancelled_past"
-			)
-		val irregularPastColor =
-			PreferenceUtils.getPrefInt(
-				activity.preferences,
-				"preference_background_irregular_past"
-			)
-
-		val useDefault =
-			activity.preferences.defaultPrefs.getStringSet(
-				"preference_school_background",
-				emptySet()
-			)
-				?: emptySet()
-		val useTheme = if (!useDefault.contains("regular")) PreferenceUtils.getPrefBool(
+		val useTheme = PreferenceUtils.getPrefBool(
 			activity.preferences,
 			"preference_use_theme_background"
-		) else false
+		)
+		val regularColor =
+			if (useTheme) activity.getAttr(R.attr.colorPrimary)
+			else
+				PreferenceUtils.getPrefInt(
+					activity.preferences,
+					"preference_background_regular"
+				)
+		val cancelledColor =
+			if (useTheme) activity.getAttr(R.attr.colorSecondary)
+			else
+				PreferenceUtils.getPrefInt(
+					activity.preferences,
+					"preference_background_cancelled"
+				)
+		val irregularColor =
+			if (useTheme) activity.getAttr(R.attr.colorTertiary)
+			else
+				PreferenceUtils.getPrefInt(
+					activity.preferences,
+					"preference_background_irregular"
+				)
+		val regularPastColor =
+			if (useTheme) regularColor.darken(0.3f)
+			else
+				PreferenceUtils.getPrefInt(
+					activity.preferences,
+					"preference_background_regular_past"
+				)
+		val cancelledPastColor =
+			if (useTheme) cancelledColor.darken(0.3f)
+			else
+				PreferenceUtils.getPrefInt(
+					activity.preferences,
+					"preference_background_cancelled_past"
+				)
+		val irregularPastColor =
+			if (useTheme) irregularColor.darken(0.3f)
+			else
+				PreferenceUtils.getPrefInt(
+					activity.preferences,
+					"preference_background_irregular_past"
+				)
 
 		items.forEach { item ->
 			item.color = when {
 				item.period.type == Period.Type.CANCELLED -> cancelledColor
 				item.period.type == Period.Type.IRREGULAR -> irregularColor
-				useTheme -> activity.getAttr(R.attr.colorPrimary)
 				else -> regularColor
 			}
 
 			item.pastColor = when {
 				item.period.type == Period.Type.CANCELLED -> cancelledPastColor
 				item.period.type == Period.Type.IRREGULAR -> irregularPastColor
-				useTheme -> if (activity.currentTheme == "pixel") activity.getAttr(
-					R.attr.colorPrimary
-				).darken(0.25f) else activity.getAttr(
-					R.attr.colorPrimaryDark
-				)
 				else -> regularPastColor
 			}
+
+			item.textColor = colorOn(
+				when {
+					item.period.type == Period.Type.CANCELLED -> cancelledColor
+					item.period.type == Period.Type.IRREGULAR -> irregularColor
+					useTheme -> activity.getAttr(R.attr.colorPrimary)
+					else -> regularColor
+				}
+			)
 		}
 	}
 
