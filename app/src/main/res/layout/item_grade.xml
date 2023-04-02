@@ -39,7 +39,7 @@
 		android:paddingHorizontal="@dimen/pill_padding"
 		android:gravity="center"
 		android:textAppearance="@style/TextAppearance.Material3.BodyMedium"
-		android:textColor="@android:color/white"
+		android:textColor="?android:textColorPrimaryInverse"
 		android:background="@drawable/pill"
 		android:textIsSelectable="false" />
 </LinearLayout>

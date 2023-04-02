@@ -49,7 +49,7 @@
 		android:gravity="center"
 		android:layout_gravity="center_vertical"
 		android:textAppearance="@style/TextAppearance.Material3.BodyMedium"
-		android:textColor="@android:color/white"
+		android:textColor="?android:textColorPrimaryInverse"
 		android:background="@drawable/pill"
 		android:textIsSelectable="false" />
 </LinearLayout>
