@@ -6,7 +6,7 @@
 	android:id="@+id/drawer_layout"
 	android:layout_width="match_parent"
 	android:layout_height="match_parent"
-	android:fitsSystemWindows="true"
+	android:fitsSystemWindows="false"
 	tools:context="activities.MainActivity">
 
 	<androidx.coordinatorlayout.widget.CoordinatorLayout
@@ -18,13 +18,12 @@
 			android:layout_height="wrap_content"
 			android:theme="?attr/actionBarTheme">
 
-			<androidx.appcompat.widget.Toolbar
+			<com.google.android.material.appbar.MaterialToolbar
 				android:id="@+id/toolbar_main"
 				android:layout_width="match_parent"
 				android:layout_height="?attr/actionBarSize"
-				android:background="?attr/actionBarBackground"
-				app:popupTheme="@style/AppTheme.PopupOverlay"/>
-
+				app:titleCentered="true"
+				app:subtitleCentered="true" />
 		</com.google.android.material.appbar.AppBarLayout>
 
 		<FrameLayout
@@ -40,6 +39,7 @@
 		android:layout_width="wrap_content"
 		android:layout_height="match_parent"
 		android:layout_gravity="start"
+		android:fitsSystemWindows="false"
 		app:headerLayout="@layout/activity_main_drawer_header"
 		app:menu="@menu/activity_main_drawer"/>
 

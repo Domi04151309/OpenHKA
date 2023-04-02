@@ -33,6 +33,6 @@
 			android:layout_alignParentBottom="true"
 			android:contentDescription="@string/stations_add"
 			app:srcCompat="@drawable/ic_add"
-			app:tint="@android:color/white" />
+			app:tint="?attr/colorOnPrimaryContainer" />
 	</RelativeLayout>
 </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
