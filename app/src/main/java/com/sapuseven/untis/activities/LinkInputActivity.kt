@@ -11,6 +11,7 @@ import android.webkit.URLUtil
 import android.widget.Button
 import android.widget.EditText
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
+import com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.google.android.material.textfield.TextInputLayout
 import com.sapuseven.untis.R
@@ -104,7 +105,7 @@ class LinkInputActivity : BaseActivity() {
 		}
 
 		existingLink?.let { link ->
-			findViewById<FloatingActionButton>(R.id.button_link_input_delete).let { button ->
+			findViewById<ExtendedFloatingActionButton>(R.id.button_link_input_delete).let { button ->
 				button.visibility = View.VISIBLE
 				button.setOnClickListener { deleteProfile(link) }
 			}
