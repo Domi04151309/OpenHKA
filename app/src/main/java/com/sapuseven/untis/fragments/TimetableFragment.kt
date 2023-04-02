@@ -207,8 +207,7 @@ class TimetableFragment : Fragment(),
 			activity.preferences.defaultPrefs.getStringSet(
 				"preference_week_custom_range",
 				emptySet()
-			)
-				?.map { MaterialDayPicker.Weekday.valueOf(it) }?.minOrNull()?.ordinal
+			)?.minOfOrNull { MaterialDayPicker.Weekday.valueOf(it) }?.ordinal
 				?: 1
 
 		weekView.timeColumnVisibility =

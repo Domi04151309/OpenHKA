@@ -167,7 +167,7 @@ class StudyPlaceFragment : Fragment(), StringDisplay {
 				StringLoader.FLAG_LOAD_SERVER
 			)
 			else -> {
-				MaterialAlertDialogBuilder(context)
+				MaterialAlertDialogBuilder(requireContext())
 					.setTitle(R.string.activity_title_study_places)
 					.setMessage(R.string.errors_failed_loading_from_server_message)
 					.setPositiveButton(R.string.all_ok) { _, _ -> }

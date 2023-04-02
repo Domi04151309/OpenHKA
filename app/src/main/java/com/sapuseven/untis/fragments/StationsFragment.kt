@@ -18,10 +18,8 @@ import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.sapuseven.untis.R
 import com.sapuseven.untis.activities.AddStationActivity
 import com.sapuseven.untis.activities.BaseActivity
-import com.sapuseven.untis.adapters.MessageAdapter
 import com.sapuseven.untis.adapters.StationAdapter
 import com.sapuseven.untis.data.lists.DepartureListItem
-import com.sapuseven.untis.data.lists.ListItem
 import com.sapuseven.untis.data.lists.StationItem
 import com.sapuseven.untis.helpers.StationUtils
 import com.sapuseven.untis.helpers.strings.StringLoader

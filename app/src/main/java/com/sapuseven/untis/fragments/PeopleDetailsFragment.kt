@@ -51,7 +51,7 @@ class PeopleDetailsFragment(private val item: JSONObject) : Fragment() {
 				mapIntent.setPackage("com.google.android.apps.maps")
 				startActivity(mapIntent)
 			} else {
-				MaterialAlertDialogBuilder(context)
+				MaterialAlertDialogBuilder(requireContext())
 					.setTitle(R.string.all_details)
 					.setMessage(R.string.errors_failed_loading_from_server_message)
 					.setPositiveButton(R.string.all_ok) { _, _ -> }

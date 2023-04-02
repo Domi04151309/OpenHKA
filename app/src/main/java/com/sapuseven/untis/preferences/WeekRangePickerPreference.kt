@@ -8,7 +8,7 @@ import com.sapuseven.untis.R
 import com.sapuseven.untis.helpers.toLocalizedString
 import java.util.*
 
-class WeekRangePickerPreference(context: Context?, attrs: AttributeSet?) : DialogPreference(context, attrs) {
+class WeekRangePickerPreference(context: Context, attrs: AttributeSet?) : DialogPreference(context, attrs) {
 	override fun getSummary(): CharSequence = generateSummary()
 
 	private fun generateSummary(): String {

@@ -250,7 +250,7 @@ class MensaFragment : Fragment(), StringDisplay {
 	private fun loadAdditives() {
 		val callback = object : StringDisplay {
 			override fun onStringLoaded(string: String) {
-				MaterialAlertDialogBuilder(context)
+				MaterialAlertDialogBuilder(requireContext())
 					.setTitle(R.string.mensa_meal_additives)
 					.setItems(parseAdditives(string)) { _, _ -> }
 					.setPositiveButton(R.string.all_ok) { _, _ -> }
@@ -263,7 +263,7 @@ class MensaFragment : Fragment(), StringDisplay {
 						StringLoader.FLAG_LOAD_SERVER
 					)
 					else -> {
-						MaterialAlertDialogBuilder(context)
+						MaterialAlertDialogBuilder(requireContext())
 							.setTitle(R.string.mensa_meal_additives)
 							.setMessage(R.string.errors_failed_loading_from_server_message)
 							.setPositiveButton(R.string.all_ok) { _, _ -> }
@@ -310,7 +310,7 @@ class MensaFragment : Fragment(), StringDisplay {
 						StringLoader.FLAG_LOAD_SERVER
 					)
 					else -> {
-						MaterialAlertDialogBuilder(context)
+						MaterialAlertDialogBuilder(requireContext())
 							.setTitle(R.string.activity_title_mensa)
 							.setMessage(R.string.errors_failed_loading_from_server_message)
 							.setPositiveButton(R.string.all_ok) { _, _ -> }

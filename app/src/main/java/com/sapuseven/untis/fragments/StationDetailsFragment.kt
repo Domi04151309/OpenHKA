@@ -70,7 +70,7 @@ class StationDetailsFragment(private var item: JSONObject) : Fragment() {
 					mapIntent.setPackage("com.google.android.apps.maps")
 					startActivity(mapIntent)
 				} else {
-					MaterialAlertDialogBuilder(context)
+					MaterialAlertDialogBuilder(requireContext())
 						.setTitle(R.string.all_details)
 						.setMessage(R.string.errors_failed_loading_from_server_message)
 						.setPositiveButton(R.string.all_ok) { _, _ -> }
@@ -79,7 +79,7 @@ class StationDetailsFragment(private var item: JSONObject) : Fragment() {
 				true
 			}
 			R.id.fav -> {
-				MaterialAlertDialogBuilder(context)
+				MaterialAlertDialogBuilder(requireContext())
 					.setTitle(R.string.stations_remove_favorite)
 					.setMessage(R.string.stations_remove_favorite_summary)
 					.setPositiveButton(R.string.stations_remove_favorite_button) { _, _ ->

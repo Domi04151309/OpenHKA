@@ -47,7 +47,7 @@ open class BaseWidget : AppWidgetProvider() {
 		for (appWidgetId in appWidgetIds) {
 			link = linkDatabase.getLink(loadIdPref(context, appWidgetId))
 			if (link != null) updateData(appWidgetId)
-			else appWidgetManager.updateAppWidget(appWidgetId, loadBaseLayout(link))
+			else appWidgetManager.updateAppWidget(appWidgetId, loadBaseLayout(null))
 		}
 	}
 

@@ -192,7 +192,8 @@ class SettingsActivity : BaseActivity(), PreferenceFragmentCompat.OnPreferenceSt
 								.setTitle(R.string.preference_dialog_colors_reset_title)
 								.setMessage(R.string.preference_dialog_colors_reset_text)
 								.setPositiveButton(R.string.preference_timetable_colors_reset_button_positive) { _, _ ->
-									preferenceManager.sharedPreferences.edit().apply {
+									(preferenceManager.sharedPreferences
+										?: throw IllegalStateException()).edit().apply {
 										listOf(
 											"preference_background_regular",
 											"preference_background_regular_past",
@@ -228,7 +229,8 @@ class SettingsActivity : BaseActivity(), PreferenceFragmentCompat.OnPreferenceSt
 						val authInfo = findPreference<Preference>("preference_authentication_info")
 							?: throw IllegalStateException()
 						findPreference<Preference>("preference_authentication")?.apply {
-							val auth = AuthenticationHelper((requireActivity() as BaseActivity).preferences)
+							val auth =
+								AuthenticationHelper((requireActivity() as BaseActivity).preferences)
 							updateAuthPreference(auth, authInfo, this)
 							setSummary(R.string.preference_authentication_desc)
 							setOnPreferenceClickListener {
@@ -346,10 +348,10 @@ class SettingsActivity : BaseActivity(), PreferenceFragmentCompat.OnPreferenceSt
 						user
 					}
 
-				preferenceScreen.removePreference(indicator)
+				preferenceScreen.removePreference(indicator ?: throw IllegalStateException())
 
 				contributors.forEach { user ->
-					preferenceScreen.addPreference(Preference(context).apply {
+					preferenceScreen.addPreference(Preference(requireContext()).apply {
 						GlobalScope.launch(Dispatchers.Main) {
 							icon = loadProfileImage(user.avatar_url, resources)
 						}
