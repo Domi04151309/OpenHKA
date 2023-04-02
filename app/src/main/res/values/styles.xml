@@ -56,14 +56,6 @@
 		<item name="colorSecondary">@color/colorAccentThemeCyan</item>
 	</style>
 
-	<style name="AppTheme.ThemePixel">
-		<item name="colorPrimary">@color/colorPrimaryThemePixel</item>
-		<item name="colorPrimaryDark">@color/appBarColorThemePixel</item>
-		<item name="colorAccent">@color/colorAccentThemePixel</item>
-		<item name="colorSecondary">@color/colorAccentThemePixel</item>
-		<item name="android:statusBarColor">@color/appBarColorThemePixel</item>
-	</style>
-
 	<style name="AppTheme.ThemeUntis.NoActionBar">
 		<item name="windowActionBar">false</item>
 		<item name="windowNoTitle">true</item>
@@ -85,11 +77,6 @@
 	</style>
 
 	<style name="AppTheme.ThemeCyan.NoActionBar">
-		<item name="windowActionBar">false</item>
-		<item name="windowNoTitle">true</item>
-	</style>
-
-	<style name="AppTheme.ThemePixel.NoActionBar">
 		<item name="windowActionBar">false</item>
 		<item name="windowNoTitle">true</item>
 	</style>
