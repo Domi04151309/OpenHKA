@@ -84,6 +84,7 @@ class MainActivity :
 				"mensa" -> openMensa()
 				"stations" -> openStations()
 				"grades" -> openGrades()
+				"jobs" -> openJobs()
 				"links" -> openLinks()
 			}
 		}
@@ -339,6 +340,12 @@ class MainActivity :
 		GradesFragment()
 	)
 
+	private fun openJobs() = openMenuItem(
+		R.id.nav_jobs,
+		R.string.activity_title_jobs,
+		JobsFragment()
+	)
+
 	private fun openLinks() = openMenuItem(
 		R.id.nav_links,
 		R.string.activity_title_links,
@@ -361,6 +368,7 @@ class MainActivity :
 			R.id.nav_mensa -> openMensa()
 			R.id.nav_stations -> openStations()
 			R.id.nav_grades -> openGrades()
+			R.id.nav_jobs -> openJobs()
 			R.id.nav_links -> openLinks()
 			R.id.nav_settings -> {
 				val i = Intent(this, SettingsActivity::class.java)

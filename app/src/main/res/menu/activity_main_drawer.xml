@@ -53,6 +53,11 @@
 			android:title="@string/activity_title_grades" />
 
 		<item
+			android:id="@+id/nav_jobs"
+			android:icon="@drawable/ic_work"
+			android:title="@string/activity_title_jobs" />
+
+		<item
 			android:id="@+id/nav_links"
 			android:icon="@drawable/ic_sort"
 			android:title="@string/activity_title_links" />

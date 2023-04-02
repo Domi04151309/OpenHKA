@@ -5,6 +5,7 @@
     <string name="activity_title_freshman_help">Ersti Hilfe</string>
     <string name="activity_title_grades">Noten</string>
     <string name="activity_title_info_center">Info-Center</string>
+    <string name="activity_title_jobs">Jobs</string>
     <string name="activity_title_links">Links</string>
     <string name="activity_title_locations">Orte</string>
     <string name="activity_title_mensa">Mensa</string>
@@ -40,6 +41,10 @@
     <string name="errors_failed_loading_from_server_message">Abrufen von Informationen vom Server fehlgeschlagen</string>
     <string name="errors_github_attach_file_message">Bitte füge die komprimierten Log-Dateien als Anhang hinzu.\nDiese wurden hier gespeichert: `%1$s`</string>
     <string name="errors_report">Bitte hilf, die App zu verbessern, indem du die Fehler unten meldest:</string>
+    <string name="jobs_internship">Praktika</string>
+    <string name="jobs_joboffer">Jobangebote</string>
+    <string name="jobs_thesis">Thesis</string>
+    <string name="jobs_workingstudent">Werkstudent</string>
     <string name="link_input_error_field_empty">Dieses Feld darf nicht leer sein!</string>
     <string name="link_input_error_invalid_url">Muss eine gültige URL sein!</string>
     <string name="link_input_ical_link">iCal Link</string>
