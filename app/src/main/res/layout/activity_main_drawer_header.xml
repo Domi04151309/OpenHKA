@@ -5,29 +5,23 @@
 	xmlns:app="http://schemas.android.com/apk/res-auto"
 	android:layout_width="match_parent"
 	android:layout_height="match_parent"
+	android:paddingBottom="8dp"
 	android:orientation="vertical">
 
 	<LinearLayout
 		android:layout_width="match_parent"
-		android:layout_height="@dimen/height_header_content"
+		android:layout_height="wrap_content"
 		android:background="?attr/colorPrimary"
 		android:orientation="vertical"
-		android:theme="@style/ThemeOverlay.AppCompat.Dark">
+		android:theme="@style/ThemeOverlay.Material3.DayNight.SideSheetDialog">
 
-		<ImageView
-			android:layout_width="@dimen/size_header_icon"
-			android:layout_height="@dimen/size_header_icon"
-			android:layout_marginStart="16dp"
-			android:layout_marginTop="48dp"
-			android:layout_marginBottom="8dp"
-			android:contentDescription="@string/main_drawer_image_logo"
-			app:srcCompat="@drawable/ic_launcher_white" />
 
 		<androidx.constraintlayout.widget.ConstraintLayout
 			android:id="@+id/constraintlayout_mainactivitydrawer_dropdown"
 			android:layout_width="match_parent"
 			android:layout_height="wrap_content"
 			android:background="?android:attr/selectableItemBackground"
+			android:paddingVertical="8dp"
 			android:clickable="true"
 			android:focusable="true">
 
@@ -39,6 +33,7 @@
 				android:layout_marginTop="8dp"
 				android:text="@string/app_name"
 				android:textAppearance="@style/TextAppearance.Material3.BodyLarge"
+				android:textColor="?android:textColorPrimaryInverse"
 				app:layout_constraintStart_toStartOf="parent"
 				app:layout_constraintTop_toTopOf="parent" />
 
@@ -49,6 +44,7 @@
 				android:layout_marginBottom="8dp"
 				android:text="@string/app_desc"
 				android:textAppearance="@style/TextAppearance.Material3.BodySmall"
+				android:textColor="?android:textColorPrimaryInverse"
 				app:layout_constraintBottom_toBottomOf="parent"
 				app:layout_constraintStart_toStartOf="parent"
 				app:layout_constraintTop_toBottomOf="@+id/textview_mainactivtydrawer_line1" />
@@ -62,7 +58,7 @@
 				app:layout_constraintBottom_toBottomOf="parent"
 				app:layout_constraintEnd_toEndOf="parent"
 				app:layout_constraintTop_toTopOf="parent"
-				app:srcCompat="@drawable/ic_arrow_drop_down_white" />
+				app:srcCompat="@drawable/ic_arrow_drop_down_colored" />
 		</androidx.constraintlayout.widget.ConstraintLayout>
 
 	</LinearLayout>
@@ -86,7 +82,8 @@
 		<View
 			android:layout_width="match_parent"
 			android:layout_height="1dp"
-			android:background="?android:attr/listDivider" />
+			android:layout_marginTop="8dp"
+			android:background="?colorDivider" />
 
 	</LinearLayout>
 </LinearLayout>
