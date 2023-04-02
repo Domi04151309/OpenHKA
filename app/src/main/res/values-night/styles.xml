@@ -1,6 +1,6 @@
 <resources xmlns:tools="http://schemas.android.com/tools">
 
-	<style name="AppTheme" parent="Theme.Material3.DayNight">
+	<style name="Base.AppTheme" parent="Theme.Material3.DayNight">
 		<item name="colorDivider">@color/colorDivider</item>
 		<item name="android:windowLightStatusBar" tools:targetApi="m">false</item>
 		<item name="android:windowAnimationStyle">@style/WindowFadeTransition</item>

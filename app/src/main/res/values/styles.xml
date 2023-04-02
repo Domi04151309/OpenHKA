@@ -1,6 +1,6 @@
 <resources xmlns:tools="http://schemas.android.com/tools">
 
-	<style name="AppTheme" parent="Theme.Material3.DayNight">
+	<style name="Base.AppTheme" parent="Theme.Material3.DayNight">
 		<item name="colorDivider">@color/colorDivider</item>
 		<item name="android:windowLightStatusBar" tools:targetApi="m">true</item>
 		<item name="android:windowAnimationStyle">@style/WindowFadeTransition</item>
@@ -19,41 +19,6 @@
 	<style name="AppTheme.Launcher.NoActionBar">
 		<item name="windowActionBar">false</item>
 		<item name="windowNoTitle">true</item>
-	</style>
-
-	<style name="AppTheme.ThemeUntis">
-		<item name="colorPrimary">@color/colorPrimaryThemeUntis</item>
-		<item name="colorPrimaryDark">@color/colorPrimaryDarkThemeUntis</item>
-		<item name="colorAccent">@color/colorAccentThemeUntis</item>
-		<item name="colorSecondary">@color/colorAccentThemeUntis</item>
-	</style>
-
-	<style name="AppTheme.ThemeBlue">
-		<item name="colorPrimary">@color/colorPrimaryThemeBlue</item>
-		<item name="colorPrimaryDark">@color/colorPrimaryDarkThemeBlue</item>
-		<item name="colorAccent">@color/colorAccentThemeBlue</item>
-		<item name="colorSecondary">@color/colorAccentThemeBlue</item>
-	</style>
-
-	<style name="AppTheme.ThemeGreen">
-		<item name="colorPrimary">@color/colorPrimaryThemeGreen</item>
-		<item name="colorPrimaryDark">@color/colorPrimaryDarkThemeGreen</item>
-		<item name="colorAccent">@color/colorAccentThemeGreen</item>
-		<item name="colorSecondary">@color/colorAccentThemeGreen</item>
-	</style>
-
-	<style name="AppTheme.ThemePink">
-		<item name="colorPrimary">@color/colorPrimaryThemePink</item>
-		<item name="colorPrimaryDark">@color/colorPrimaryDarkThemePink</item>
-		<item name="colorAccent">@color/colorAccentThemePink</item>
-		<item name="colorSecondary">@color/colorAccentThemePink</item>
-	</style>
-
-	<style name="AppTheme.ThemeCyan">
-		<item name="colorPrimary">@color/colorPrimaryThemeCyan</item>
-		<item name="colorPrimaryDark">@color/colorPrimaryDarkThemeCyan</item>
-		<item name="colorAccent">@color/colorAccentThemeCyan</item>
-		<item name="colorSecondary">@color/colorAccentThemeCyan</item>
 	</style>
 
 	<style name="AppTheme.ThemeUntis.NoActionBar">
