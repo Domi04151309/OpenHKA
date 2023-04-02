@@ -100,7 +100,6 @@ open class BaseWidget : AppWidgetProvider() {
 					"green" -> R.color.colorPrimaryThemeGreen
 					"pink" -> R.color.colorPrimaryThemePink
 					"cyan" -> R.color.colorPrimaryThemeCyan
-					"pixel" -> R.color.colorPrimaryThemePixel
 					else -> R.color.colorPrimary
 				}
 			remoteViews.setInt(

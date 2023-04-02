@@ -250,6 +250,5 @@
         <item quantity="one">%1$d Beitrag</item>
         <item quantity="other">%1$d Beiträge</item>
     </plurals>
-    <string name="preference_theme_pixel">Pixel</string>
     <string name="main_dialog_itemdetails_timeformat">%1$s - %2$s</string>
 </resources>
