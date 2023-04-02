@@ -19,7 +19,7 @@
 			android:id="@+id/textview_itemmessage_subject"
 			android:layout_width="match_parent"
 			android:layout_height="wrap_content"
-			android:textAppearance="@style/TextAppearance.MaterialComponents.Body2"
+			android:textAppearance="@style/TextAppearance.Material3.BodyMedium"
 			android:textColor="?android:attr/textColorPrimary"
 			android:textIsSelectable="false" />
 
@@ -27,7 +27,7 @@
 			android:id="@+id/textview_itemmessage_body"
 			android:layout_width="match_parent"
 			android:layout_height="wrap_content"
-			android:textAppearance="@style/TextAppearance.MaterialComponents.Body2"
+			android:textAppearance="@style/TextAppearance.Material3.BodyMedium"
 			android:textColor="?android:attr/textColorSecondary"
 			android:textIsSelectable="false" />
 	</LinearLayout>
@@ -38,7 +38,7 @@
 		android:layout_height="24dp"
 		android:paddingHorizontal="@dimen/pill_padding"
 		android:gravity="center"
-		android:textAppearance="@style/TextAppearance.MaterialComponents.Body2"
+		android:textAppearance="@style/TextAppearance.Material3.BodyMedium"
 		android:textColor="@android:color/white"
 		android:background="@drawable/pill"
 		android:textIsSelectable="false" />
