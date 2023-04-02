@@ -57,7 +57,6 @@
 	</style>
 
 	<style name="AppTheme.ThemePixel">
-		<item name="android:windowLightStatusBar" tools:targetApi="m">true</item>
 		<item name="colorPrimary">@color/colorPrimaryThemePixel</item>
 		<item name="colorPrimaryDark">@color/appBarColorThemePixel</item>
 		<item name="colorAccent">@color/colorAccentThemePixel</item>

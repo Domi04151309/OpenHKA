@@ -191,14 +191,12 @@
 	<string name="preference_timetable_item_corner_radius">Item corner radius</string>
 	<string name="preference_timetable_item_padding">Item padding</string>
 	<string name="preference_timetable_item_padding_overlap">Overlapping item padding</string>
-	<string name="preference_timetable_item_text_light">Use white text for timetable items</string>
 	<string name="preference_timetable_lesson_info_font_size">Font size for lesson infos</string>
 	<string name="preference_timetable_lesson_name_font_size">Font size for lesson name</string>
 	<string name="preference_timetable_range">Hours to display</string>
 	<string name="preference_timetable_range_desc">Hours %1$d to %2$d</string>
 	<string name="preference_timetable_range_index_reset">Reset lesson numbering</string>
 	<string name="preference_use_theme_background">Use theme colors</string>
-	<string name="preference_use_theme_background_desc">This only applies to regular lessons</string>
 	<string name="preference_wear_os_support">Wear OS Support</string>
 	<string name="preference_wear_os_support_connecting">Connecting to your wearable</string>
 	<string name="preference_wear_os_support_connecting_desc">Please wait while your profile is copied to your watch.</string>

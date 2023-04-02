@@ -200,14 +200,12 @@
     <string name="preference_timetable_item_corner_radius">Abgerundete Ecken</string>
     <string name="preference_timetable_item_padding">Abstand zwischen Stunden</string>
     <string name="preference_timetable_item_padding_overlap">Abstand zwischen gleichzeitigen Stunden</string>
-    <string name="preference_timetable_item_text_light">Weißer Stundentext</string>
     <string name="preference_timetable_lesson_info_font_size">Schriftgröße für Stundeninfo</string>
     <string name="preference_timetable_lesson_name_font_size">Schriftgröße für Stundenname</string>
     <string name="preference_timetable_range">Anzuzeigende Stunden</string>
     <string name="preference_timetable_range_desc">%1$d. bis %2$d. Stunde</string>
     <string name="preference_timetable_range_index_reset">Stundennummerierung zurücksetzen</string>
     <string name="preference_use_theme_background">Designfarben verwenden</string>
-    <string name="preference_use_theme_background_desc">Dies gilt nur für normale Stunden</string>
     <string name="preference_wear_os_support">Wear OS Unterstützung</string>
     <string name="preference_wear_os_support_connecting">Verbindungsaufbau zur Uhr</string>
     <string name="preference_wear_os_support_connecting_desc">Bitte warte, während dein Profil auf die Uhr kopiert wird.</string>
