@@ -5,7 +5,7 @@ import android.view.LayoutInflater
 import androidx.security.crypto.EncryptedSharedPreferences
 import androidx.security.crypto.MasterKey
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
-import com.google.android.material.textfield.TextInputLayout
+import com.google.android.material.textfield.TextInputEditText
 import com.sapuseven.untis.R
 import com.sapuseven.untis.helpers.config.PreferenceManager
 
@@ -50,9 +50,9 @@ class AuthenticationHelper(preferenceManager: PreferenceManager) {
 			.setView(dialogView)
 			.setPositiveButton(R.string.all_ok) { _, _ ->
 				login(
-					dialogView.findViewById<TextInputLayout>(R.id.username).editText?.text?.toString()
+					dialogView.findViewById<TextInputEditText>(R.id.username).text?.toString()
 						?: throw IllegalStateException(),
-					dialogView.findViewById<TextInputLayout>(R.id.password).editText?.text?.toString()
+					dialogView.findViewById<TextInputEditText>(R.id.password).text?.toString()
 						?: throw IllegalStateException()
 				)
 				callback()
