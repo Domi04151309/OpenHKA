@@ -11,8 +11,8 @@ android {
 		applicationId "io.github.domi04151309.hka"
 		minSdkVersion 21
 		targetSdkVersion 33
-		versionCode 39
-		versionName "1.5.0-3.5.1"
+		versionCode 40
+		versionName "2.0.0-3.5.1"
 		vectorDrawables.useSupportLibrary = true
 		testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
 	}
