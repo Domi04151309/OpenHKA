@@ -386,26 +386,33 @@ class TimetableFragment : Fragment(),
 				)
 
 		items.forEach { item ->
-			item.color = when {
-				item.period.type == Period.Type.CANCELLED -> cancelledColor
-				item.period.type == Period.Type.IRREGULAR -> irregularColor
+			item.color = when (item.period.type) {
+				Period.Type.CANCELLED -> cancelledColor
+				Period.Type.IRREGULAR -> irregularColor
 				else -> regularColor
 			}
 
-			item.pastColor = when {
-				item.period.type == Period.Type.CANCELLED -> cancelledPastColor
-				item.period.type == Period.Type.IRREGULAR -> irregularPastColor
+			item.pastColor = when (item.period.type) {
+				Period.Type.CANCELLED -> cancelledPastColor
+				Period.Type.IRREGULAR -> irregularPastColor
 				else -> regularPastColor
 			}
 
-			item.textColor = colorOn(
-				when {
-					item.period.type == Period.Type.CANCELLED -> cancelledColor
-					item.period.type == Period.Type.IRREGULAR -> irregularColor
-					useTheme -> activity.getAttr(R.attr.colorPrimary)
-					else -> regularColor
+			item.textColor = if (useTheme) {
+				when (item.period.type) {
+					Period.Type.CANCELLED -> activity.getAttr(R.attr.colorOnSecondary)
+					Period.Type.IRREGULAR -> activity.getAttr(R.attr.colorOnTertiary)
+					else -> activity.getAttr(R.attr.colorOnPrimary)
 				}
-			)
+			} else {
+				colorOn(
+					when (item.period.type) {
+						Period.Type.CANCELLED -> cancelledColor
+						Period.Type.IRREGULAR -> irregularColor
+						else -> regularColor
+					}
+				)
+			}
 		}
 	}
 
