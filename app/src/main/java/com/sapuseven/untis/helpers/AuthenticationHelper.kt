@@ -2,10 +2,10 @@ package com.sapuseven.untis.helpers
 
 import android.content.SharedPreferences
 import android.view.LayoutInflater
-import android.widget.EditText
 import androidx.security.crypto.EncryptedSharedPreferences
 import androidx.security.crypto.MasterKey
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
+import com.google.android.material.textfield.TextInputLayout
 import com.sapuseven.untis.R
 import com.sapuseven.untis.helpers.config.PreferenceManager
 
@@ -47,12 +47,13 @@ class AuthenticationHelper(preferenceManager: PreferenceManager) {
 			false
 		)
 		MaterialAlertDialogBuilder(context)
-			.setTitle(R.string.preference_authentication_login)
 			.setView(dialogView)
 			.setPositiveButton(R.string.all_ok) { _, _ ->
 				login(
-					dialogView.findViewById<EditText>(R.id.username).text.toString(),
-					dialogView.findViewById<EditText>(R.id.password).text.toString()
+					dialogView.findViewById<TextInputLayout>(R.id.username).editText?.text?.toString()
+						?: throw IllegalStateException(),
+					dialogView.findViewById<TextInputLayout>(R.id.password).editText?.text?.toString()
+						?: throw IllegalStateException()
 				)
 				callback()
 			}
