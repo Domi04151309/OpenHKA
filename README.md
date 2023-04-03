@@ -8,8 +8,8 @@ A mobile client for the IWI HKA system
 
 ## Screenshots
 
-| <img src="https://raw.githubusercontent.com/Domi04151309/OpenHKA/main/fastlane/metadata/android/en-US/images/phoneScreenshots/1.jpg" alt="Screenshot" /> | <img src="https://raw.githubusercontent.com/Domi04151309/OpenHKA/main/fastlane/metadata/android/en-US/images/phoneScreenshots/2.jpg" alt="Screenshot" /> | <img src="https://raw.githubusercontent.com/Domi04151309/OpenHKA/main/fastlane/metadata/android/en-US/images/phoneScreenshots/3.jpg" alt="Screenshot" /> | <img src="https://raw.githubusercontent.com/Domi04151309/OpenHKA/main/fastlane/metadata/android/en-US/images/phoneScreenshots/4.jpg" alt="Screenshot" /> | <img src="https://raw.githubusercontent.com/Domi04151309/OpenHKA/main/fastlane/metadata/android/en-US/images/phoneScreenshots/5.jpg" alt="Screenshot" /> |
-| --- | --- | --- | --- | --- |
+| <img src="https://raw.githubusercontent.com/Domi04151309/OpenHKA/main/fastlane/metadata/android/en-US/images/phoneScreenshots/1.jpg" alt="Screenshot" /> | <img src="https://raw.githubusercontent.com/Domi04151309/OpenHKA/main/fastlane/metadata/android/en-US/images/phoneScreenshots/2.jpg" alt="Screenshot" /> | <img src="https://raw.githubusercontent.com/Domi04151309/OpenHKA/main/fastlane/metadata/android/en-US/images/phoneScreenshots/3.jpg" alt="Screenshot" /> | <img src="https://raw.githubusercontent.com/Domi04151309/OpenHKA/main/fastlane/metadata/android/en-US/images/phoneScreenshots/4.jpg" alt="Screenshot" /> | <img src="https://raw.githubusercontent.com/Domi04151309/OpenHKA/main/fastlane/metadata/android/en-US/images/phoneScreenshots/5.jpg" alt="Screenshot" /> | <img src="https://raw.githubusercontent.com/Domi04151309/OpenHKA/main/fastlane/metadata/android/en-US/images/phoneScreenshots/6.jpg" alt="Screenshot" /> | <img src="https://raw.githubusercontent.com/Domi04151309/OpenHKA/main/fastlane/metadata/android/en-US/images/phoneScreenshots/7.jpg" alt="Screenshot" /> |
+| --- | --- | --- | --- | --- | --- | --- |
 
 ## Inspiration
 The development of this app was inspired by the original HsKAmpus app.

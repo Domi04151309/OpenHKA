@@ -16,6 +16,7 @@ Hauptmerkmale der App:
 - Einsicht in die Belegung von Lernplätzen
 - Einsehen der Mensa-Speisekarten
 - Einsehen von Daten des öffentlichen Nahverkehrs
+- Einsehen Ihrer Noten
 
 Diese App ist spezialisiert auf die Hochschule Karlsruhe (HKA).
 Die Unterstützung für andere Stundenpläne kann nicht garantiert werden.

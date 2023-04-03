@@ -12,10 +12,11 @@ Main features of the app:
 - Viewing your timetable
 - Viewing RSS feeds (News)
 - Viewing events related to the Hochschule Karlsruhe (HKA)
-- Searching and finding people at Hochschule Karlsruhe (HKA)
+- Searching and finding people at the Hochschule Karlsruhe (HKA)
 - Viewing the occupation of study places
 - Viewing the mensa menus
 - Viewing public transport data
+- Viewing your grades
 
 This app is specialized for the Hochschule Karlsruhe (HKA).
 Support for other timetables can not be guaranteed.
