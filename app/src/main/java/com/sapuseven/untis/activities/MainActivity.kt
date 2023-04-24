@@ -78,8 +78,12 @@ class MainActivity :
 			setupActionBar()
 			setupNavDrawer()
 
-			if (intent.hasExtra("info")) openInfoCenter()
-			else if (intent.hasExtra("grades")) openGrades()
+			if (intent.hasExtra("info") && intent.getBooleanExtra("info", false)) openInfoCenter()
+			else if (intent.hasExtra("grades") && intent.getBooleanExtra(
+					"grades",
+					false
+				)
+			) openGrades()
 			else when (PreferenceUtils.getPrefString(preferences, "preference_launch_screen")) {
 				"timetable" -> openPersonalTimetable()
 				"info_center" -> openInfoCenter()
