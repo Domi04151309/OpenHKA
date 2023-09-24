@@ -36,6 +36,8 @@
     volatile <fields>;
 }
 
+-dontwarn org.joda.convert.**
+
 # ical4j
 -dontwarn org.apache.commons.logging.**
 -keep class org.apache.commons.logging.** { *; }

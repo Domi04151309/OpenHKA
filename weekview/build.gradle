@@ -3,14 +3,20 @@ apply plugin: 'com.android.library'
 apply plugin: 'kotlin-android'
 
 android {
-    compileSdkVersion 31
-    buildToolsVersion "31.0.0"
-
     defaultConfig {
         minSdkVersion 15
         targetSdkVersion 33
+        compileSdk 33
     }
     namespace 'com.sapuseven.untis.views.weekview'
+
+    kotlinOptions {
+        jvmTarget = JavaVersion.VERSION_17
+    }
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_17
+        targetCompatibility JavaVersion.VERSION_17
+    }
 }
 
 dependencies {
