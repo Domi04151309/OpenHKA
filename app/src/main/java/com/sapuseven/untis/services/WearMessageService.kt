@@ -1,7 +1,6 @@
 package com.sapuseven.untis.services
 
 import android.content.Intent
-import androidx.localbroadcastmanager.content.LocalBroadcastManager
 import com.google.android.gms.wearable.MessageEvent
 import com.google.android.gms.wearable.WearableListenerService
 
@@ -16,7 +15,7 @@ class WearMessageService : WearableListenerService() {
 			val message = messageEvent.data[0]
 			val messageIntent = Intent("LOGIN_SUCCESS")
 			messageIntent.putExtra("message", message)
-			LocalBroadcastManager.getInstance(this).sendBroadcast(messageIntent)
+			sendBroadcast(messageIntent)
 		} else {
 			super.onMessageReceived(messageEvent)
 		}

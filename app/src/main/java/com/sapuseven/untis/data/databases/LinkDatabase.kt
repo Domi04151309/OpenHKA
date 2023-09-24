@@ -29,6 +29,7 @@ class LinkDatabase private constructor(context: Context) :
 		var currentVersion = oldVersion
 
 		while (currentVersion < newVersion) {
+			@Suppress("ControlFlowWithEmptyBody")
 			when (currentVersion) {
 			}
 

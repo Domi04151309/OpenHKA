@@ -88,7 +88,7 @@ class WidgetRemoteViewsFactory(private val applicationContext: Context, intent: 
 		runBlocking {
 			items =
 				InfoCenterFragment.loadMessages(applicationContext, link ?: return@runBlocking)
-					?.map { it ->
+					?.map {
 						WidgetListItem(
 							0,
 							it.title ?: "",

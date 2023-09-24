@@ -412,7 +412,7 @@ class SettingsActivity : BaseActivity(), PreferenceFragmentCompat.OnPreferenceSt
 		}
 
 		override fun onDisplayPreferenceDialog(preference: Preference) {
-			fragmentManager?.let { manager ->
+			parentFragmentManager.let { manager ->
 				if (manager.findFragmentByTag(DIALOG_FRAGMENT_TAG) != null) return
 
 				when (preference) {

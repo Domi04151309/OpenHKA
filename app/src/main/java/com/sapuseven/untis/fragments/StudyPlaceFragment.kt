@@ -139,7 +139,7 @@ class StudyPlaceFragment : Fragment(), StringDisplay {
 
 	override fun onStringLoaded(string: String) {
 		val callback = object : StringDisplay {
-			override fun onStringLoaded(innerString: String) {
+			override fun onStringLoaded(@Suppress("PARAMETER_NAME_CHANGED_ON_OVERRIDE") innerString: String) {
 				parsedData = parseStudyPlaces(resources, string, innerString)
 				adapter.updateItems(parsedData.list)
 				swiperefreshlayout.isRefreshing = false

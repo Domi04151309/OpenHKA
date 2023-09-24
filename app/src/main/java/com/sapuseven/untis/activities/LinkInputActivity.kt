@@ -142,9 +142,9 @@ class LinkInputActivity : BaseActivity() {
 
 	private fun focusFirstFreeField() {
 		when {
-			editTextLinkInputRss.text?.isEmpty() == true -> editTextLinkInputRss as EditText
-			editTextLinkInputICal.text?.isEmpty() == true -> editTextLinkInputICal as EditText
-			else -> editTextLinkInputRss as EditText
+			editTextLinkInputRss.text?.isEmpty() == true -> editTextLinkInputRss
+			editTextLinkInputICal.text?.isEmpty() == true -> editTextLinkInputICal
+			else -> editTextLinkInputRss
 		}.requestFocus()
 	}
 

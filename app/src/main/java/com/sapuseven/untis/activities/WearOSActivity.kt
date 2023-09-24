@@ -7,7 +7,7 @@ import android.content.IntentFilter
 import android.os.Bundle
 import android.widget.ImageView
 import android.widget.TextView
-import androidx.localbroadcastmanager.content.LocalBroadcastManager
+import androidx.core.content.ContextCompat
 import com.google.android.gms.wearable.*
 import com.sapuseven.untis.R
 import com.sapuseven.untis.data.databases.LinkDatabase
@@ -47,8 +47,12 @@ class WearOSActivity : BaseActivity() {
 		title = findViewById(R.id.title)
 		summary = findViewById(R.id.description)
 
-		LocalBroadcastManager.getInstance(this)
-			.registerReceiver(receiver, IntentFilter("LOGIN_SUCCESS"))
+		ContextCompat.registerReceiver(
+			this,
+			receiver,
+			IntentFilter("LOGIN_SUCCESS"),
+			ContextCompat.RECEIVER_NOT_EXPORTED
+		)
 	}
 
 	override fun onResume() {

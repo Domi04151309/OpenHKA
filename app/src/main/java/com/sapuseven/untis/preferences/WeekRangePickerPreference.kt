@@ -29,6 +29,6 @@ class WeekRangePickerPreference(context: Context, attrs: AttributeSet?) : Dialog
 	}
 }
 
-private fun <E> List<E>.bounds(): Pair<E, E?>? = if (size >= 1)
+private fun <E> List<E>.bounds(): Pair<E, E?>? = if (isNotEmpty())
 	first() to if (size >= 2) last() else null
 else null
