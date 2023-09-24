@@ -123,8 +123,16 @@ class TimetableLoader(
 
 	private fun parseICal(data: String): Calendar? {
 		return try {
-			CalendarBuilder().build(StringReader(data))
+			val correctedData = StringBuilder()
+			for (line in data.split('\n')) {
+				if (line[0].isUpperCase()) correctedData.append('\n')
+				else correctedData.append(' ')
+				correctedData.append(line.trim())
+			}
+			correctedData.deleteCharAt(0)
+			CalendarBuilder().build(StringReader(correctedData.toString()))
 		} catch (e: ParserException) {
+			Log.w(TimetableLoader::class.java.simpleName, e)
 			null
 		}
 	}
